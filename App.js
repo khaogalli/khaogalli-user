@@ -1,104 +1,137 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   View,
-  KeyboardAvoidingView,
-  TextInput,
-  StyleSheet,
   Text,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Image,
+  useWindowDimensions,
+  TextInput,
+  KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
-  Button,
   Keyboard,
-  StatusBar,
-  Image,
-  onChangeText,
+  Alert,
+  Button,
   Pressable,
+  ScrollView,
+  FlatList,
 } from "react-native";
 
 export default function App() {
-  const [username, onChangeText] = React.useState("");
-  const [regnum, onChangeRegNum] = React.useState("");
-  const [password, onChangePass] = React.useState("");
+  const windowWidth = useWindowDimensions().width;
+  const windowHeight = useWindowDimensions().height;
+  const windowFontScale = useWindowDimensions().fontScale;
+  const windowScale = useWindowDimensions().scale;
+
+  const restaurants = [
+    { name: "A1", status: "B1", pic: require("./assets/dp.png") },
+    { name: "A2", status: "B2", pic: require("./assets/dp.png") },
+    { name: "A3", status: "B3", pic: require("./assets/dp.png") },
+    { name: "A4", status: "B4", pic: require("./assets/dp.png") },
+    { name: "A5", status: "B5", pic: require("./assets/dp.png") },
+    { name: "A6", status: "B6", pic: require("./assets/dp.png") },
+    { name: "A7", status: "B7", pic: require("./assets/dp.png") },
+    { name: "A8", status: "B8", pic: require("./assets/dp.png") },
+    { name: "A9", status: "B9", pic: require("./assets/dp.png") },
+    { name: "A10", status: "B10", pic: require("./assets/dp.png") },
+  ];
+
+  const name = "username";
+
+  const renderItem = ({ item }) => (
+    <Pressable
+      onPress={() => {
+        console.log(item.name);
+      }}
+    >
+      <View
+        style={[
+          {
+            padding: 15,
+            marginBottom: 7,
+            margin: 2,
+            borderRadius: 20,
+            flexDirection: "row",
+            alignItems: "center",
+            backgroundColor: "white",
+          },
+          {
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+
+            elevation: 5,
+          },
+        ]}
+      >
+        <Image
+          source={item.pic}
+          style={{ height: 55, width: 55, borderRadius: 10 }}
+        />
+        <View style={{ padding: 10 }}>
+          <Text>Name: {item.name}</Text>
+          <Text>Status: {item.status}</Text>
+        </View>
+      </View>
+    </Pressable>
+  );
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={styles.container}
+      style={{
+        flex: 1,
+        backgroundColor: "#f3f5f9",
+      }}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.inner}>
           <StatusBar backgroundColor="#ad8840" />
 
-          <View style={styles.center}>
-            <Image
-              style={[styles.logo, styles.h1]}
-              source={require("./assets/download.jpeg")}
-            />
-
+          <View style={[styles.header, { width: windowWidth }]}>
             <Text
               style={{
-                paddingTop: 3,
-                fontSize: 36,
-                color: "white",
+                fontSize: 16,
+                position: "absolute",
+                left: 0,
+                verticalAlign: "middle",
+                paddingTop: 15,
+                paddingLeft: 10,
+                color: "black",
               }}
             >
-              Sign up
+              WELCOME BACK!!{"\n"}
+              {name}
             </Text>
             <View
               style={{
-                backgroundColor: "#aa2e32",
-                height: 355,
-                width: 300,
-                borderRadius: 20,
-                marginTop: 10,
-                borderWidth: 2,
+                alignSelf: "flex-end",
+                paddingRight: 10,
+                paddingTop: 10,
+                paddingBottom: 10,
               }}
             >
-              <View style={{ marginLeft: 15, marginTop: 20 }}>
-                <Text style={styles.lable}>Username</Text>
-                <TextInput
-                  style={[styles.input, { height: 40, width: 270 }]}
-                  onChangeText={onChangeText}
-                  value={username}
-                />
-                <Text style={styles.lable}>Password</Text>
-                <TextInput
-                  style={[styles.input, { height: 40, width: 270 }]}
-                  onChangeText={onChangeRegNum}
-                  value={regnum}
-                />
-                <Text style={styles.lable}>Confirm Password</Text>
-                <TextInput
-                  style={[styles.input, { height: 40, width: 270 }]}
-                  onChangeText={onChangePass}
-                  value={password}
-                />
+              <Image
+                source={require("./assets/favicon.png")}
+                styles={{
+                  border: 2,
+                  borderColor: "black",
+                }}
+              />
+            </View>
 
-                <Pressable style={styles.button1}>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      fontSize: 15,
-                    }}
-                  >
-                    Continue
-                  </Text>
-                </Pressable>
-
-                <Pressable style={{ marginTop: 15 }}>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: 15,
-                      paddingRight: 10,
-                    }}
-                  >
-                    Already Signed up? Sign in
-                  </Text>
-                </Pressable>
-              </View>
+            <View style={{ height: windowHeight, padding: 5 }}>
+              <FlatList
+                data={restaurants}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+              />
             </View>
           </View>
         </View>
@@ -108,28 +141,10 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f74449",
-  },
   inner: {
     padding: 24,
     flex: 1,
     justifyContent: "space-around",
-  },
-  header: {
-    fontSize: 36,
-    marginBottom: 48,
-  },
-  textInput: {
-    height: 40,
-    borderColor: "#000000",
-    borderBottomWidth: 1,
-    marginBottom: 36,
-  },
-  btnContainer: {
-    backgroundColor: "white",
-    marginTop: 12,
   },
 
   logo: {
@@ -141,7 +156,7 @@ const styles = StyleSheet.create({
   },
 
   center: {
-    marginTop: "0%",
+    paddingTop: "40%",
     alignItems: "center",
     backgroundColor: "#f74449",
   },
@@ -178,5 +193,13 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffbf00",
     marginTop: 12,
     justifyContent: "center",
+  },
+  header: {
+    borderBottomColor: "black",
+    borderBottomWidth: 2,
+    position: "absolute",
+    top: 0,
+    left: 0,
+    height: 60,
   },
 });
