@@ -18,6 +18,8 @@ import {
   ScrollView,
 } from "react-native";
 
+import Api from "../ApiManager";
+
 export default function Signin() {
   const windowWidth = useWindowDimensions().width;
   const windowHeight = useWindowDimensions().height;
@@ -48,29 +50,9 @@ export default function Signin() {
       Alert.alert("Password should be at least 8 characters long.");
       return;
     }
+    Api.login(username, regnum, password);
 
-    const message = {
-      username: username,
-      regnum: regnum,
-      password: password,
-    };
 
-    try {
-      const response = fetch("http://192.168.23.201:8080/signin", {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(message),
-      });
-      data = response.JSON();
-      if (data.successful) {
-        onSuccessfullSignIn();
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
   };
 
   return (
@@ -89,7 +71,7 @@ export default function Signin() {
             <View style={[styles.center, styles.h1]}>
               <Image
                 style={styles.logo}
-                source={require("./assets/download.jpeg")}
+                source={require("../../assets/download.jpeg")}
               />
 
               <Text

@@ -15,7 +15,7 @@ import {
   Pressable,
 } from "react-native";
 
-export default function App() {
+export default function Signup() {
   const [username, onChangeText] = React.useState("");
   const [regnum, onChangeRegNum] = React.useState("");
   const [password, onChangePass] = React.useState("");
@@ -31,7 +31,7 @@ export default function App() {
           <View style={styles.center}>
             <Image
               style={[styles.logo, styles.h1]}
-              source={require("./assets/download.jpeg")}
+              source={require("../../assets/download.jpeg")}
             />
 
             <Text
