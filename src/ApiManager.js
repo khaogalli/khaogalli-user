@@ -19,6 +19,8 @@ class ApiManager {
             data = response.JSON();
             if (data.successful) {
                 this.onAuthChange(true);
+            } else {
+                this.onAuthChange(false);
             }
         } catch (error) {
             console.error("Error:", error);
