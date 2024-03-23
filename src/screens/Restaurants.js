@@ -53,37 +53,53 @@ export default function Restaurants() {
   cart.Res = res_name;
   cart.UID = user;
 
-  var itemlist = [];
+  const [itemlist, setItemList] = useState(
+    menu.map((menuItem) => ({ item: menuItem.items, qty: 0 }))
+  );
 
-  for (var i = 0; i < menu.length; i++) {
-    var x = menu[i].items;
-    itemlist.push({ item: x, qty: 0 });
-  }
+  // for (var i = 0; i < menu.length; i++) {
+  //   var x = menu[i].items;
+  //   itemlist.push({ item: x, qty: 0 });
+  // }
 
   const qty = (item, op) => {
-    var index;
-    for (var i = 0; i < menu.length; i++) {
-      if (itemlist[i].item === item) {
-        index = i;
-        break;
-      }
-    }
-    if (op === "+") {
-      itemlist[index].qty++;
-    }
-    if (op === "-" && itemlist[index].qty > 0) {
-      itemlist[index].qty--;
-    }
+    // var index;
+    // for (var i = 0; i < menu.length; i++) {
+    //   if (itemlist[i].item === item) {
+    //     index = i;
+    //     break;
+    //   }
+    // }
+    // if (op === "+") {
+    //   itemlist[index].qty++;
+    // }
+    // if (op === "-" && itemlist[index].qty > 0) {
+    //   itemlist[index].qty--;
+    // }
+    // console.log(itemlist);
+
+    setItemList((prevItemList) =>
+      prevItemList.map((itemData) =>
+        itemData.item === item
+          ? {
+              ...itemData,
+              qty: Math.max(0, itemData.qty + (op === "+" ? 1 : -1)),
+            }
+          : itemData
+      )
+    );
     console.log(itemlist);
   };
 
   const addItem = (itemlist) => {
-    for (var i = 0; i < itemlist.length; i++) {
-      console.log(itemlist[i]);
-      if (itemlist[i].qty != 0) {
-        cart.Order.push(itemlist[i]);
-      }
-    }
+    const selectedItems = itemlist.filter((itemData) => itemData.qty > 0);
+    cart.Order = selectedItems;
+    // for (var i = 0; i < itemlist.length; i++) {
+    //   console.log(itemlist[i]);
+    //   if (itemlist[i].qty != 0) {
+    //     cart.Order.push(itemlist[i]);
+    //   }
+    // }
     console.log("final cart:");
     console.log(cart);
   };
@@ -105,7 +121,9 @@ export default function Restaurants() {
           >
             <Text style={styles.button_inc}>+</Text>
           </Pressable>
-          <Text style={styles.qty}>qty</Text>
+          <Text style={styles.qty}>
+            {itemlist.find((i) => i.item === item.items)?.qty}
+          </Text>
           <Pressable
             onPress={() => {
               console.log(item.items);
@@ -257,17 +275,17 @@ const styles = StyleSheet.create({
   },
 
   button_inc: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "900",
     paddingVertical: 0,
     paddingHorizontal: 10,
     color: "#ad8840",
   },
 
-  qty: { fontWeight: "bold" },
+  qty: { fontWeight: "bold", color: "red" },
 
   button_dec: {
-    fontSize: 35,
+    fontSize: 25,
     fontWeight: "900",
     paddingVertical: 0,
     paddingHorizontal: 10,
