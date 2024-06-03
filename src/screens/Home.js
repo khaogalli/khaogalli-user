@@ -36,6 +36,7 @@ export default function Home() {
     { name: "A8", status: "B8", pic: require("../../assets/dp.png") },
     { name: "A9", status: "B9", pic: require("../../assets/dp.png") },
     { name: "A10", status: "B10", pic: require("../../assets/dp.png") },
+    { name: "A10", status: "B10", pic: require("../../assets/dp.png") },
   ];
 
   const name = "username";
@@ -83,66 +84,67 @@ export default function Home() {
   );
 
   return (
-    <SafeAreaView>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{
-          flex: 1,
-          backgroundColor: "#f3f5f9",
-        }}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.inner}>
-            <StatusBar backgroundColor="#ad8840" />
-
-            <View style={[styles.header, { width: windowWidth }]}>
-              <Text
-                style={{
-                  fontSize: 16,
-                  position: "absolute",
-                  left: 0,
-                  verticalAlign: "middle",
-                  paddingTop: 15,
-                  paddingLeft: 10,
-                  color: "black",
-                }}
-              >
-                WELCOME BACK!!{"\n"}
-                {name}
-              </Text>
-              <View
-                style={{
-                  alignSelf: "flex-end",
-                  paddingRight: 10,
-                  paddingTop: 10,
-                  paddingBottom: 10,
-                }}
-              >
-                <Image
-                  source={require("../../assets/favicon.png")}
-                  styles={{
-                    border: 2,
-                    borderColor: "black",
-                  }}
-                />
-              </View>
-
-              <View style={{ height: windowHeight, padding: 5 }}>
-                <FlatList
-                  data={restaurants}
-                  renderItem={renderItem}
-                  keyExtractor={(item, index) => index.toString()}
-                />
-              </View>
-            </View>
-          </View>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
+    <View style={styles.container}>
+      <View style={styles.topView}>
+        <Text
+          style={{
+            fontSize: 16,
+            position: "absolute",
+            left: 0,
+            verticalAlign: "middle",
+            paddingTop: 15,
+            paddingLeft: 10,
+            color: "black",
+          }}
+        >
+          WELCOME BACK!!{"\n"}
+          {name}
+        </Text>
+        <View
+          style={{
+            alignSelf: "flex-end",
+            paddingRight: 10,
+            paddingTop: 10,
+            paddingBottom: 10,
+          }}
+        >
+          <Image
+            source={require("../../assets/favicon.png")}
+            styles={{
+              border: 2,
+              borderColor: "black",
+            }}
+          />
+        </View>
+      </View>
+      <View style={styles.bottomView}>
+        <FlatList
+          style={{ width: "100%" }}
+          data={restaurants}
+          renderItem={renderItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  topView: {
+    height: 100,
+    justifyContent: "center",
+    alignItems: "center",
+    paddingTop: 20,
+  },
+  bottomView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+  },
   inner: {
     padding: 24,
     flex: 1,
