@@ -139,57 +139,72 @@ export default function Restaurants() {
 
   return (
     <SafeAreaView>
-       <View>
-        <StatusBar backgroundColor="#ad8840" />
-        <View>
-          {
-            <Image
-              style={[
-                styles.primary_bg,
-                {
-                  width: windowWidth,
-                },
-              ]}
-              source={require("../../assets/backdrop.jpeg")}
-            />
-          }
-          <View>
-            <Image
-              style={styles.secondary_dp}
-              source={require("../../assets/dp1.png")}
-            />
-          </View>
-        </View>
-        <View style={styles.h1view}>
-          <Text style={styles.h1}>{res_name}</Text>
-        </View>
-
-        <View style={{ padding: 5 }}>
-          <FlatList
-            data={menu}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            style={{ flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
-          />
-        </View>
-      </View>
-        <View
-          style={{
-            height: 50,
-            width: 400,
-            borderColor: "#cd3131",
-            borderWidth: 3,
-            alignSelf: "center",
-            marginBottom: 30,
-            backgroundColor: "#ff3c3c",
-            borderRadius: 10,
-          }}
+      <ScrollView>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : "height"}
+          style={styles.kba}
         >
-          <Text style={{ textAlign: "center", padding: 10 }}>
-            Confirm Order
-          </Text>
-        </View> 
+          <View>
+            <StatusBar backgroundColor="#ad8840" />
+            <View>
+              {
+                <Image
+                  style={[
+                    styles.primary_bg,
+                    {
+                      width: windowWidth,
+                    },
+                  ]}
+                  source={require("../../assets/backdrop.jpeg")}
+                />
+              }
+              <View>
+                <Image
+                  style={styles.secondary_dp}
+                  source={require("../../assets/dp1.png")}
+                />
+              </View>
+            </View>
+            <View style={styles.h1view}>
+              <Text style={styles.h1}>{res_name}</Text>
+            </View>
+
+            <View style={{ padding: 5 }}>
+              <FlatList
+                data={menu}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                scrollToEnd={true}
+                style={{ flex: 1 }}
+                contentContainerStyle={{ flexGrow: 1 }}
+              />
+            </View>
+          </View>
+          <Pressable
+            onPress={() => {
+              console.log("hi");
+              addItem(itemlist);
+            }}
+          >
+            <View
+              style={{
+                height: 50,
+                width: 400,
+                borderColor: "#cd3131",
+                borderWidth: 3,
+                alignSelf: "center",
+                marginBottom: 30,
+                backgroundColor: "#ff3c3c",
+                borderRadius: 10,
+              }}
+            >
+              <Text style={{ textAlign: "center", padding: 10 }}>
+                Confirm Order
+              </Text>
+            </View>
+          </Pressable>
+        </KeyboardAvoidingView>
+      </ScrollView>
     </SafeAreaView>
   );
 }
