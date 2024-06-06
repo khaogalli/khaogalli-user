@@ -10,7 +10,7 @@ import Profile from "./src/screens/Profile";
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   Api.onAuthChange = setIsSignedIn;
-  return isSignedIn ? <Home /> : <Summary />;
+  return isSignedIn ? <Home /> : <Profile />;
 };
 
 export default App;

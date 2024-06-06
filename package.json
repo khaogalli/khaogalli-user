@@ -13,9 +13,13 @@
     "@react-navigation/native-stack": "^6.9.25",
     "expo": "^51.0.9",
     "expo-notifications": "~0.28.5",
+    "expo-print": "~13.0.1",
+    "expo-sharing": "~12.0.1",
     "expo-status-bar": "~1.12.1",
+    "pdf-lib": "^1.17.1",
     "react": "18.2.0",
-    "react-native": "0.74.1"
+    "react-native": "0.74.1",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

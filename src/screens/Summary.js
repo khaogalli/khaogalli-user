@@ -1,87 +1,161 @@
-import { useState, useEffect, useRef } from "react";
-import { Text, View, Button, Platform } from "react-native";
+import React from "react";
+import {
+  StatusBar,
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
 
 export default function App() {
-  const [expoPushToken, setExpoPushToken] = useState("");
-  const [notification, setNotification] = useState(false);
-  const notificationListener = useRef();
-  const responseListener = useRef();
+  const orderItems = [
+    { id: "1", name: "Item 1", quantity: 2, amount: 10 },
+    { id: "2", name: "Item 2", quantity: 1, amount: 15 },
+    { id: "3", name: "Item 3", quantity: 3, amount: 20 },
+  ];
+  const renderItem = ({ item }) => (
+    <View style={styles.row}>
+      <Text style={styles.itemName}>{item.name}</Text>
+      <Text style={styles.itemQuantity}>{item.quantity}</Text>
+      <Text style={styles.itemAmount}>{item.amount}</Text>
+    </View>
+  );
+
+  const getTotalAmount = () => {
+    return orderItems.reduce(
+      (total, item) => total + item.amount * item.quantity,
+      0
+    );
+  };
 
   return (
-    <View
-      style={{
-        flex: 1,
-        alignItems: "center",
-        justifyContent: "space-around",
-      }}
-    >
-      <Text>Your expo push token: {expoPushToken}</Text>
-      <View style={{ alignItems: "center", justifyContent: "center" }}>
-        <Text>
-          Title: {notification && notification.request.content.title}{" "}
-        </Text>
-        <Text>Body: {notification && notification.request.content.body}</Text>
-        <Text>
-          Data:{" "}
-          {notification && JSON.stringify(notification.request.content.data)}
-        </Text>
+    <SafeAreaView style={{ flex: 1 }}>
+      <StatusBar backgroundColor="#ad8840" />
+      <View style={styles.container}>
+        <Text style={styles.heading}>Order ID</Text>
+        <Text style={styles.heading1}>123456</Text>
+        <Text style={styles.heading1}>~Restaurant~</Text>
+        <View style={styles.table}>
+          <View style={styles.header}>
+            <Text style={styles.headerText}>Item</Text>
+            <Text style={styles.headerText}>Qty</Text>
+            <Text style={styles.headerText}>Amount</Text>
+          </View>
+          <FlatList
+            data={orderItems}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+          />
+        </View>
+        <View style={styles.total}>
+          <Text style={styles.totalText}>Grand Total:</Text>
+          <Text style={styles.totalAmount}>Rs. {getTotalAmount()}</Text>
+        </View>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => alert("Proceed to Payment")}
+          >
+            <Text style={styles.buttonText}>Proceed to Payment</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => alert("Place Order")}
+          >
+            <Text style={styles.buttonText}>Place Order</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <Button
-        title="Press to schedule a notification"
-        onPress={async () => {
-          await schedulePushNotification();
-        }}
-      />
-    </View>
+    </SafeAreaView>
   );
 }
 
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: "Here is the notification body",
-      data: { data: "goes here" },
-    },
-    trigger: { seconds: 2 },
-  });
-}
-
-async function registerForPushNotificationsAsync() {
-  let token;
-
-  if (Platform.OS === "android") {
-    await Notifications.setNotificationChannelAsync("default", {
-      name: "default",
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: "#FF231F7C",
-    });
-  }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } =
-      await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== "granted") {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
-    }
-    if (finalStatus !== "granted") {
-      alert("Failed to get push token for push notification!");
-      return;
-    }
-    // Learn more about projectId:
-    // https://docs.expo.dev/push-notifications/push-notifications-setup/#configure-projectid
-    token = (
-      await Notifications.getExpoPushTokenAsync({
-        projectId: "your-project-id",
-      })
-    ).data;
-    console.log(token);
-  } else {
-    alert("Must use physical device for Push Notifications");
-  }
-
-  return token;
-}
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 20,
+    backgroundColor: "#fff",
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  heading1: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  heading2: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  table: {
+    marginBottom: 20,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    paddingBottom: 10,
+    marginBottom: 10,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    width: "33%", // Adjusting width to fit three columns
+    textAlign: "center",
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+  },
+  itemName: {
+    fontSize: 16,
+    width: "33%", // Adjusting width to fit three columns
+    textAlign: "center",
+  },
+  itemQuantity: {
+    fontSize: 16,
+    width: "33%", // Adjusting width to fit three columns
+    textAlign: "center",
+  },
+  itemAmount: {
+    fontSize: 16,
+    width: "33%", // Adjusting width to fit three columns
+    textAlign: "center",
+  },
+  total: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  totalText: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  totalAmount: {
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+  },
+  button: {
+    backgroundColor: "#ffbf00",
+    padding: 15,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+  },
+});
