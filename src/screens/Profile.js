@@ -50,7 +50,7 @@ const ProfilePage = () => {
     },
   ];
 
-  const icon_path = "../../assets/favicon.png";
+  const icon_path = Image.resolveAssetSource(require("../../assets/favicon.png")).uri;
   const html = `
     <html>
       <body>
