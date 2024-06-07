@@ -7,11 +7,13 @@ import Signup from "./src/screens/Signup";
 import Summary from "./src/screens/Summary";
 import Profile from "./src/screens/Profile";
 import ResHome from "./src/screens/ResHome";
+import ResOrder from "./src/screens/ResOrder";
+import SetMenu from "./src/screens/SetMenu";
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   Api.onAuthChange = setIsSignedIn;
-  return isSignedIn ? <Home /> : <Profile />;
+  return isSignedIn ? <Home /> : <SetMenu />;
 };
 
 export default App;
