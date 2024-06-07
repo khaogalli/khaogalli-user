@@ -6,6 +6,7 @@ import Signin from "./src/screens/Signin";
 import Signup from "./src/screens/Signup";
 import Summary from "./src/screens/Summary";
 import Profile from "./src/screens/Profile";
+import ResHome from "./src/screens/ResHome";
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
