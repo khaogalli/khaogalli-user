@@ -14,9 +14,6 @@ import {
 } from "react-native";
 
 const ProfilePage = () => {
-  const toDate = "2021-09-01";
-  const fromDate = "2021-09-01";
-
   const history = [
     {
       orderID: "123456",
@@ -50,14 +47,20 @@ const ProfilePage = () => {
     },
   ];
 
-  const icon_path = Image.resolveAssetSource(require("../../assets/favicon.png")).uri;
+  const icon_path = Image.resolveAssetSource(
+    require("../../assets/favicon.png")
+  ).uri;
+
   const html = `
     <html>
       <body>
-      <img src="${icon_path}" alt="favicon" style="margin-left: auto; margin-right: auto; width: 100; height: 100 radius: 5"/>
+      <div style="diplay: flex">
+        <div style="display: inline-block;">
+        <img src="${icon_path}" alt="favicon" style="display: inline-block; margin-left: auto; margin-right: auto; width: 100; height: 100 radius: 5"/>
+        </div>
+      </div>
         <h1 style="text-align:center">Order Statement</h1>
         <p style="text-align:center; font-size:28" >John Doe</p>
-        <p>From: ${fromDate}  &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp To: ${toDate}</p>
         <table style="border-collapse: collapse; width: 100%;">
           <thead>
             <tr  style="background-color: #ffbf00; text-align: center;">    
