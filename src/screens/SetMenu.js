@@ -18,6 +18,7 @@ import { DataTable } from "react-native-paper";
 export default function App() {
   //id is the decoded form of the item id stores in the database. data base will have id as resname+itemid and id will be the itemid
   //thus making id unique as well as easy to predict.
+
   const [Menu, setMenu] = useState([
     { id: "1", name: "Item 1", price: 10, status: true },
     { id: "2", name: "Item 2", price: 15, status: false }, //from api
@@ -132,9 +133,13 @@ export default function App() {
                   backgroundColor: "#ffbf00",
                   borderWidth: 1,
                   padding: 10,
-                  borderRadius: 10,
+                  borderRadius: 10, //style not being applied
                   marginTop: 25,
                   justifyContent: "center",
+                }}
+                onPress={() => {
+                  // data(Menu) sent to api
+                  //navigate to home
                 }}
               >
                 <Text>Done</Text>
@@ -145,7 +150,7 @@ export default function App() {
             <View>
               <FlatList
                 data={Menu}
-                renderItem={renderItem}
+                renderItem={renderItem} //not scrolling
                 keyExtractor={(item) => item.id}
                 style={{ padding: 2 }}
               />
@@ -210,7 +215,7 @@ export default function App() {
                       fontWeight: "bold",
                       fontSize: 15,
                       width: 100,
-                    }}
+                    }} //keyboard acoing view not working
                   >
                     Add
                   </Text>
