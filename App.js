@@ -13,7 +13,7 @@ import SetMenu from "./src/screens/SetMenu";
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   Api.onAuthChange = setIsSignedIn;
-  return isSignedIn ? <Home /> : <ResOrder />;
+  return isSignedIn ? <Home /> : <Signup />;
 };
 
 export default App;

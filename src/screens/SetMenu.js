@@ -58,35 +58,12 @@ export default function App() {
           console.log(item.OderID);
         }}
       >
-        <View
-          style={[
-            {
-              padding: 15,
-              marginBottom: 7,
-              margin: 2,
-              borderRadius: 20,
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: "white",
-              width: "100%",
-            },
-            {
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
-            },
-          ]}
-        >
+        <View style={[styles.listItem, styles.listItemShadow]}>
           <View style={{ padding: 10 }}>
             <Text>Item {item.name}</Text>
             <Text>Price {item.price}</Text>
           </View>
-          <View style={{ padding: 10, position: "absolute", right: 0 }}>
+          <View style={styles.toggelSwitchPostion}>
             <Switch
               trackColor={{ false: "#767577", true: "#81b0ff" }}
               thumbColor={item.status ? "#f5dd4b" : "#f4f3f4"}
@@ -112,31 +89,11 @@ export default function App() {
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar backgroundColor="#ad8840" />
         <View style={styles.container}>
-          <View
-            style={[
-              styles.topView,
-              { flexDirection: "row", justifyContent: "space-around" },
-            ]}
-          >
-            <Text
-              style={{
-                fontSize: 28,
-                textAlign: "center",
-              }}
-            >
-              Edit Menu
-            </Text>
+          <View style={[styles.topView, styles.headerAlign]}>
+            <Text style={styles.headerText}>Edit Menu</Text>
             <View>
               <TouchableOpacity
-                styles={{
-                  height: 40,
-                  backgroundColor: "#ffbf00",
-                  borderWidth: 1,
-                  padding: 10,
-                  borderRadius: 10, //style not being applied
-                  marginTop: 25,
-                  justifyContent: "center",
-                }}
+                styles={styles.doneText}
                 onPress={() => {
                   // data(Menu) sent to api
                   //navigate to home
@@ -155,14 +112,7 @@ export default function App() {
                 style={{ padding: 2 }}
               />
             </View>
-            <View
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                paddingLeft: 10,
-                marginTop: 10,
-              }}
-            >
+            <View style={styles.formHeaderContainer}>
               <View
                 style={{
                   flex: 1,
@@ -184,7 +134,7 @@ export default function App() {
               >
                 <Text style={styles.lable}>Price</Text>
                 <TextInput
-                  style={[styles.input, { height: 40, width: 100 }]}
+                  style={[styles.input, styles.inputText, { width: 100 }]}
                   onChangeText={setPrice}
                   value={price}
                 />
@@ -196,29 +146,12 @@ export default function App() {
                 }}
               >
                 <TouchableOpacity
-                  style={{
-                    height: 40,
-                    backgroundColor: "#ffbf00",
-                    borderWidth: 1,
-                    padding: 10,
-                    borderRadius: 10,
-                    marginTop: 25,
-                    justifyContent: "center",
-                  }}
+                  style={styles.addButton}
                   onPress={() => {
-                    addItems();
+                    addItems(); /* keyboard avoiding view not working */
                   }}
                 >
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      fontSize: 15,
-                      width: 100,
-                    }} //keyboard acoing view not working
-                  >
-                    Add
-                  </Text>
+                  <Text style={styles.addButtonText}>Add</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -230,6 +163,66 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  doneText: {
+    height: 40,
+    backgroundColor: "#ffbf00",
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10, //style not being applied
+    marginTop: 25,
+    justifyContent: "center",
+  },
+  inputContainer: {
+    flex: 1,
+    alignItems: "center",
+  },
+  inputText: { height: 40, width: 100 },
+  formHeaderContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingLeft: 10,
+    marginTop: 10,
+  },
+  addButton: {
+    height: 40,
+    backgroundColor: "#ffbf00",
+    borderWidth: 1,
+    padding: 10,
+    borderRadius: 10,
+    marginTop: 25,
+    justifyContent: "center",
+  },
+  addButtonText: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 15,
+    width: 100,
+  },
+  headerText: {
+    fontSize: 28,
+  },
+  headerAlign: { flexDirection: "row", justifyContent: "space-around" },
+  toggelSwitchPostion: { padding: 10, position: "absolute", right: 0 },
+  listItemShadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  listItem: {
+    padding: 15,
+    marginBottom: 7,
+    margin: 2,
+    borderRadius: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    width: "100%",
+  },
   container: {
     flex: 1,
   },

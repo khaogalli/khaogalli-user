@@ -7,11 +7,9 @@ import {
   Text,
   Platform,
   TouchableWithoutFeedback,
-  Button,
   Keyboard,
   StatusBar,
   Image,
-  onChangeText,
   Pressable,
 } from "react-native";
 
@@ -34,25 +32,8 @@ export default function Signup() {
               source={require("../../assets/download.jpeg")}
             />
 
-            <Text
-              style={{
-                paddingTop: 3,
-                fontSize: 36,
-                color: "white",
-              }}
-            >
-              Sign up
-            </Text>
-            <View
-              style={{
-                backgroundColor: "#aa2e32",
-                height: 355,
-                width: 300,
-                borderRadius: 20,
-                marginTop: 10,
-                borderWidth: 2,
-              }}
-            >
+            <Text style={styles.signupText}>Sign up</Text>
+            <View style={styles.formContainer}>
               <View style={{ marginLeft: 15, marginTop: 20 }}>
                 <Text style={styles.lable}>Username</Text>
                 <TextInput
@@ -74,27 +55,11 @@ export default function Signup() {
                 />
 
                 <Pressable style={styles.button1}>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      fontWeight: "bold",
-                      fontSize: 15,
-                    }}
-                  >
-                    Continue
-                  </Text>
+                  <Text style={styles.continueText}>Continue</Text>
                 </Pressable>
 
                 <Pressable style={{ marginTop: 15 }}>
-                  <Text
-                    style={{
-                      textAlign: "center",
-                      color: "white",
-                      fontWeight: "bold",
-                      fontSize: 15,
-                      paddingRight: 10,
-                    }}
-                  >
+                  <Text style={styles.footerText}>
                     Already Signed up? Sign in
                   </Text>
                 </Pressable>
@@ -108,6 +73,31 @@ export default function Signup() {
 }
 
 const styles = StyleSheet.create({
+  footerText: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 15,
+    paddingRight: 10,
+  },
+  continueText: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 15,
+  },
+  formContainer: {
+    backgroundColor: "#aa2e32",
+    height: 355,
+    width: 300,
+    borderRadius: 20,
+    marginTop: 10,
+    borderWidth: 2,
+  },
+  signupText: {
+    paddingTop: 3,
+    fontSize: 36,
+    color: "white",
+  },
   container: {
     flex: 1,
     backgroundColor: "#f74449",
