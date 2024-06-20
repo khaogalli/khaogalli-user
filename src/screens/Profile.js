@@ -1,20 +1,11 @@
 import React from "react";
-// import { PDFDocument, rgb, StandardFonts } from "pdf-lib";
-// import RNFetchBlob from "rn-fetch-blob";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
-import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
-  Button,
-  Alert,
-  Pressable,
-} from "react-native";
+import { View, Text, Image, StyleSheet, Pressable } from "react-native";
 
 const ProfilePage = () => {
   const history = [
+    //api end point
     {
       orderID: "123456",
       restaurant: "Gazebo",
@@ -132,56 +123,28 @@ const ProfilePage = () => {
         source={require("../../assets/download.jpeg")}
         style={styles.profileImage}
       />
-      <Text style={{ fontWeight: "900", fontSize: 26 }}>John Doe</Text>
+      <Text style={styles.userName}>John Doe</Text>
       <Text style={styles.regNumber}>Reg No: 123456</Text>
 
       <View style={styles.buttonContainer}>
         <Pressable onPress={handleChangePassword}>
-          <View
-            style={{
-              alignSelf: "center",
-              borderColor: "black",
-              borderWidth: 0.5,
-              padding: 5,
-              borderRadius: 5,
-              width: 230,
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.buttonText}>
             <Text style={styles.name}>Change Password</Text>
           </View>
         </Pressable>
       </View>
+      
       <View style={styles.buttonContainer}>
         <Pressable onPress={orders}>
-          <View
-            style={{
-              alignSelf: "center",
-              borderColor: "black",
-              borderWidth: 0.5,
-              padding: 5,
-              borderRadius: 5,
-              width: 230,
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.buttonText}>
             <Text style={styles.name}>Orders</Text>
           </View>
         </Pressable>
       </View>
+
       <View style={styles.buttonContainer}>
         <Pressable onPress={handleGeneratePDF}>
-          <View
-            style={{
-              alignSelf: "center",
-              borderColor: "black",
-              borderWidth: 0.5,
-              padding: 5,
-              borderRadius: 5,
-              width: 230,
-              alignItems: "center",
-            }}
-          >
+          <View style={styles.buttonText}>
             <Text style={styles.name}>Download History</Text>
           </View>
         </Pressable>
@@ -189,18 +152,7 @@ const ProfilePage = () => {
 
       <View style={styles.buttonContainer}>
         <Pressable onPress={handleLogout}>
-          <View
-            style={{
-              alignSelf: "center",
-              borderColor: "black",
-              borderWidth: 0.5,
-              padding: 5,
-              borderRadius: 5,
-              width: 230,
-              alignItems: "center",
-              backgroundColor: "#ff3c3c",
-            }}
-          >
+          <View style={styles.signouttButtonText}>
             <Text style={styles.name}>Sign Out</Text>
           </View>
         </Pressable>
@@ -210,6 +162,26 @@ const ProfilePage = () => {
 };
 
 const styles = StyleSheet.create({
+  signouttButtonText: {
+    alignSelf: "center",
+    borderColor: "black",
+    borderWidth: 0.5,
+    padding: 5,
+    borderRadius: 5,
+    width: 230,
+    alignItems: "center",
+    backgroundColor: "#ff3c3c",
+  },
+  buttonText: {
+    alignSelf: "center",
+    borderColor: "black",
+    borderWidth: 0.5,
+    padding: 5,
+    borderRadius: 5,
+    width: 230,
+    alignItems: "center",
+  },
+  userName: { fontWeight: "900", fontSize: 26 },
   container: {
     flex: 1,
     justifyContent: "center",

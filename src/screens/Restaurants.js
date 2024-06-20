@@ -7,13 +7,8 @@ import {
   StyleSheet,
   Image,
   useWindowDimensions,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
-  Button,
   Pressable,
   ScrollView,
   FlatList,
@@ -47,7 +42,6 @@ export default function Restaurants() {
     { items: "A8", price: "B8", pic: require("../../assets/dp.png") },
     { items: "A9", price: "B9", pic: require("../../assets/dp.png") },
     { items: "A10", price: "B10", pic: require("../../assets/dp.png") },
-    { items: "A11", price: "B11", pic: require("../../assets/dp.png") },
   ];
 
   cart.Res = res_name;
@@ -57,27 +51,7 @@ export default function Restaurants() {
     menu.map((menuItem) => ({ item: menuItem.items, qty: 0 }))
   );
 
-  // for (var i = 0; i < menu.length; i++) {
-  //   var x = menu[i].items;
-  //   itemlist.push({ item: x, qty: 0 });
-  // }
-
   const qty = (item, op) => {
-    // var index;
-    // for (var i = 0; i < menu.length; i++) {
-    //   if (itemlist[i].item === item) {
-    //     index = i;
-    //     break;
-    //   }
-    // }
-    // if (op === "+") {
-    //   itemlist[index].qty++;
-    // }
-    // if (op === "-" && itemlist[index].qty > 0) {
-    //   itemlist[index].qty--;
-    // }
-    // console.log(itemlist);
-
     setItemList((prevItemList) =>
       prevItemList.map((itemData) =>
         itemData.item === item
@@ -94,12 +68,6 @@ export default function Restaurants() {
   const addItem = (itemlist) => {
     const selectedItems = itemlist.filter((itemData) => itemData.qty > 0);
     cart.Order = selectedItems;
-    // for (var i = 0; i < itemlist.length; i++) {
-    //   console.log(itemlist[i]);
-    //   if (itemlist[i].qty != 0) {
-    //     cart.Order.push(itemlist[i]);
-    //   }
-    // }
     console.log("final cart:");
     console.log(cart);
   };
@@ -182,25 +150,11 @@ export default function Restaurants() {
           </View>
           <Pressable
             onPress={() => {
-              console.log("hi");
               addItem(itemlist);
             }}
           >
-            <View
-              style={{
-                height: 50,
-                width: 400,
-                borderColor: "#cd3131",
-                borderWidth: 3,
-                alignSelf: "center",
-                marginBottom: 30,
-                backgroundColor: "#ff3c3c",
-                borderRadius: 10,
-              }}
-            >
-              <Text style={{ textAlign: "center", padding: 10 }}>
-                Confirm Order
-              </Text>
+            <View style={styles.confirmOrderView}>
+              <Text style={styles.confirmOrderText}>Confirm Order</Text>
             </View>
           </Pressable>
         </KeyboardAvoidingView>
@@ -213,7 +167,6 @@ const styles = StyleSheet.create({
   kba: {
     backgroundColor: "#f3f5f9",
   },
-
   h1: {
     color: "black",
     textAlign: "center",
@@ -224,7 +177,6 @@ const styles = StyleSheet.create({
     padding: 10,
     alignItems: "center",
   },
-
   secondary_dp: {
     width: 150,
     height: 150,
@@ -234,12 +186,10 @@ const styles = StyleSheet.create({
     marginTop: -5,
     marginLeft: -70,
   },
-
   primary_bg: {
     resizeMode: "cover",
     position: "absolute",
   },
-
   rows: [
     {
       padding: 15,
@@ -262,9 +212,7 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
   ],
-
   row_icon: { height: 55, width: 55, borderRadius: 10 },
-
   buttom_con: {
     borderWidth: 1,
     borderColor: "black",
@@ -273,7 +221,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
   },
-
   button_inc: {
     fontSize: 20,
     fontWeight: "900",
@@ -281,14 +228,28 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     color: "#ad8840",
   },
-
   qty: { fontWeight: "bold", color: "red" },
-
   button_dec: {
     fontSize: 25,
     fontWeight: "900",
     paddingVertical: 0,
     paddingHorizontal: 10,
     color: "#ad8840",
+  },
+  confirmOrderView: {
+    height: 50,
+    width: 400,
+    borderColor: "#cd3131",
+    borderWidth: 3,
+    alignSelf: "center",
+    marginBottom: 30,
+    backgroundColor: "#ff3c3c",
+    borderRadius: 10,
+  },
+  confirmOrderText: {
+    textAlign: "center",
+    padding: 10,
+    fontSize: 20,
+    color: "#ffbf00",
   },
 });

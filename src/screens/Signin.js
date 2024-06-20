@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -13,9 +13,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
-  Button,
   Pressable,
-  ScrollView,
 } from "react-native";
 
 import Api from "../ApiManager";
@@ -51,21 +49,16 @@ export default function Signin() {
       return;
     }
     Api.login(username, regnum, password);
-
-
   };
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{
-        flex: 1,
-        backgroundColor: "#f74449",
-      }}
+      style={styles.KAV}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={styles.inner}>
-          <SafeAreaView tyle={{ flex: 1, justifyContent: "space-around" }}>
+          <SafeAreaView style={styles.SAV}>
             <StatusBar backgroundColor="#ad8840" />
 
             <View style={[styles.center, styles.h1]}>
@@ -74,24 +67,8 @@ export default function Signin() {
                 source={require("../../assets/download.jpeg")}
               />
 
-              <Text
-                style={{
-                  fontSize: 36,
-                  color: "white",
-                }}
-              >
-                Sign in
-              </Text>
-              <View
-                style={{
-                  backgroundColor: "#aa2e32",
-                  height: 355,
-                  width: 300,
-                  borderRadius: 20,
-                  marginTop: 10,
-                  borderWidth: 2,
-                }}
-              >
+              <Text style={styles.signinText}>Sign in</Text>
+              <View style={styles.formContainer}>
                 <View style={{ marginLeft: 15, marginTop: 20 }}>
                   <Text style={styles.lable}>Username</Text>
                   <TextInput
@@ -148,12 +125,31 @@ export default function Signin() {
 }
 
 const styles = StyleSheet.create({
+  KAV: {
+    flex: 1,
+    backgroundColor: "#f74449",
+  },
+  SAV: { flex: 1, justifyContent: "space-around" },
   inner: {
     padding: 24,
     flex: 1,
     justifyContent: "space-around",
   },
-
+  formContainer: [
+    {
+      backgroundColor: "#aa2e32",
+      height: 355,
+      width: 300,
+      borderRadius: 20,
+      marginTop: 10,
+      borderWidth: 2,
+    },
+    { marginLeft: 15, marginTop: 20 },
+  ],
+  signinText: {
+    fontSize: 36,
+    color: "white",
+  },
   logo: {
     width: 150,
     height: 150,
@@ -161,18 +157,15 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 2,
   },
-
   center: {
     paddingTop: "40%",
     alignItems: "center",
     backgroundColor: "#f74449",
   },
-
   h1: {
     paddingTop: 10,
     alignItems: "center",
   },
-
   input: {
     marginBottom: 12,
     borderWidth: 1,
@@ -200,5 +193,10 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffbf00",
     marginTop: 12,
     justifyContent: "center",
+  },
+  continueButton: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 15,
   },
 });

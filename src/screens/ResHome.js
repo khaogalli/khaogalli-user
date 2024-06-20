@@ -2,31 +2,15 @@ import React, { useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Image,
-  useWindowDimensions,
-  TextInput,
-  KeyboardAvoidingView,
-  Platform,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
-  Button,
   Pressable,
-  ScrollView,
   FlatList,
 } from "react-native";
 
 export default function Home() {
-  const windowWidth = useWindowDimensions().width;
-  const windowHeight = useWindowDimensions().height;
-  const windowFontScale = useWindowDimensions().fontScale;
-  const windowScale = useWindowDimensions().scale;
-
   const [i, setI] = useState(true);
-
   const Orders = [
     {
       OderID: "134",
@@ -68,35 +52,12 @@ export default function Home() {
             console.log(item.OderID);
           }}
         >
-          <View
-            style={[
-              {
-                padding: 15,
-                marginBottom: 7,
-                margin: 2,
-                borderRadius: 20,
-                flexDirection: "row",
-                alignItems: "center",
-                backgroundColor: "white",
-              },
-              {
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-
-                elevation: 5,
-              },
-            ]}
-          >
+          <View style={[styles.renderItem, styles.listShadow]}>
             <View style={{ padding: 10 }}>
               <Text>Order ID: {item.OderID}</Text>
               <Text> Customer ID: {item.UserID}</Text>
             </View>
-            <View style={{ padding: 10, position: "absolute", right: 0 }}>
+            <View style={styles.dateTime}>
               <Text>{item.Date}</Text>
               <Text>{item.Time}</Text>
             </View>
@@ -111,19 +72,7 @@ export default function Home() {
       <StatusBar backgroundColor="#ad8840" />
       <View style={styles.container}>
         <View style={styles.topView}>
-          <Text
-            style={{
-              fontSize: 28,
-              position: "absolute",
-              left: 0,
-              verticalAlign: "middle",
-              paddingTop: 5,
-              paddingLeft: 10,
-              color: "black",
-            }}
-          >
-            {name}
-          </Text>
+          <Text style={styles.userName}>{name}</Text>
           <View
             style={{
               alignSelf: "flex-end",
@@ -132,27 +81,19 @@ export default function Home() {
               paddingBottom: 10,
             }}
           >
-            <Image
-              source={require("../../assets/favicon.png")}
-              styles={{
-                border: 2,
-                borderColor: "black",
-              }}
-            />
+            <Image source={require("../../assets/favicon.png")} />
           </View>
         </View>
         <Pressable
           onPress={() => {
             setI(!i);
           }}
-          style={{
-            backgroundColor: i ? "red" : "green",
-            padding: 10,
-            alignItems: "center",
-            width: "25%",
-            borderRadius: 10,
-            marginLeft: 10,
-          }}
+          style={[
+            {
+              backgroundColor: i ? "red" : "green",
+            },
+            styles.filterButton,
+          ]}
         >
           <View>{i ? <Text>Pending</Text> : <Text>Completed</Text>}</View>
         </Pressable>
@@ -170,6 +111,28 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
+  filterButton: {
+    padding: 10,
+    alignItems: "center",
+    width: "25%",
+    borderRadius: 10,
+    marginLeft: 10,
+  },
+  userName: {
+    fontSize: 28,
+    position: "absolute",
+    left: 0,
+    verticalAlign: "middle",
+    paddingTop: 5,
+    paddingLeft: 10,
+    color: "black",
+  },
+  dateTime: {
+    padding: 10,
+    position: "absolute",
+    right: 0,
+    marginBottom: 5,
+  },
   container: {
     flex: 1,
   },
@@ -190,7 +153,25 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-around",
   },
-
+  renderItem: {
+    padding: 15,
+    marginBottom: 7,
+    margin: 2,
+    borderRadius: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+  },
+  listShadow: {
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
   logo: {
     width: 150,
     height: 150,

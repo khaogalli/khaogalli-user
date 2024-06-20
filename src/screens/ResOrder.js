@@ -59,17 +59,9 @@ export default function App() {
         </View>
         <View>
           {paid ? (
-            <Text
-              style={{ color: "#2dce08", textAlign: "center", fontSize: 32 }}
-            >
-              Paid
-            </Text>
+            <Text style={styles.paidStatus}>Paid</Text>
           ) : (
-            <Text
-              style={{ color: "#ff3c3c", textAlign: "center", fontSize: 32 }}
-            >
-              Not Paid
-            </Text>
+            <Text style={styles.paidStatus}>Not Paid</Text>
           )}
         </View>
         <View style={styles.buttonContainer}>
@@ -90,6 +82,7 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  paidStatus: { color: "#2dce08", textAlign: "center", fontSize: 32 },
   container: {
     flex: 1,
     padding: 20,
