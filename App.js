@@ -9,11 +9,13 @@ import Profile from "./src/screens/Profile";
 import ResHome from "./src/screens/ResHome";
 import ResOrder from "./src/screens/ResOrder";
 import SetMenu from "./src/screens/SetMenu";
+import ResProfile from "./src/screens/ResProfile";
+import ChangePassword from "./src/screens/ChangePassword";
 
 const App = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   Api.onAuthChange = setIsSignedIn;
-  return isSignedIn ? <Home /> : <Signup />;
+  return isSignedIn ? <Home /> : <ChangePassword />;
 };
 
 export default App;

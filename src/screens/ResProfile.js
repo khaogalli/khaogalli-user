@@ -1,11 +1,19 @@
 import React from "react";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 
 const ProfilePage = () => {
   const history = [
-    //api end point
+    //api end point (Restaurant Name and Restaurant ID)
+    //the history would be the orders that the restuarat completed in past 30 days.
     {
       orderID: "123456",
       restaurant: "Gazebo",
@@ -113,15 +121,25 @@ const ProfilePage = () => {
     console.log("Orders");
   };
 
+  const editMenu = () => {
+    console.log("Edit Menu");
+  };
+
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../../assets/download.jpeg")}
-        style={styles.profileImage}
-      />
+      <TouchableOpacity
+        onPress={() => {
+          console.log("Edit Profile");
+        }}
+      >
+        <Image
+          source={require("../../assets/download.jpeg")}
+          style={styles.profileImage}
+        />
+      </TouchableOpacity>
       <Text style={styles.userName}>John Doe</Text>
       <Text style={styles.regNumber}>Reg No: 123456</Text>
-      
+
       <View style={styles.buttonContainer}>
         <Pressable onPress={orders}>
           <View style={styles.buttonText}>
@@ -134,6 +152,14 @@ const ProfilePage = () => {
         <Pressable onPress={handleGeneratePDF}>
           <View style={styles.buttonText}>
             <Text style={styles.name}>Download History</Text>
+          </View>
+        </Pressable>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <Pressable onPress={editMenu}>
+          <View style={styles.buttonText}>
+            <Text style={styles.name}>Edit Menu</Text>
           </View>
         </Pressable>
       </View>

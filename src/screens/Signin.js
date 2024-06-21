@@ -19,11 +19,6 @@ import {
 import Api from "../ApiManager";
 
 export default function Signin() {
-  const windowWidth = useWindowDimensions().width;
-  const windowHeight = useWindowDimensions().height;
-  const windowFontScale = useWindowDimensions().fontScale;
-  const windowScale = useWindowDimensions().scale;
-
   const [username, onChangeText] = React.useState("");
   const [regnum, onChangeRegNum] = React.useState("");
   const [password, onChangePass] = React.useState("");
@@ -90,27 +85,11 @@ export default function Signin() {
                   />
 
                   <Pressable style={styles.button1} onPress={verify}>
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        fontWeight: "bold",
-                        fontSize: 15,
-                      }}
-                    >
-                      Continue
-                    </Text>
+                    <Text style={styles.continueText}>Continue</Text>
                   </Pressable>
 
                   <Pressable style={{ marginTop: 15 }}>
-                    <Text
-                      style={{
-                        textAlign: "center",
-                        color: "white",
-                        fontWeight: "bold",
-                        fontSize: 15,
-                        paddingRight: 10,
-                      }}
-                    >
+                    <Text style={styles.footerText}>
                       Not Signed up? Sign up
                     </Text>
                   </Pressable>
@@ -134,6 +113,18 @@ const styles = StyleSheet.create({
     padding: 24,
     flex: 1,
     justifyContent: "space-around",
+  },
+  footerText: {
+    textAlign: "center",
+    color: "white",
+    fontWeight: "bold",
+    fontSize: 15,
+    paddingRight: 10,
+  },
+  continueText: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 15,
   },
   formContainer: [
     {
