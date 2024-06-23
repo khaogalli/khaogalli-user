@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,16 +7,28 @@ import {
   Image,
   Pressable,
   FlatList,
-  TouchableOpacity,
 } from "react-native";
 
 export default function Home({ route, navigation }) {
+  const [i, setI] = useState(true);
   const username = route.params.username;
   const name = username;
-  const [x, setX] = useState(0); // for testing purposes
-  const [i, setI] = useState(true);
   const Orders = [
-    // data fetched from the database using the tocken. API endpoint
+    // this is the orders of the customer so far.....1 means completed and 0 means pending
+    {
+      OderID: "134",
+      status: "0",
+      UserID: "645893", // no need of this field
+      Date: "2021-10-10",
+      Time: "12:30:00",
+    },
+    {
+      OderID: "12234",
+      status: "1",
+      UserID: "645893",
+      Date: "2021-10-10",
+      Time: "12:30:00",
+    },
     {
       OderID: "134",
       status: "0",
@@ -31,41 +43,14 @@ export default function Home({ route, navigation }) {
       Date: "2021-10-10",
       Time: "12:30:00",
     },
-    {
-      OderID: "7876",
-      status: "0",
-      UserID: "645893",
-      Date: "2021-10-10",
-      Time: "12:30:00",
-    },
-    {
-      OderID: "234",
-      status: "1",
-      UserID: "645893",
-      Date: "2021-10-10",
-      Time: "12:30:00",
-    },
   ];
-
-  goToResOrder = (OderID) => {
-    console.log(OderID);
-    navigation.navigate("ResOrder", { OderID }); // issue of navigation to ResOrder on initial render need to press back to comw to this screen.problem due to use of onpress in flat list rendering.//IDK some how issue fixed....Check once...
-  };
-
-  goToResProfile = () => {
-    navigation.navigate("ResProfile", { username });
-  };
-
-  filterSwitch = () => {
-    setI(!i);
-  };
 
   const renderItem = ({ item }) => (
     <>
       {item.status == i ? (
         <Pressable
           onPress={() => {
-            goToResOrder(item.OderID);
+            console.log(item.OderID);
           }}
         >
           <View style={[styles.renderItem, styles.listShadow]}>
@@ -97,13 +82,13 @@ export default function Home({ route, navigation }) {
               paddingBottom: 10,
             }}
           >
-            <TouchableOpacity onPress={goToResProfile}>
-              <Image source={require("../../assets/favicon.png")} />
-            </TouchableOpacity>
+            <Image source={require("../../assets/favicon.png")} />
           </View>
         </View>
-        <TouchableOpacity
-          onPress={filterSwitch}
+        <Pressable
+          onPress={() => {
+            setI(!i);
+          }}
           style={[
             {
               backgroundColor: i ? "red" : "green",
@@ -112,7 +97,7 @@ export default function Home({ route, navigation }) {
           ]}
         >
           <View>{i ? <Text>Pending</Text> : <Text>Completed</Text>}</View>
-        </TouchableOpacity>
+        </Pressable>
         <View style={styles.bottomView}>
           <FlatList
             style={{ width: "100%", marginTop: 5 }}

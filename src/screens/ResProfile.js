@@ -10,15 +10,19 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-const ProfilePage = () => {
+const ProfilePage = ({ route, navigation }) => {
+  const username = route.params.username;
+  const userID = 123456; // get from API. here for testing purpose
+
   const history = [
     //api end point (Restaurant Name and Restaurant ID)
     //the history would be the orders that the restuarat completed in past 30 days.
     {
-      orderID: "123456",
-      restaurant: "Gazebo",
-      date: "2021-09-01",
+      orderID: "123456", //order id
+      restaurant: "Gazebo", //user ID in this case
+      date: "2021-09-01", //date of order
       items: [
+        //items in the order
         { id: "1", name: "Item 1", quantity: 2, amount: 10 },
         { id: "2", name: "Item 2", quantity: 1, amount: 15 },
         { id: "3", name: "Item 3", quantity: 3, amount: 20 },
@@ -47,6 +51,7 @@ const ProfilePage = () => {
   ];
 
   const icon_path = Image.resolveAssetSource(
+    // from api
     require("../../assets/favicon.png")
   ).uri;
 
@@ -110,6 +115,7 @@ const ProfilePage = () => {
 
   const handleLogout = () => {
     console.log("Logout");
+    navigation.navigate("Signin");
   };
 
   const handleGeneratePDF = () => {
@@ -117,12 +123,9 @@ const ProfilePage = () => {
     console.log("PDF generated");
   };
 
-  const orders = () => {
-    console.log("Orders");
-  };
-
   const editMenu = () => {
     console.log("Edit Menu");
+    navigation.navigate("SetMenu", { username });
   };
 
   return (
@@ -130,6 +133,7 @@ const ProfilePage = () => {
       <TouchableOpacity
         onPress={() => {
           console.log("Edit Profile");
+          navigation.navigate("ChangePassword", { username });
         }}
       >
         <Image
@@ -137,39 +141,31 @@ const ProfilePage = () => {
           style={styles.profileImage}
         />
       </TouchableOpacity>
-      <Text style={styles.userName}>John Doe</Text>
-      <Text style={styles.regNumber}>Reg No: 123456</Text>
+      <Text style={styles.userName}>{username}</Text>
+      <Text style={styles.regNumber}>Reg No: {userID}</Text>
 
       <View style={styles.buttonContainer}>
-        <Pressable onPress={orders}>
-          <View style={styles.buttonText}>
-            <Text style={styles.name}>Orders</Text>
-          </View>
-        </Pressable>
-      </View>
-
-      <View style={styles.buttonContainer}>
-        <Pressable onPress={handleGeneratePDF}>
+        <TouchableOpacity onPress={handleGeneratePDF}>
           <View style={styles.buttonText}>
             <Text style={styles.name}>Download History</Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.buttonContainer}>
-        <Pressable onPress={editMenu}>
+        <TouchableOpacity onPress={editMenu}>
           <View style={styles.buttonText}>
             <Text style={styles.name}>Edit Menu</Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.buttonContainer}>
-        <Pressable onPress={handleLogout}>
+        <TouchableOpacity onPress={handleLogout}>
           <View style={styles.signouttButtonText}>
             <Text style={styles.name}>Sign Out</Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

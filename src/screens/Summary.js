@@ -9,7 +9,20 @@ import {
   SafeAreaView,
 } from "react-native";
 
-export default function App() {
+export default function App({ route, navigation }) {
+  const cart = route.params.cart;
+  const user = route.params.user; // get user name from the data base using the order id
+  const order = cart.Order;
+  const resName = cart.Res;
+  console.log(order);
+  console.log(resName);
+  // Order Id is generated when Confirm button is clicked.
+  //api call to send order to backend ItemID, Name, Price list from backend(not good less work).//or get item price via params (better but more work)
+
+  for (let i = 0; i < order.length; i++) {
+    //logic to form the OrderItems array from the info given above.....
+  }
+
   const orderItems = [
     { id: "1", name: "Item 1", quantity: 2, amount: 10 },
     { id: "2", name: "Item 2", quantity: 1, amount: 15 },
@@ -36,7 +49,7 @@ export default function App() {
       <View style={styles.container}>
         <Text style={styles.heading}>Order ID</Text>
         <Text style={styles.heading1}>123456</Text>
-        <Text style={styles.heading1}>~Restaurant~</Text>
+        <Text style={styles.heading1}>~Restaurant~{resName}</Text>
         <View style={styles.table}>
           <View style={styles.header}>
             <Text style={styles.headerText}>Item</Text>
@@ -62,7 +75,9 @@ export default function App() {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => alert("Place Order")}
+            onPress={() => {
+              navigation.navigate("Home", { user });
+            }}
           >
             <Text style={styles.buttonText}>Place Order</Text>
           </TouchableOpacity>

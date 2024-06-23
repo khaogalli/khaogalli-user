@@ -7,9 +7,10 @@ import {
   Pressable,
   FlatList,
   StatusBar,
+  TouchableOpacity,
 } from "react-native";
 
-export default function Home() {
+export default function Home({ route, navigation }) {
   const restaurants = [
     { name: "A1", status: "B1", pic: require("../../assets/dp.png") },
     { name: "A2", status: "B2", pic: require("../../assets/dp.png") },
@@ -22,13 +23,23 @@ export default function Home() {
     { name: "A9", status: "B9", pic: require("../../assets/dp.png") },
     { name: "A10", status: "B10", pic: require("../../assets/dp.png") },
   ];
+  const username = route.params.username;
+  const name = username;
 
-  const name = "username";
+  const goToProfile = () => {
+    navigation.navigate("Profile", { username });
+  };
+
+  const goToRestaurants = (itemName) => {
+    console.log(itemName);
+    navigation.navigate("Restaurants", { itemName, name });
+  };
 
   const renderItem = ({ item }) => (
     <Pressable
       onPress={() => {
         console.log(item.name);
+        goToRestaurants(item.name);
       }}
     >
       <View style={[styles.renderItem, styles.listShadow]}>
@@ -53,7 +64,9 @@ export default function Home() {
           {name}
         </Text>
         <View style={styles.profilePicture}>
-          <Image source={require("../../assets/favicon.png")} />
+          <TouchableOpacity onPress={goToProfile}>
+            <Image source={require("../../assets/favicon.png")} />
+          </TouchableOpacity>
         </View>
       </View>
       <View style={styles.bottomView}>

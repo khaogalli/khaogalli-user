@@ -1,11 +1,25 @@
 import React from "react";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
-import { View, Text, Image, StyleSheet, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Pressable,
+  TouchableOpacity,
+} from "react-native";
 
-const ProfilePage = () => {
+const ProfilePage = ({ route, navigation }) => {
+  const username = route.params.username;
+  const userID = 3456; // get from API. here for testing purpose
+
+  goToChnagePassword = () => {
+    navigation.navigate("ChangePassword", { username });
+  };
   const history = [
     //api end point
+    //the history would be the orders that the user ordered in past 30 days.
     {
       orderID: "123456",
       restaurant: "Gazebo",
@@ -39,6 +53,7 @@ const ProfilePage = () => {
   ];
 
   const icon_path = Image.resolveAssetSource(
+    // get from api
     require("../../assets/favicon.png")
   ).uri;
 
@@ -102,6 +117,7 @@ const ProfilePage = () => {
 
   const handleLogout = () => {
     console.log("Logout");
+    navigation.navigate("Signin");
   };
 
   const handleGeneratePDF = () => {
@@ -111,39 +127,42 @@ const ProfilePage = () => {
 
   const orders = () => {
     console.log("Orders");
+    navigation.navigate("Orders", { username });
   };
 
   return (
     <View style={styles.container}>
-      <Image
-        source={require("../../assets/download.jpeg")}
-        style={styles.profileImage}
-      />
-      <Text style={styles.userName}>John Doe</Text>
-      <Text style={styles.regNumber}>Reg No: 123456</Text>
-      
+      <TouchableOpacity onPress={goToChnagePassword}>
+        <Image
+          source={require("../../assets/download.jpeg")}
+          style={styles.profileImage}
+        />
+      </TouchableOpacity>
+      <Text style={styles.userName}>{username}</Text>
+      <Text style={styles.regNumber}>Reg No: {userID}</Text>
+
       <View style={styles.buttonContainer}>
-        <Pressable onPress={orders}>
+        <TouchableOpacity onPress={orders}>
           <View style={styles.buttonText}>
             <Text style={styles.name}>Orders</Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.buttonContainer}>
-        <Pressable onPress={handleGeneratePDF}>
+        <TouchableOpacity onPress={handleGeneratePDF}>
           <View style={styles.buttonText}>
             <Text style={styles.name}>Download History</Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.buttonContainer}>
-        <Pressable onPress={handleLogout}>
+        <TouchableOpacity onPress={handleLogout}>
           <View style={styles.signouttButtonText}>
             <Text style={styles.name}>Sign Out</Text>
           </View>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );

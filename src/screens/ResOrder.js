@@ -9,15 +9,24 @@ import {
   SafeAreaView,
 } from "react-native";
 
-export default function App() {
+export default function App({ route, navigation }) {
   const orderItems = [
+    // data fetched from the database using the order id
     { id: "1", name: "Item 1", quantity: 2, amount: 10 },
     { id: "2", name: "Item 2", quantity: 1, amount: 15 },
     { id: "3", name: "Item 3", quantity: 3, amount: 20 },
   ];
+  const [paid, setPaid] = useState(true); // status of payment feched from the database using the order id
 
-  const [paid, setPaid] = useState(true);
+  // get username from the data base using the order id
+  const username = "username"; // for testing purposes
+  const orderID = route.params.OderID;
   const [orderStatus, setOrderStatus] = useState(false);
+
+  goToHome = () => {
+    setOrderStatus(!orderStatus);
+    navigation.navigate("ResHome", { username }); // this is important to pass username back because we need to show the username on the home screen.
+  };
 
   const renderItem = ({ item }) => (
     <View style={styles.row}>
@@ -39,8 +48,8 @@ export default function App() {
       <StatusBar backgroundColor="#ad8840" />
       <View style={styles.container}>
         <Text style={styles.heading}>Order ID</Text>
-        <Text style={styles.heading1}>123456</Text>
-        <Text style={styles.heading1}>~Customer ID/Name~</Text>
+        <Text style={styles.heading1}>{orderID}</Text>
+        <Text style={styles.heading1}>~Customer ID/Name~{username}</Text>
         <View style={styles.table}>
           <View style={styles.header}>
             <Text style={styles.headerText}>Item</Text>
@@ -67,7 +76,7 @@ export default function App() {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => setOrderStatus(!orderStatus)}
+            onPress={goToHome} // should I route back to home page? or wait for the user to press back button? Ig former is better...
           >
             {orderStatus ? (
               <Text style={styles.buttonText}>Complete</Text>

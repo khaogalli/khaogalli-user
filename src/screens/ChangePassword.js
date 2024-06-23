@@ -13,7 +13,9 @@ import {
   Animated,
 } from "react-native";
 
-const ProfilePage = () => {
+const ProfilePage = ({ route, navigation }) => {
+  const username = route.params.username;
+
   const opacity = useRef(new Animated.Value(0)).current;
 
   const fadeIn = () => {
@@ -35,7 +37,8 @@ const ProfilePage = () => {
     }).start();
   };
 
-  const [userName, setUserName] = useState("John Doe");
+  const [userName, setUserName] = useState(username);
+  const [type, setType] = useState(0); // 0 for student, 1 for restaurant //get from api
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState();
   const [valid, setValid] = useState(false);
@@ -62,13 +65,20 @@ const ProfilePage = () => {
     //varification code
     setValid(true);
     opacity.current = 0;
+    if (type == 1) navigation.navigate("ResProfile", { username });
+    else navigation.navigate("Profile", { username });
+  };
+
+  const saveChanges = () => {
+    if (type == 1) navigation.navigate("ResProfile", { username });
+    else navigation.navigate("Profile", { username });
   };
 
   return (
     <>
       <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="#ad8840" />
-        <TouchableOpacity
+        <TouchableOpacity // upload profle page yet to be made so this is a placeholder for now
           onPress={() => {
             console.log("Edit Profile");
           }}
@@ -129,7 +139,7 @@ const ProfilePage = () => {
             <Text style={styles.changePasswordText}>Change Password</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.button1} onPress={changePassword}>
+          <TouchableOpacity style={styles.button1} onPress={saveChanges}>
             <Text style={styles.changePasswordText}>Save Changes</Text>
           </TouchableOpacity>
         )}

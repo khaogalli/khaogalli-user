@@ -11,12 +11,26 @@ import {
   StatusBar,
   Image,
   Pressable,
+  TouchableOpacity,
 } from "react-native";
 
-export default function Signup() {
-  const [username, onChangeText] = React.useState("");
+export default function Signup({ route, navigation }) {
+  const [username, onChangeText] = React.useState("Heet"); // for testing purposes
   const [regnum, onChangeRegNum] = React.useState("");
   const [password, onChangePass] = React.useState("");
+  const [type, setType] = React.useState(0);
+
+  goToSignin = () => {
+    navigation.navigate("Signin");
+  };
+
+  verify = () => {
+    if (type == 0) {
+      navigation.navigate("Home", { username });
+    } else {
+      navigation.navigate("ResHome", { username });
+    }
+  };
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -54,15 +68,18 @@ export default function Signup() {
                   value={password}
                 />
 
-                <Pressable style={styles.button1}>
+                <TouchableOpacity style={styles.button1} onPress={verify}>
                   <Text style={styles.continueText}>Continue</Text>
-                </Pressable>
+                </TouchableOpacity>
 
-                <Pressable style={{ marginTop: 15 }}>
+                <TouchableOpacity
+                  style={{ marginTop: 15 }}
+                  onPress={goToSignin}
+                >
                   <Text style={styles.footerText}>
                     Already Signed up? Sign in
                   </Text>
-                </Pressable>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

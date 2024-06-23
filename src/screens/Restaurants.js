@@ -12,13 +12,13 @@ import {
   Pressable,
   ScrollView,
   FlatList,
+  TouchableOpacity,
 } from "react-native";
 
-export default function Restaurants() {
+export default function Restaurants({ route, navigation }) {
   const windowWidth = useWindowDimensions().width;
-  const windowHeight = useWindowDimensions().height;
-  const windowFontScale = useWindowDimensions().fontScale;
-  const windowScale = useWindowDimensions().scale;
+  const name = route.params.itemName;
+  const username = route.params.username; // to fetch user ID .Uer ID is needed for confirming the order ....
 
   var cart = {
     //send to BE
@@ -27,7 +27,7 @@ export default function Restaurants() {
     Order: [],
   };
 
-  var res_name = "Gazebo 1"; // api end point
+  var res_name = name; // api end point
   var user = "userID"; //api end point
 
   const menu = [
@@ -70,6 +70,7 @@ export default function Restaurants() {
     cart.Order = selectedItems;
     console.log("final cart:");
     console.log(cart);
+    navigation.navigate("Summary", { cart });
   };
 
   const renderItem = ({ item }) => (
@@ -81,25 +82,25 @@ export default function Restaurants() {
       </View>
       <View style={{ marginLeft: "auto" }}>
         <View style={styles.buttom_con}>
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               console.log(item.items);
               qty(item.items, "+");
             }}
           >
             <Text style={styles.button_inc}>+</Text>
-          </Pressable>
+          </TouchableOpacity>
           <Text style={styles.qty}>
             {itemlist.find((i) => i.item === item.items)?.qty}
           </Text>
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               console.log(item.items);
               qty(item.items, "-");
             }}
           >
             <Text style={styles.button_dec}>-</Text>
-          </Pressable>
+          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -129,7 +130,7 @@ export default function Restaurants() {
               <View>
                 <Image
                   style={styles.secondary_dp}
-                  source={require("../../assets/dp1.png")}
+                  source={require("../../assets/dp1.png")} // fetched from api.
                 />
               </View>
             </View>
@@ -148,7 +149,7 @@ export default function Restaurants() {
               />
             </View>
           </View>
-          <Pressable
+          <TouchableOpacity
             onPress={() => {
               addItem(itemlist);
             }}
@@ -156,7 +157,7 @@ export default function Restaurants() {
             <View style={styles.confirmOrderView}>
               <Text style={styles.confirmOrderText}>Confirm Order</Text>
             </View>
-          </Pressable>
+          </TouchableOpacity>
         </KeyboardAvoidingView>
       </ScrollView>
     </SafeAreaView>
