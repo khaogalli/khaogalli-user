@@ -14,17 +14,25 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import Api from "../ApiManager";
+
 export default function Signup({ route, navigation }) {
   const [username, onChangeText] = React.useState("Heet"); // for testing purposes
   const [regnum, onChangeRegNum] = React.useState("");
   const [password, onChangePass] = React.useState("");
-  const [type, setType] = React.useState(0);
+  const [type, setType] = React.useState(1);
 
   goToSignin = () => {
     navigation.navigate("Signin");
   };
 
   verify = () => {
+
+    // validation code.
+
+    Api.login(username, regnum, password);
+    
+
     if (type == 0) {
       navigation.navigate("Home", { username });
     } else {

@@ -124,7 +124,7 @@ export default function Restaurants({ route, navigation }) {
                       width: windowWidth,
                     },
                   ]}
-                  source={require("../../assets/backdrop.jpeg")}
+                  source={require("../../assets/backdrop.jpeg")} 
                 />
               }
               <View>

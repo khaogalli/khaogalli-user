@@ -23,34 +23,34 @@ export default function Signin({ route, navigation }) {
   const [username, onChangeText] = React.useState("Heet"); // for testing purposes
   const [regnum, onChangeRegNum] = React.useState("");
   const [password, onChangePass] = React.useState("");
-  const [type, setType] = React.useState(0); // 0 for student, 1 for restaurant
+  const [type, setType] = React.useState(1); // 0 for student, 1 for restaurant
 
   goToSignup = () => {
     navigation.navigate("Signup");
   };
 
   const verify = () => {
-    // if (!username.trim().match(/^[a-zA-Z0-9]+$/)) {
-    //   Alert.alert("Username Invalid");
-    //   return;
-    // }
-    // if (!regnum.trim().match(/^\d{2}(BAI|BRS|BPS|BCE)\d{4}$/)) {
-    //   Alert.alert("Registration Number Invalid");
-    //   return;
-    // }
+    if (!username.trim().match(/^[a-zA-Z0-9]+$/)) {
+      Alert.alert("Username Invalid");
+      return;
+    }
+    if (!regnum.trim().match(/^\d{2}(BAI|BRS|BPS|BCE)\d{4}$/)) {
+      Alert.alert("Registration Number Invalid");
+      return;
+    }
 
-    // const year = parseInt(regnum.substring(0, 2));
-    // if (year <= 20) {
-    //   Alert.alert("RegistrationNumber Invalid");
-    //   return;
-    // }
+    const year = parseInt(regnum.substring(0, 2));
+    if (year <= 20) {
+      Alert.alert("RegistrationNumber Invalid");
+      return;
+    }
 
-    // if (password.length < 8) {
-    //   Alert.alert("Password should be at least 8 characters long.");
-    //   return;
-    // }
-    // Api.login(username, regnum, password);
-
+    if (password.length < 8) {
+      Alert.alert("Password should be at least 8 characters long.");
+      return;
+    }
+    Api.login(username, regnum, password);
+    
     if (type == 0) {
       navigation.navigate("Home", { username });
     } else {

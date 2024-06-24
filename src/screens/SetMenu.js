@@ -14,7 +14,7 @@ import {
   Platform,
 } from "react-native";
 
-export default function App() {
+export default function App({ route, navigation }) {
   const [Menu, setMenu] = useState([
     { id: "1", name: "Item 1", price: 10, status: true },
     { id: "2", name: "Item 2", price: 15, status: false },
@@ -67,11 +67,6 @@ export default function App() {
   };
 
   const renderItem = ({ item }) => (
-    <Pressable
-      onPress={() => {
-        console.log(item.id);
-      }}
-    >
       <View style={[styles.listItem, styles.listItemShadow]}>
         <View style={{ padding: 10 }}>
           <Text>Item {item.name}</Text>
@@ -95,7 +90,6 @@ export default function App() {
           <Text style={styles.buttonText}>Delete</Text>
         </TouchableOpacity>
       </View>
-    </Pressable>
   );
 
   return (
@@ -111,8 +105,7 @@ export default function App() {
             <TouchableOpacity
               style={styles.doneText}
               onPress={() => {
-                // data(Menu) sent to api
-                // navigate to home
+                navigation.navigate("Home", { Menu });
               }}
             >
               <Text>Done</Text>
@@ -166,7 +159,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     padding: 10,
     borderRadius: 10,
-    marginTop: 25,
+    marginTop: 5,
     justifyContent: "center",
   },
   inputContainer: {

@@ -9,10 +9,12 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
+import Api from "../ApiManager";
 
 export default function Home({ route, navigation }) {
-  const restaurants = [
-    { name: "A1", status: "B1", pic: require("../../assets/dp.png") },
+  let restaurants = [
+    // this is the list of restaurants frm api...
+    { name: "A1", status: "B1", pic: require("../../assets/dp.png") }, // pic is the source of the profile picture of the restaurant... http url made by backend and sent here
     { name: "A2", status: "B2", pic: require("../../assets/dp.png") },
     { name: "A3", status: "B3", pic: require("../../assets/dp.png") },
     { name: "A4", status: "B4", pic: require("../../assets/dp.png") },
@@ -23,7 +25,16 @@ export default function Home({ route, navigation }) {
     { name: "A9", status: "B9", pic: require("../../assets/dp.png") },
     { name: "A10", status: "B10", pic: require("../../assets/dp.png") },
   ];
-  const username = route.params.username;
+
+  const username = Api.Info.username;
+  const userID = Api.Info.regnum;
+  const tocken = Api.Info.tocken;
+  const profilePic = Api.Info.profilePic; // source of the profile picture of the user... source={profilePic}
+
+  Api.Home(username, userID, tocken); // api end point for fetching the list of restaurants....
+
+  restaurants = Api.restaurantList;
+
   const name = username;
 
   const goToProfile = () => {

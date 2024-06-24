@@ -1,4 +1,4 @@
-import React, { Profiler, useState } from "react";
+import React, { useState } from "react";
 import Api from "./src/ApiManager";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -22,11 +22,11 @@ import ResProfile from "./src/screens/ResProfile";
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const initialScreen = "SetMenu";
+  const initialScreen = "Signin";
 
   const [isSignedIn, setIsSignedIn] = useState(false);
   Api.onAuthChange = setIsSignedIn;
-  return (
+  return isSignedIn ? (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={initialScreen}
@@ -54,20 +54,6 @@ const App = () => {
           },
         }}
       >
-        <Stack.Screen
-          name="Signup"
-          component={Signup}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="Signin"
-          component={Signin}
-          options={{
-            headerShown: false,
-          }}
-        />
         <Stack.Screen
           name="Home"
           component={Home}
@@ -140,8 +126,51 @@ const App = () => {
         />
       </Stack.Navigator>
     </NavigationContainer>
+  ) : (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName={initialScreen}
+        screenOptions={{
+          headerShown: false,
+          gestureEnabled: true,
+          gestureDirection: "horizontal",
+          cardStyleInterpolator: ({ current, layouts }) => {
+            const { index } = current;
+            const inputRange = [index - 1, index, index + 1];
+            const translateX = current.progress.interpolate({
+              inputRange,
+              outputRange: [layouts.screen.width, 0, -layouts.screen.width],
+            });
+
+            return {
+              cardStyle: {
+                transform: [{ translateX }],
+              },
+            };
+          },
+          transitionSpec: {
+            open: { animation: "timing", config: { duration: 1200 } },
+            close: { animation: "timing", config: { duration: 1200 } },
+          },
+        }}
+      >
+        <Stack.Screen
+          name="Signup"
+          component={Signup}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Signin"
+          component={Signin}
+          options={{
+            headerShown: false,
+          }}
+        />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-  //isSignedIn ? <Home /> : <Home />;
 };
 
 export default App;
