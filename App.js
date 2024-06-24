@@ -22,7 +22,7 @@ import ResProfile from "./src/screens/ResProfile";
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const initialScreen = "Signup";
+  const initialScreen = "SetMenu";
 
   const [isSignedIn, setIsSignedIn] = useState(false);
   Api.onAuthChange = setIsSignedIn;

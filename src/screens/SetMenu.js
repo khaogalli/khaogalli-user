@@ -13,20 +13,17 @@ import {
   Switch,
   Platform,
 } from "react-native";
-import { DataTable } from "react-native-paper";
 
 export default function App() {
-  //id is the decoded form of the item id stores in the database. data base will have id as resname+itemid and id will be the itemid
-  //thus making id unique as well as easy to predict.
-
   const [Menu, setMenu] = useState([
     { id: "1", name: "Item 1", price: 10, status: true },
-    { id: "2", name: "Item 2", price: 15, status: false }, //from api
+    { id: "2", name: "Item 2", price: 15, status: false },
     { id: "3", name: "Item 3", price: 20, status: true },
   ]);
 
   const [name, setName] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("");
+  const [editingId, setEditingId] = useState(null);
 
   const toggleSwitch = (id) => {
     setMenu((prevMenu) =>
@@ -36,124 +33,124 @@ export default function App() {
     );
   };
 
-  addItems = () => {
-    let id = String(parseInt(Menu.at(-1).id) + 1);
-    let newItem = {
-      id: id,
-      name: name,
-      price: price,
-      status: true,
-    };
-    let tempMenu = Menu;
-    tempMenu.push(newItem);
-    console.log(newItem);
-    setMenu(tempMenu);
-    console.log(Menu);
+  const addItems = () => {
+    if (editingId) {
+      setMenu((prevMenu) =>
+        prevMenu.map((item) =>
+          item.id === editingId ? { ...item, name: name, price: parseFloat(price) } : item
+        )
+      );
+      setEditingId(null);
+    } else {
+      let id = String(parseInt(Menu.at(-1).id) + 1);
+      let newItem = {
+        id: id,
+        name: name,
+        price: parseFloat(price),
+        status: true,
+      };
+      setMenu((prevMenu) => [...prevMenu, newItem]);
+    }
+    setName("");
+    setPrice("");
+  };
+
+  const editItem = (id) => {
+    const item = Menu.find((item) => item.id === id);
+    setName(item.name);
+    setPrice(item.price.toString());
+    setEditingId(id);
+  };
+
+  const deleteItem = (id) => {
+    setMenu((prevMenu) => prevMenu.filter((item) => item.id !== id));
   };
 
   const renderItem = ({ item }) => (
-    <>
-      <Pressable
-        onPress={() => {
-          console.log(item.OderID);
-        }}
-      >
-        <View style={[styles.listItem, styles.listItemShadow]}>
-          <View style={{ padding: 10 }}>
-            <Text>Item {item.name}</Text>
-            <Text>Price {item.price}</Text>
-          </View>
-          <View style={styles.toggelSwitchPostion}>
-            <Switch
-              trackColor={{ false: "#767577", true: "#81b0ff" }}
-              thumbColor={item.status ? "#f5dd4b" : "#f4f3f4"}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={() => {
-                toggleSwitch(item.id);
-              }}
-              value={item.status}
-            />
-          </View>
+    <Pressable
+      onPress={() => {
+        console.log(item.id);
+      }}
+    >
+      <View style={[styles.listItem, styles.listItemShadow]}>
+        <View style={{ padding: 10 }}>
+          <Text>Item {item.name}</Text>
+          <Text>Price {item.price}</Text>
         </View>
-      </Pressable>
-    </>
+        <View style={styles.toggleSwitchPosition}>
+          <Switch
+            trackColor={{ false: "#767577", true: "#81b0ff" }}
+            thumbColor={item.status ? "#f5dd4b" : "#f4f3f4"}
+            ios_backgroundColor="#3e3e3e"
+            onValueChange={() => {
+              toggleSwitch(item.id);
+            }}
+            value={item.status}
+          />
+        </View>
+        <TouchableOpacity style={styles.editButton} onPress={() => editItem(item.id)}>
+          <Text style={styles.buttonText}>Edit</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.deleteButton} onPress={() => deleteItem(item.id)}>
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
+      </View>
+    </Pressable>
   );
 
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
-      style={{
-        flex: 1,
-      }}
+      style={{ flex: 1 }}
     >
       <SafeAreaView style={{ flex: 1 }}>
         <StatusBar backgroundColor="#ad8840" />
         <View style={styles.container}>
           <View style={[styles.topView, styles.headerAlign]}>
             <Text style={styles.headerText}>Edit Menu</Text>
-            <View>
-              <TouchableOpacity
-                styles={styles.doneText}
-                onPress={() => {
-                  // data(Menu) sent to api
-                  //navigate to home
-                }}
-              >
-                <Text>Done</Text>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity
+              style={styles.doneText}
+              onPress={() => {
+                // data(Menu) sent to api
+                // navigate to home
+              }}
+            >
+              <Text>Done</Text>
+            </TouchableOpacity>
           </View>
-          <View>
-            <View>
-              <FlatList
-                data={Menu}
-                renderItem={renderItem} //not scrolling
-                keyExtractor={(item) => item.id}
-                style={{ padding: 2 }}
+          <View style={{ flex: 1 }}>
+            <FlatList
+              data={Menu}
+              renderItem={renderItem}
+              keyExtractor={(item) => item.id}
+              style={{ padding: 2 }}
+            />
+          </View>
+          <View style={styles.formHeaderContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Item</Text>
+              <TextInput
+                style={[styles.input, { height: 40, width: 150 }]}
+                onChangeText={setName}
+                value={name}
               />
             </View>
-            <View style={styles.formHeaderContainer}>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                }}
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Price</Text>
+              <TextInput
+                style={[styles.input, { height: 40, width: 100 }]}
+                keyboardType="numeric"
+                onChangeText={setPrice}
+                value={price}
+              />
+            </View>
+            <View style={styles.inputContainer}>
+              <TouchableOpacity
+                style={styles.addButton}
+                onPress={addItems}
               >
-                <Text style={styles.lable}>Item</Text>
-                <TextInput
-                  style={[styles.input, { height: 40, width: 150 }]}
-                  onChangeText={setName}
-                  value={name}
-                />
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                }}
-              >
-                <Text style={styles.lable}>Price</Text>
-                <TextInput
-                  style={[styles.input, styles.inputText, { width: 100 }]}
-                  onChangeText={setPrice}
-                  value={price}
-                />
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity
-                  style={styles.addButton}
-                  onPress={() => {
-                    addItems(); /* keyboard avoiding view not working */
-                  }}
-                >
-                  <Text style={styles.addButtonText}>Add</Text>
-                </TouchableOpacity>
-              </View>
+                <Text style={styles.addButtonText}>{editingId ? "Update" : "Add"}</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </View>
@@ -168,7 +165,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffbf00",
     borderWidth: 1,
     padding: 10,
-    borderRadius: 10, //style not being applied
+    borderRadius: 10,
     marginTop: 25,
     justifyContent: "center",
   },
@@ -176,7 +173,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
   },
-  inputText: { height: 40, width: 100 },
   formHeaderContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -202,7 +198,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
   },
   headerAlign: { flexDirection: "row", justifyContent: "space-around" },
-  toggelSwitchPostion: { padding: 10, position: "absolute", right: 0 },
+  toggleSwitchPosition: { padding: 10, position: "absolute", right: 0 },
   listItemShadow: {
     shadowColor: "#000",
     shadowOffset: {
@@ -232,37 +228,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 20,
   },
-  bottomView: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    width: "100%",
-  },
-  inner: {
-    padding: 24,
-    flex: 1,
-    justifyContent: "space-around",
-  },
-
-  logo: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    borderColor: "black",
-    borderWidth: 2,
-  },
-
-  center: {
-    paddingTop: "40%",
-    alignItems: "center",
-    backgroundColor: "#f74449",
-  },
-
-  h1: {
-    paddingTop: 10,
-    alignItems: "center",
-  },
-
   input: {
     marginBottom: 12,
     borderWidth: 1,
@@ -270,29 +235,26 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     color: "black",
   },
-  lable: {
+  label: {
     fontSize: 18,
     color: "black",
-    alignItems: "center",
     fontWeight: "bold",
     marginBottom: 2,
   },
-  button1: {
-    width: 270,
-    height: 40,
-    borderWidth: 1,
+  editButton: {
+    backgroundColor: "#4CAF50",
     padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#ffbf00",
-    marginTop: 12,
-    justifyContent: "center",
+    borderRadius: 5,
+    margin: 5,
   },
-  header: {
-    borderBottomColor: "black",
-    borderBottomWidth: 2,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: 60,
+  deleteButton: {
+    backgroundColor: "#f44336",
+    padding: 10,
+    borderRadius: 5,
+    margin: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
   },
 });
