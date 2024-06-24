@@ -16,27 +16,6 @@ import {
 const ProfilePage = ({ route, navigation }) => {
   const username = route.params.username;
 
-  const opacity = useRef(new Animated.Value(0)).current;
-
-  const fadeIn = () => {
-    console.log("fadein");
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 10000,
-      useNativeDriver: true,
-    }).start();
-    opacity.current = 1;
-  };
-
-  const fadeOut = () => {
-    console.log("fadeout");
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 10000,
-      useNativeDriver: true,
-    }).start();
-  };
-
   const [userName, setUserName] = useState(username);
   const [type, setType] = useState(0); // 0 for student, 1 for restaurant //get from api
   const [password, setPassword] = useState();
@@ -47,14 +26,8 @@ const ProfilePage = ({ route, navigation }) => {
     //get password from api
     //if password is correct
     if (password == "heet") {
-      console.log("if :" + opacity.current);
-      console.log(opacity);
       setValid(true);
-      fadeIn();
     } else {
-      console.log("else :" + opacity.current);
-      console.log(opacity);
-      fadeOut();
       setValid(false);
     }
   };
@@ -114,7 +87,7 @@ const ProfilePage = ({ route, navigation }) => {
         />
 
         {valid ? (
-          <Animated.View style={{ opacity: opacity }}>
+          <View>
             <Text style={[styles.lable, { textAlign: "center" }]}>
               New Password
             </Text>
@@ -123,6 +96,7 @@ const ProfilePage = ({ route, navigation }) => {
               onChangeText={setConfirmPassword}
               value={confirmPassword}
             />
+
             <Text style={[styles.lable, { textAlign: "center" }]}>
               Confirm Password
             </Text>
@@ -131,7 +105,7 @@ const ProfilePage = ({ route, navigation }) => {
               onChangeText={setConfirmPassword}
               value={confirmPassword}
             />
-          </Animated.View>
+          </View>
         ) : null}
 
         {valid ? (

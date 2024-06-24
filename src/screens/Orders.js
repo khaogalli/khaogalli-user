@@ -12,6 +12,7 @@ import {
 export default function Home({ route, navigation }) {
   const [i, setI] = useState(true);
   const username = route.params.username;
+  
   const name = username;
   const Orders = [
     // this is the orders of the customer so far.....1 means completed and 0 means pending
