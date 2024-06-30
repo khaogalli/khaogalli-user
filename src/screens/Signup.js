@@ -10,34 +10,52 @@ import {
   Keyboard,
   StatusBar,
   Image,
-  Pressable,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 
 import Api from "../ApiManager";
 
 export default function Signup({ route, navigation }) {
-  const [username, onChangeText] = React.useState("Heet"); // for testing purposes
-  const [regnum, onChangeRegNum] = React.useState("");
+  const [username, onChangeText] = React.useState("");
   const [password, onChangePass] = React.useState("");
-  const [type, setType] = React.useState(1);
+  const [Conpassword, onChangeConPass] = React.useState("");
 
   goToSignin = () => {
     navigation.navigate("Signin");
   };
 
   verify = () => {
-
-    // validation code.
-
-    Api.login(username, regnum, password);
-    
-
-    if (type == 0) {
-      navigation.navigate("Home", { username });
-    } else {
-      navigation.navigate("ResHome", { username });
+    if (!username.trim().match(/^[a-zA-Z0-9]+$/)) {
+      error = "Username Invalid";
+      Alert.alert("Username Invalid");
+      return;
     }
+
+    if (password.length < 8) {
+      error = "Password should be at least 8 characters long";
+      Alert.alert("Password should be at least 8 characters long.");
+      return;
+    }
+
+    // if (password == Conpassword) {
+    //   error = "Password don't match";
+    //   Alert.alert("Password don't match");
+    //   return;
+    // }
+    console.log("iugefo");
+    Api.Signup(username, password).then((stat) => {
+      if (stat == 200) {
+        navigation.navigate("Home");
+      } else if (stat === 422) {
+        error = "Username already taken.";
+        console.log(error);
+      } else {
+        console.log(stat);
+        error = "Something went wrong.\nTry again later.";
+        console.log(error);
+      }
+    });
   };
   return (
     <KeyboardAvoidingView
@@ -66,14 +84,14 @@ export default function Signup({ route, navigation }) {
                 <Text style={styles.lable}>Password</Text>
                 <TextInput
                   style={[styles.input, { height: 40, width: 270 }]}
-                  onChangeText={onChangeRegNum}
-                  value={regnum}
+                  onChangeText={onChangePass}
+                  value={password}
                 />
                 <Text style={styles.lable}>Confirm Password</Text>
                 <TextInput
                   style={[styles.input, { height: 40, width: 270 }]}
-                  onChangeText={onChangePass}
-                  value={password}
+                  onChangeText={onChangeConPass}
+                  value={Conpassword}
                 />
 
                 <TouchableOpacity style={styles.button1} onPress={verify}>

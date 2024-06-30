@@ -7,12 +7,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Signin from "./src/screens/Signin";
 import Signup from "./src/screens/Signup";
 import ChangePassword from "./src/screens/ChangePassword";
-import Profile from "./src/screens/Profile";
 //pages for user
 import Home from "./src/screens/Home";
 import Restaurants from "./src/screens/Restaurants";
 import Summary from "./src/screens/Summary";
 import Orders from "./src/screens/Orders";
+import Profile from "./src/screens/Profile";
 //pages for restaurant
 import ResHome from "./src/screens/ResHome";
 import ResOrder from "./src/screens/ResOrder";
@@ -22,8 +22,7 @@ import ResProfile from "./src/screens/ResProfile";
 const Stack = createNativeStackNavigator();
 
 const App = () => {
-  const initialScreen = "Signin";
-
+  const initialScreen = "Signup";
   const [isSignedIn, setIsSignedIn] = useState(false);
   Api.onAuthChange = setIsSignedIn;
   return isSignedIn ? (

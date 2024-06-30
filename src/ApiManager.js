@@ -1,38 +1,41 @@
-import Signup from "./screens/Signup";
-
 class ApiManager {
   onAuthChange;
-  Info = {
+  UserInfo = {
     username: "",
-    regnum: "",
+    userID: "",
     tocken: "",
-    profilePic: "",
   };
   restaurantList = [];
+  restaurantMenu = [];
 
-  login(username, regnum, password) {
-    const message = {
+  async login(username, password) {
+    const user = {
       username: username,
-      regnum: regnum,
       password: password,
     };
+    const message = {
+      user: user,
+    };
     try {
-      const response = fetch("http://192.168.23.201:8080/signin", {
+      const response = fetch("http://192.168.140.201:8080/api/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(message),
       });
-      data = response.JSON();
-      this.Info.username = data.username;
-      this.Info.regnum = data.regnum; // regnum is userID
-      this.Info.tocken = data.tocken;
-      this.Info.profilePic = data.profilePic;
-      if (data.successful) {
-        this.onAuthChange(true);
-      } else {
-        this.onAuthChange(false);
+      if ((await response.status) === 200) {
+        data = await response.JSON();
+        this.UserInfo.username = data.user.username;
+        this.UserInfo.userID = data.user.userID;
+        this.UserInfo.tocken = data.user.tocken;
+        return (await response).status;
+      } else if ((await response).status === 422){
+        return (await response).status;
+      }else if ((await response).status === 500){
+        return (await response).status ;
+      }else{
+        return (await response).status;
       }
     } catch (error) {
       console.error("Error:", error);
@@ -40,28 +43,38 @@ class ApiManager {
     this.onAuthChange(true);
   }
 
-  Signup(username, regnum, password) {
-    const message = {
+  async Signup(username, password) {
+    console.log("u87329870");
+    const user = {
       username: username,
-      regnum: regnum,
       password: password,
     };
+    const message = {
+      user: user,
+    };
     try {
-      const response = fetch("http://192.168.23.201:8080/signup", {
+      const response = await fetch("http://192.168.140.201:8080/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(message),
       });
-      data = response.JSON();
-      this.Info.username = data.username;
-      this.Info.regnum = data.regnum; // regnum is userID
-      this.Info.tocken = data.tocken;
-      if (data.successful) {
-        this.onAuthChange(true);
-      } else {
-        this.onAuthChange(false);
+      console.log("hi");
+      console.log(response.status);
+      if ((response.status) === 200) {
+        data = response.JSON();
+        this.UserInfo.username = data.user.username;
+        this.UserInfo.userID = data.user.userID;
+        this.UserInfo.tocken = data.user.tocken;
+        return (response).status;
+      } else if ((response).status === 422){
+        return ( response).status;
+      }else if ((response).status === 500){
+        return ( response).status ;
+      }else{
+        console.log(response);
+        return (response).status;
       }
     } catch (error) {
       console.error("Error:", error);
@@ -75,7 +88,7 @@ class ApiManager {
       tocken: tocken,
     };
     try {
-      const response = fetch("http://http://192.168.23.201:8080/signup", {
+      const response = fetch("http://192.168.23.201:8080/signup", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -89,8 +102,24 @@ class ApiManager {
     }
   }
 
-
-
+  RestaurantsDetail(restaurantID) {
+    const message = {
+      restaurantID: restaurantID,
+    };
+    try {
+      const response = fetch("http://192.168.23.201:8080/restaurant", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(message),
+      });
+      data = response.JSON();
+      this.restaurantMenu = data.menu;
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  }
 }
 
 Api = new ApiManager();

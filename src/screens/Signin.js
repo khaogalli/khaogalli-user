@@ -6,24 +6,21 @@ import {
   StatusBar,
   StyleSheet,
   Image,
-  useWindowDimensions,
   TextInput,
   KeyboardAvoidingView,
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
-  Pressable,
   TouchableOpacity,
 } from "react-native";
 
 import Api from "../ApiManager";
 
 export default function Signin({ route, navigation }) {
-  const [username, onChangeText] = React.useState("Heet"); // for testing purposes
-  const [regnum, onChangeRegNum] = React.useState("");
+  const [username, onChangeText] = React.useState("");
   const [password, onChangePass] = React.useState("");
-  const [type, setType] = React.useState(1); // 0 for student, 1 for restaurant
+  const error = "";
 
   goToSignup = () => {
     navigation.navigate("Signup");
@@ -31,30 +28,23 @@ export default function Signin({ route, navigation }) {
 
   const verify = () => {
     if (!username.trim().match(/^[a-zA-Z0-9]+$/)) {
+      error = "Username Invalid";
       Alert.alert("Username Invalid");
-      return;
-    }
-    if (!regnum.trim().match(/^\d{2}(BAI|BRS|BPS|BCE)\d{4}$/)) {
-      Alert.alert("Registration Number Invalid");
-      return;
-    }
-
-    const year = parseInt(regnum.substring(0, 2));
-    if (year <= 20) {
-      Alert.alert("RegistrationNumber Invalid");
       return;
     }
 
     if (password.length < 8) {
+      error = "Password should be at least 8 characters long";
       Alert.alert("Password should be at least 8 characters long.");
       return;
     }
-    Api.login(username, regnum, password);
-    
-    if (type == 0) {
-      navigation.navigate("Home", { username });
-    } else {
-      navigation.navigate("ResHome", { username });
+    const status = Api.login(username, password);
+    if (status === 200) {
+        navigation.navigate("Home");
+    }else if(status === 422){
+      error = "Username already taken."
+    }else{
+      error = "Something went wrong.\nTry again later."
     }
   };
 
@@ -83,19 +73,12 @@ export default function Signin({ route, navigation }) {
                     onChangeText={onChangeText}
                     value={username}
                   />
-                  <Text style={styles.lable}>Registration Number</Text>
-                  <TextInput
-                    style={[styles.input, { height: 40, width: 270 }]}
-                    onChangeText={onChangeRegNum}
-                    value={regnum}
-                  />
                   <Text style={styles.lable}>Password</Text>
                   <TextInput
                     style={[styles.input, { height: 40, width: 270 }]}
                     onChangeText={onChangePass}
                     value={password}
                   />
-
                   <TouchableOpacity style={styles.button1} onPress={verify}>
                     <Text style={styles.continueText}>Continue</Text>
                   </TouchableOpacity>
