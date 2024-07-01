@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -10,8 +10,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import Api from "../ApiManager";
+import { AuthContext } from "../services/AuthContext";
 
 export default function Home({ route, navigation }) {
+  const { user } = useContext(AuthContext);
   let restaurants = [
     // this is the list of restaurants frm api...
     { name: "A1", status: "B1", pic: require("../../assets/dp.png") }, // pic is the source of the profile picture of the restaurant... http url made by backend and sent here
@@ -26,12 +28,9 @@ export default function Home({ route, navigation }) {
     { name: "A10", status: "B10", pic: require("../../assets/dp.png") },
   ];
 
-  const username = Api.Info.username;
-  const userID = Api.Info.regnum;
-  const tocken = Api.Info.tocken;
-  const profilePic = Api.Info.profilePic; // source of the profile picture of the user... source={profilePic}
+  const username = user.username;
 
-  Api.Home(username, userID, tocken); // api end point for fetching the list of restaurants....
+  // Api.Home(username, userID, tocken); // api end point for fetching the list of restaurants....
 
   restaurants = Api.restaurantList;
 

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   KeyboardAvoidingView,
@@ -15,17 +15,20 @@ import {
 } from "react-native";
 
 import Api from "../ApiManager";
+import { AuthContext } from "../services/AuthContext";
 
 export default function Signup({ route, navigation }) {
   const [username, onChangeText] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const [Conpassword, onChangeConPass] = React.useState("");
 
+  const { register } = useContext(AuthContext);
+
   goToSignin = () => {
     navigation.navigate("Signin");
   };
 
-  verify = () => {
+  verify = async () => {
     if (!username.trim().match(/^[a-zA-Z0-9]+$/)) {
       error = "Username Invalid";
       Alert.alert("Username Invalid");
@@ -43,19 +46,11 @@ export default function Signup({ route, navigation }) {
     //   Alert.alert("Password don't match");
     //   return;
     // }
-    console.log("iugefo");
-    Api.Signup(username, password).then((stat) => {
-      if (stat == 200) {
-        navigation.navigate("Home");
-      } else if (stat === 422) {
-        error = "Username already taken.";
-        console.log(error);
-      } else {
-        console.log(stat);
-        error = "Something went wrong.\nTry again later.";
-        console.log(error);
-      }
-    });
+    try {
+      await register(username, password);
+    } catch (err) {
+      console.log("Error:", err.response.data);
+    }
   };
   return (
     <KeyboardAvoidingView

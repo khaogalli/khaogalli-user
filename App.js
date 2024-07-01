@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Api from "./src/ApiManager";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -18,14 +18,16 @@ import ResHome from "./src/screens/ResHome";
 import ResOrder from "./src/screens/ResOrder";
 import SetMenu from "./src/screens/SetMenu";
 import ResProfile from "./src/screens/ResProfile";
+import { AuthContext, AuthProvider } from "./src/services/AuthContext";
 
 const Stack = createNativeStackNavigator();
 
 const App = () => {
   const initialScreen = "Signup";
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  Api.onAuthChange = setIsSignedIn;
-  return isSignedIn ? (
+
+  const { user } = useContext(AuthContext);
+  console.log(user);
+  return user ? (
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName={initialScreen}
@@ -172,4 +174,10 @@ const App = () => {
   );
 };
 
-export default App;
+export default () => {
+  return (
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  );
+};

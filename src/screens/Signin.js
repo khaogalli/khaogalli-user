@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   View,
   Text,
@@ -16,17 +16,20 @@ import {
 } from "react-native";
 
 import Api from "../ApiManager";
+import { AuthContext } from "../services/AuthContext";
 
 export default function Signin({ route, navigation }) {
   const [username, onChangeText] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const error = "";
 
+  const { login } = useContext(AuthContext);
+
   goToSignup = () => {
     navigation.navigate("Signup");
   };
 
-  const verify = () => {
+  const verify = async () => {
     if (!username.trim().match(/^[a-zA-Z0-9]+$/)) {
       error = "Username Invalid";
       Alert.alert("Username Invalid");
@@ -38,13 +41,11 @@ export default function Signin({ route, navigation }) {
       Alert.alert("Password should be at least 8 characters long.");
       return;
     }
-    const status = Api.login(username, password);
-    if (status === 200) {
-        navigation.navigate("Home");
-    }else if(status === 422){
-      error = "Username already taken."
-    }else{
-      error = "Something went wrong.\nTry again later."
+
+    try {
+      await login(username, password);
+    } catch (err) {
+      console.log(err);
     }
   };
 
