@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,30 +9,40 @@ import {
   StatusBar,
   TouchableOpacity,
 } from "react-native";
-import Api from "../ApiManager";
 import { AuthContext } from "../services/AuthContext";
+import { get_restaurants, restaurant } from "../services/api";
 
 export default function Home({ route, navigation }) {
   const { user } = useContext(AuthContext);
-  let restaurants = [
-    // this is the list of restaurants frm api...
-    { name: "A1", status: "B1", pic: require("../../assets/dp.png") }, // pic is the source of the profile picture of the restaurant... http url made by backend and sent here
-    { name: "A2", status: "B2", pic: require("../../assets/dp.png") },
-    { name: "A3", status: "B3", pic: require("../../assets/dp.png") },
-    { name: "A4", status: "B4", pic: require("../../assets/dp.png") },
-    { name: "A5", status: "B5", pic: require("../../assets/dp.png") },
-    { name: "A6", status: "B6", pic: require("../../assets/dp.png") },
-    { name: "A7", status: "B7", pic: require("../../assets/dp.png") },
-    { name: "A8", status: "B8", pic: require("../../assets/dp.png") },
-    { name: "A9", status: "B9", pic: require("../../assets/dp.png") },
-    { name: "A10", status: "B10", pic: require("../../assets/dp.png") },
-  ];
-
   const username = user.username;
+  const [restaurants, setRestaurants] = useState([]);
 
-  // Api.Home(username, userID, tocken); // api end point for fetching the list of restaurants....
-
-  restaurants = Api.restaurantList;
+  useEffect(() => {
+    let getData = async () => {
+      console.log("get data");
+      // setRestaurants([
+      //   // this is the list of restaurants frm api...
+      //   { name: "A1", id: "B1", pic: require("../../assets/dp.png") }, // pic is the source of the profile picture of the restaurant... http url made by backend and sent here
+      //   { name: "A2", id: "B2", pic: require("../../assets/dp.png") },
+      //   { name: "A3", id: "B3", pic: require("../../assets/dp.png") },
+      //   { name: "A4", id: "B4", pic: require("../../assets/dp.png") },
+      //   { name: "A5", id: "B5", pic: require("../../assets/dp.png") },
+      //   { name: "A6", id: "B6", pic: require("../../assets/dp.png") },
+      //   { name: "A7", id: "B7", pic: require("../../assets/dp.png") },
+      //   { name: "A8", id: "B8", pic: require("../../assets/dp.png") },
+      //   { name: "A9", id: "B9", pic: require("../../assets/dp.png") },
+      //   { name: "A10", id: "B10", pic: require("../../assets/dp.png") },
+      // ]);
+      try {
+        let res = await get_restaurants();
+        setRestaurants(res.data.restaurants);
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getData();
+  }, []);
 
   const name = username;
 
@@ -40,16 +50,16 @@ export default function Home({ route, navigation }) {
     navigation.navigate("Profile", { username });
   };
 
-  const goToRestaurants = (itemName) => {
-    console.log(itemName);
-    navigation.navigate("Restaurants", { itemName, name });
+  const goToRestaurants = (itemId, itemName) => {
+    console.log("resid " + itemId);
+    navigation.navigate("Restaurants", { itemId, itemName });
   };
 
   const renderItem = ({ item }) => (
     <Pressable
       onPress={() => {
-        console.log(item.name);
-        goToRestaurants(item.name);
+        console.log(item.id);
+        goToRestaurants(item.id, item.name);
       }}
     >
       <View style={[styles.renderItem, styles.listShadow]}>
@@ -59,7 +69,6 @@ export default function Home({ route, navigation }) {
         />
         <View style={{ padding: 10 }}>
           <Text>Name: {item.name}</Text>
-          <Text>Status: {item.status}</Text>
         </View>
       </View>
     </Pressable>

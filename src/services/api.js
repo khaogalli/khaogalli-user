@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://192.168.88.165:8080";
+const API_URL = "http://172.20.10.6:8080";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -21,7 +21,7 @@ api.interceptors.response.use(
 
 export const setToken = (token) => {
   if (token) {
-    api.defaults.headers.common["Authorization"] = `Token ${token}`;
+    api.defaults.headers.common["Authorization"] = `Bearer ${token}`;
   } else {
     delete api.defaults.headers.common["Authorization"];
   }
@@ -33,6 +33,26 @@ export const loginUser = (user) => {
 
 export const registerUser = (user) => {
   return api.post("/api/users", { user });
+};
+
+export const get_restaurants = () => {
+  return api.get("/api/restaurants/list");
+};
+
+export const get_menu = (ResID) => {
+  return api.get("/api/restaurants/menu/" + ResID);
+};
+
+export const place_order = (order) => {
+  return api.post("/api/orders", { order });
+};
+
+export const get_orders = (days) => {
+  return api.get("/api/orders/" + days);
+};
+
+export const api_update_user = (user) => {
+  return api.patch("/api/users", { user });
 };
 
 export default api;

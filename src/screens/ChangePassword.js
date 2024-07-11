@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState, useEffect } from "react";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
 import {
@@ -11,41 +11,88 @@ import {
   TouchableOpacity,
   Image,
   Animated,
+  Pressable,
 } from "react-native";
+import { AuthContext } from "../services/AuthContext";
 
 const ProfilePage = ({ route, navigation }) => {
-  const username = route.params.username;
+  const { update_user, user } = useContext(AuthContext);
+  let username = user.username;
 
   const [userName, setUserName] = useState(username);
   const [type, setType] = useState(0); // 0 for student, 1 for restaurant //get from api
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPassword] = useState();
-  const [valid, setValid] = useState(false);
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [NewPassword, setNewPassword] = useState("");
+  const [pressed, setPressed] = useState(0);
 
-  validate = (password) => {
-    //get password from api
-    //if password is correct
-    if (password == "heet") {
-      setValid(true);
-    } else {
-      setValid(false);
-    }
-  };
+  useEffect(() => {
+    console.log("hi1");
+    const doSomething = async () => {
+      console.log("hi");
+      let user = {};
+      let changed = false;
+      if (userName != username) {
+        changed = true;
+        user.username = userName;
+      }
+      if (password != "" && NewPassword == confirmPassword) {
+        // todo validate new password
+        user.update_pass = {
+          old_password: password,
+          new_password: confirmPassword,
+        };
+        changed = true;
+      }
 
-  const changePassword = () => {
-    opacity.current = 0;
-    console.log("Password Changed");
-    //varification code
-    setValid(true);
-    opacity.current = 0;
-    if (type == 1) navigation.navigate("ResProfile", { username });
-    else navigation.navigate("Profile", { username });
-  };
+      if (!changed) {
+        return;
+      }
+      console.log("something");
 
-  const saveChanges = () => {
-    if (type == 1) navigation.navigate("ResProfile", { username });
-    else navigation.navigate("Profile", { username });
-  };
+      try {
+        await update_user(user);
+        navigation.navigate("Profile");
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    doSomething();
+  }, [pressed]);
+
+  // const saveChanges = () => {
+  //   console.log("hi1");
+  //   const doSomething = async () => {
+  //     console.log("hi");
+  //     let user = {};
+  //     let changed = false;
+  //     if (userName != username) {
+  //       changed = true;
+  //       user.username = userName;
+  //     }
+  //     if (password != "" && NewPassword == confirmPassword) {
+  //       // todo validate new password
+  //       user.update_pass = {
+  //         old_password: password,
+  //         new_password: confirmPassword,
+  //       };
+  //       changed = true;
+  //     }
+
+  //     if (!changed) {
+  //       return;
+  //     }
+  //     console.log("something");
+
+  //     try {
+  //       let res = await update_user(user);
+  //       console.log(res.data);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   doSomething();
+  // };
 
   return (
     <>
@@ -70,31 +117,22 @@ const ProfilePage = ({ route, navigation }) => {
 
         <Text style={styles.lable}>Password</Text>
         <TextInput
-          style={[
-            styles.input,
-            password
-              ? valid
-                ? { backgroundColor: "rgba(0, 255, 0, 0.1)", opacity: 1 }
-                : { backgroundColor: "rgba(255, 0, 0, 0.1)", opacity: 1 }
-              : {},
-          ]}
+          style={[styles.input]}
           onChangeText={(text) => {
-            setPassword(text);
-            validate(text); // Call validate with the new text value
+            setPassword(text); // Call validate with the new text value
           }}
           value={password}
-          onChange={validate}
         />
 
-        {valid ? (
+        {password != "" ? (
           <View>
             <Text style={[styles.lable, { textAlign: "center" }]}>
               New Password
             </Text>
             <TextInput
               style={[styles.input]}
-              onChangeText={setConfirmPassword}
-              value={confirmPassword}
+              onChangeText={setNewPassword}
+              value={NewPassword}
             />
 
             <Text style={[styles.lable, { textAlign: "center" }]}>
@@ -107,16 +145,14 @@ const ProfilePage = ({ route, navigation }) => {
             />
           </View>
         ) : null}
-
-        {valid ? (
-          <TouchableOpacity style={styles.button1} onPress={changePassword}>
-            <Text style={styles.changePasswordText}>Change Password</Text>
-          </TouchableOpacity>
-        ) : (
-          <TouchableOpacity style={styles.button1} onPress={saveChanges}>
-            <Text style={styles.changePasswordText}>Save Changes</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          style={styles.button1}
+          onPress={() => {
+            setPressed(pressed + 1);
+          }}
+        >
+          <Text style={styles.changePasswordText}>Save Changes</Text>
+        </TouchableOpacity>
       </SafeAreaView>
     </>
   );

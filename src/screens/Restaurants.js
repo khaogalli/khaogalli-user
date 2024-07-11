@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,42 +13,114 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
+import { AuthContext } from "../services/AuthContext";
+import { get_menu } from "../services/api";
 
 export default function Restaurants({ route, navigation }) {
   const windowWidth = useWindowDimensions().width;
+  const { user } = useContext(AuthContext);
   const name = route.params.itemName;
-  const username = route.params.username; // to fetch user ID .Uer ID is needed for confirming the order ....
+  const restaurantID = route.params.itemId;
+  console.log(restaurantID);
 
   var cart = {
     //send to BE
     UID: "",
     Res: "",
+    ResID: "",
     Order: [],
   };
 
-  var res_name = name; // api end point
-  var user = "userID"; //api end point
+  const [menu, setMenu] = useState([]);
+  const [itemlist, setItemList] = useState([]);
 
-  const menu = [
-    //api end point
-    { items: "A1", price: "B1", pic: require("../../assets/dp.png") },
-    { items: "A2", price: "B2", pic: require("../../assets/dp.png") },
-    { items: "A3", price: "B3", pic: require("../../assets/dp.png") },
-    { items: "A4", price: "B4", pic: require("../../assets/dp.png") },
-    { items: "A5", price: "B5", pic: require("../../assets/dp.png") },
-    { items: "A6", price: "B6", pic: require("../../assets/dp.png") },
-    { items: "A7", price: "B7", pic: require("../../assets/dp.png") },
-    { items: "A8", price: "B8", pic: require("../../assets/dp.png") },
-    { items: "A9", price: "B9", pic: require("../../assets/dp.png") },
-    { items: "A10", price: "B10", pic: require("../../assets/dp.png") },
-  ];
+  useEffect(() => {
+    let getData = async () => {
+      setMenu([
+        //api end point
+        {
+          id: "A1",
+          name: "",
+          price: "B1",
+          desc: require("../../assets/dp.png"),
+        },
+        {
+          id: "A2",
+          name: "",
+          price: "B2",
+          desc: require("../../assets/dp.png"),
+        },
+        {
+          id: "A3",
+          name: "",
+          price: "B3",
+          desc: require("../../assets/dp.png"),
+        },
+        {
+          id: "A4",
+          name: "",
+          price: "B4",
+          desc: require("../../assets/dp.png"),
+        },
+        {
+          id: "A5",
+          name: "",
+          price: "B5",
+          desc: require("../../assets/dp.png"),
+        },
+        {
+          id: "A6",
+          name: "",
+          price: "B6",
+          desc: require("../../assets/dp.png"),
+        },
+        {
+          id: "A7",
+          name: "",
+          price: "B7",
+          desc: require("../../assets/dp.png"),
+        },
+        {
+          id: "A8",
+          name: "",
+          price: "B8",
+          desc: require("../../assets/dp.png"),
+        },
+        {
+          id: "A9",
+          name: "",
+          price: "B9",
+          desc: require("../../assets/dp.png"),
+        },
+        {
+          id: "A10",
+          name: "",
+          price: "B10",
+          desc: require("../../assets/dp.png"),
+        },
+      ]);
+      let res = await get_menu(restaurantID);
+      setMenu(res.data.menu);
+      console.log(res.data.menu);
+      setItemList(
+        res.data.menu.map((menuItem) => ({
+          item: menuItem.id,
+          name: menuItem.name,
+          price: menuItem.price,
+          qty: 0,
+        }))
+      );
+      console.log(itemlist);
+    };
+
+    getData();
+  }, []);
+
+  var res_name = name; // api end point
 
   cart.Res = res_name;
-  cart.UID = user;
-
-  const [itemlist, setItemList] = useState(
-    menu.map((menuItem) => ({ item: menuItem.items, qty: 0 }))
-  );
+  cart.UID = user.id;
+  cart.ResID = restaurantID;
 
   const qty = (item, op) => {
     setItemList((prevItemList) =>
@@ -76,25 +148,25 @@ export default function Restaurants({ route, navigation }) {
     <View style={styles.rows}>
       <Image source={item.pic} style={styles.row_icon} />
       <View style={{ padding: 10 }}>
-        <Text>Name: {item.items}</Text>
+        <Text>Name: {item.name}</Text>
         <Text>price: {item.price}</Text>
       </View>
       <View style={{ marginLeft: "auto" }}>
         <View style={styles.buttom_con}>
           <TouchableOpacity
             onPress={() => {
-              console.log(item.items);
-              qty(item.items, "+");
+              console.log(item.name);
+              qty(item.id, "+");
             }}
           >
             <Text style={styles.button_inc}>+</Text>
           </TouchableOpacity>
           <Text style={styles.qty}>
-            {itemlist.find((i) => i.item === item.items)?.qty}
+            {itemlist.find((i) => i.item === item.id)?.qty}
           </Text>
           <TouchableOpacity
             onPress={() => {
-              console.log(item.items);
+              console.log(item.name);
               qty(item.items, "-");
             }}
           >

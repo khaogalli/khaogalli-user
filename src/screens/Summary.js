@@ -8,14 +8,17 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
+import { place_order } from "../services/api";
 
 export default function App({ route, navigation }) {
   const cart = route.params.cart;
   const user = route.params.user; // get user name from the data base using the order id
   const order = cart.Order;
   const resName = cart.Res;
+  const resID = cart.ResID;
   console.log(order);
   console.log(resName);
+  console.log(resID);
   // Order Id is generated when Confirm button is clicked.
   //api call to send order to backend ItemID, Name, Price list from backend(not good less work).//or get item price via params (better but more work)
 
@@ -23,33 +26,32 @@ export default function App({ route, navigation }) {
     //logic to form the OrderItems array from the info given above.....
   }
 
-  const orderItems = [
-    { id: "1", name: "Item 1", quantity: 2, amount: 10 },
-    { id: "2", name: "Item 2", quantity: 1, amount: 15 },
-    { id: "3", name: "Item 3", quantity: 3, amount: 20 },
+  let orderItems = [
+    { item: "1", name: "Item 1", quantity: 2, price: 10 },
+    { item: "2", name: "Item 2", quantity: 1, price: 15 },
+    { item: "3", name: "Item 3", quantity: 3, price: 20 },
   ];
+
+  orderItems = order;
+
   const renderItem = ({ item }) => (
     <View style={styles.row}>
       <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemQuantity}>{item.quantity}</Text>
-      <Text style={styles.itemAmount}>{item.amount}</Text>
+      <Text style={styles.itemQuantity}>{item.qty}</Text>
+      <Text style={styles.itemAmount}>{item.price * item.qty}</Text>
     </View>
   );
 
   const getTotalAmount = () => {
-    return orderItems.reduce(
-      (total, item) => total + item.amount * item.quantity,
-      0
-    );
+    return orderItems.reduce((total, item) => total + item.price * item.qty, 0);
   };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <StatusBar backgroundColor="#ad8840" />
       <View style={styles.container}>
-        <Text style={styles.heading}>Order ID</Text>
-        <Text style={styles.heading1}>123456</Text>
-        <Text style={styles.heading1}>~Restaurant~{resName}</Text>
+        <Text style={styles.heading}>Order</Text>
+        <Text style={styles.heading1}>{resName}</Text>
         <View style={styles.table}>
           <View style={styles.header}>
             <Text style={styles.headerText}>Item</Text>
@@ -75,8 +77,22 @@ export default function App({ route, navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => {
-              navigation.navigate("Home", { user });
+            onPress={async () => {
+              let order = {
+                restaurant_id: resID,
+                items: orderItems.map((item) => ({
+                  id: item.item,
+                  quantity: item.qty,
+                })),
+              };
+              console.log(order);
+              try {
+                let res = await place_order(order);
+                console.log(res.data);
+                navigation.navigate("Home", { user });
+              } catch (err) {
+                console.log(err.response.data);
+              }
             }}
           >
             <Text style={styles.buttonText}>Place Order</Text>

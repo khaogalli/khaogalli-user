@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,47 +8,58 @@ import {
   Pressable,
   FlatList,
 } from "react-native";
+import { get_orders } from "../services/api";
 
 export default function Home({ route, navigation }) {
   const [i, setI] = useState(true);
   const username = route.params.username;
-  
+
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      let res = await get_orders(100);
+      console.log(res.data);
+      setOrders(res.data);
+    };
+    getData();
+  }, []);
   const name = username;
-  const Orders = [
-    // this is the orders of the customer so far.....1 means completed and 0 means pending
-    {
-      OderID: "134",
-      status: "0",
-      UserID: "645893", // no need of this field
-      Date: "2021-10-10",
-      Time: "12:30:00",
-    },
-    {
-      OderID: "12234",
-      status: "1",
-      UserID: "645893",
-      Date: "2021-10-10",
-      Time: "12:30:00",
-    },
-    {
-      OderID: "134",
-      status: "0",
-      UserID: "645893",
-      Date: "2021-10-10",
-      Time: "12:30:00",
-    },
-    {
-      OderID: "12234",
-      status: "1",
-      UserID: "645893",
-      Date: "2021-10-10",
-      Time: "12:30:00",
-    },
-  ];
+  // const orders = [
+  //   // this is the orders of the customer so far.....1 means completed and 0 means pending
+  //   {
+  //     OderID: "134",
+  //     status: "0",
+  //     UserID: "645893", // no need of this field
+  //     Date: "2021-10-10",
+  //     Time: "12:30:00",
+  //   },
+  //   {
+  //     OderID: "12234",
+  //     status: "1",
+  //     UserID: "645893",
+  //     Date: "2021-10-10",
+  //     Time: "12:30:00",
+  //   },
+  //   {
+  //     OderID: "134",
+  //     status: "0",
+  //     UserID: "645893",
+  //     Date: "2021-10-10",
+  //     Time: "12:30:00",
+  //   },
+  //   {
+  //     OderID: "12234",
+  //     status: "1",
+  //     UserID: "645893",
+  //     Date: "2021-10-10",
+  //     Time: "12:30:00",
+  //   },
+  // ];
 
   const renderItem = ({ item }) => (
     <>
-      {item.status == i ? (
+      {item.pending == i ? (
         <Pressable
           onPress={() => {
             console.log(item.OderID);
@@ -56,12 +67,12 @@ export default function Home({ route, navigation }) {
         >
           <View style={[styles.renderItem, styles.listShadow]}>
             <View style={{ padding: 10 }}>
-              <Text>Order ID: {item.OderID}</Text>
-              <Text> Customer ID: {item.UserID}</Text>
+              <Text>Order ID</Text>
+              <Text>{item.id}</Text>
             </View>
             <View style={styles.dateTime}>
-              <Text>{item.Date}</Text>
-              <Text>{item.Time}</Text>
+              <Text>{item.created_at.substring(0, 10)}</Text>
+              <Text>{item.created_at.substring(11, 19)}</Text>
             </View>
           </View>
         </Pressable>
@@ -102,7 +113,7 @@ export default function Home({ route, navigation }) {
         <View style={styles.bottomView}>
           <FlatList
             style={{ width: "100%", marginTop: 5 }}
-            data={Orders}
+            data={orders}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
           />
