@@ -81,7 +81,7 @@ const ProfilePage = ({ route, navigation }) => {
         </div>
       </div>
         <h1 style="text-align:center">Order Statement</h1>
-        <p style="text-align:center; font-size:28" >John Doe</p>
+        <p style="text-align:center; font-size:28" >${username}</p>
         <table style="border-collapse: collapse; width: 100%;">
           <thead>
             <tr  style="background-color: #ffbf00; text-align: center;">    
@@ -97,7 +97,7 @@ const ProfilePage = ({ route, navigation }) => {
                 (order) => `
                   <tr style="text-align:center">
                     <td>${order.id}</td>
-                    <td>${order.restaurant_id}</td>
+                    <td>${order.restaurant_name}</td>
                     <td>${order.created_at.substring(
                       0,
                       10
