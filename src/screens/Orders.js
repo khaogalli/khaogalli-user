@@ -94,7 +94,6 @@ export default function Home({ route, navigation }) {
               paddingBottom: 10,
             }}
           >
-            <Image source={require("../../assets/favicon.png")} />
           </View>
         </View>
         <Pressable

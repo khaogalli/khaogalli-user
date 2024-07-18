@@ -21,7 +21,7 @@ import { AuthContext } from "../services/AuthContext";
 export default function Signin({ route, navigation }) {
   const [username, onChangeText] = React.useState("");
   const [password, onChangePass] = React.useState("");
-  const error = "";
+  const [error, setError] = React.useState("");
 
   const { login } = useContext(AuthContext);
 
@@ -30,22 +30,28 @@ export default function Signin({ route, navigation }) {
   };
 
   const verify = async () => {
-    if (!username.trim().match(/^[a-zA-Z0-9]+$/)) {
-      error = "Username Invalid";
-      Alert.alert("Username Invalid");
+    if (username == "") {
+      setError("Please Enter Username");
       return;
     }
 
-    if (password.length < 8) {
-      error = "Password should be at least 8 characters long";
-      Alert.alert("Password should be at least 8 characters long.");
+    if (password == "") {
+      setError("Please Enter Password");
       return;
     }
 
     try {
       await login(username, password);
     } catch (err) {
-      console.log(err);
+      console.log("hi" + err);
+      if (err.response.status == 422) {
+        if (err.response.data.errors.hasOwnProperty("username"))
+          setError("Username does not exist");
+      }
+
+      if (err.response.status == 401) {
+        setError("Passowrd incorrect");
+      }
     }
   };
 
@@ -80,6 +86,11 @@ export default function Signin({ route, navigation }) {
                     onChangeText={onChangePass}
                     value={password}
                   />
+
+                  <Text style={{ color: "#ffbf00", textAlign: "center" }}>
+                    {error}
+                  </Text>
+
                   <TouchableOpacity style={styles.button1} onPress={verify}>
                     <Text style={styles.continueText}>Continue</Text>
                   </TouchableOpacity>

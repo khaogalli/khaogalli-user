@@ -124,6 +124,7 @@ const ProfilePage = ({ route, navigation }) => {
         >
           <Image
             source={{ uri: photo }} //require("../../assets/download.jpeg")
+            defaultSource={require("../../assets/user.png")}
             style={styles.profileImage}
           />
         </TouchableOpacity>

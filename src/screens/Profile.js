@@ -16,8 +16,9 @@ import { useFocusEffect } from "@react-navigation/native";
 
 const ProfilePage = ({ route, navigation }) => {
   const { user } = useContext(AuthContext);
+  const { logout } = useContext(AuthContext);
   const username = user.username;
-  const userID = user.id; // get from API. here for testing purpose
+  const userID = user.id;
 
   goToChnagePassword = () => {
     navigation.navigate("ChangePassword", { username });
@@ -34,44 +35,8 @@ const ProfilePage = ({ route, navigation }) => {
     getData();
   }, []);
 
-  // setHistory([
-  //   //api end point
-  //   //the history would be the orders that the user ordered in past 30 days.
-  //   {
-  //     orderID: "123456",
-  //     restaurant: "Gazebo",
-  //     date: "2021-09-01",
-  //     items: [
-  //       { id: "1", name: "Item 1", quantity: 2, amount: 10 },
-  //       { id: "2", name: "Item 2", quantity: 1, amount: 15 },
-  //       { id: "3", name: "Item 3", quantity: 3, amount: 20 },
-  //     ],
-  //   },
-  //   {
-  //     orderID: "123456",
-  //     restaurant: "Gazebo",
-  //     date: "2021-09-01",
-  //     items: [
-  //       { id: "1", name: "Item 1", quantity: 2, amount: 10 },
-  //       { id: "2", name: "Item 2", quantity: 1, amount: 15 },
-  //       { id: "3", name: "Item 3", quantity: 3, amount: 20 },
-  //     ],
-  //   },
-  //   {
-  //     orderID: "123456",
-  //     restaurant: "Gazebo",
-  //     date: "2021-09-01",
-  //     items: [
-  //       { id: "1", name: "Item 1", quantity: 2, amount: 10 },
-  //       { id: "2", name: "Item 2", quantity: 1, amount: 15 },
-  //       { id: "3", name: "Item 3", quantity: 3, amount: 20 },
-  //     ],
-  //   },
-  // ]);
-
   const icon_path = Image.resolveAssetSource(
-    // get from api
-    require("../../assets/favicon.png")
+    require("../../assets/download.jpeg")
   ).uri;
 
   const html = `
@@ -79,7 +44,7 @@ const ProfilePage = ({ route, navigation }) => {
       <body>
       <div style="diplay: flex">
         <div style="display: inline-block;">
-        <img src="${icon_path}" alt="favicon" style="display: inline-block; margin-left: auto; margin-right: auto; width: 100; height: 100 radius: 5"/>
+        <img src="${icon_path}" style="display: inline-block; margin-left: auto; margin-right: auto; width: 100; height: 100 radius: 5"/>
         </div>
       </div>
         <h1 style="text-align:center">Order Statement</h1>
@@ -134,9 +99,13 @@ const ProfilePage = ({ route, navigation }) => {
     await shareAsync(file.uri);
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     console.log("Logout");
-    navigation.navigate("Signin");
+    try {
+      await logout();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleGeneratePDF = () => {
@@ -162,6 +131,7 @@ const ProfilePage = ({ route, navigation }) => {
       <TouchableOpacity onPress={goToChnagePassword}>
         <Image
           source={{ uri: photo + "?" + nonce }}
+          defaultSource={require("../../assets/user.png")}
           style={styles.profileImage}
         />
       </TouchableOpacity>

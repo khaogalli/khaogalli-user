@@ -2,19 +2,21 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
-  SafeAreaView,
   StatusBar,
   StyleSheet,
   Image,
   useWindowDimensions,
   KeyboardAvoidingView,
-  Platform,
-  ScrollView,
   FlatList,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
-import { get_menu } from "../services/api";
+import {
+  get_menu,
+  ITEM_IMAGE_URL,
+  RESTAURANT_IMAGE_URL,
+} from "../services/api";
 
 export default function Restaurants({ route, navigation }) {
   const windowWidth = useWindowDimensions().width;
@@ -36,69 +38,6 @@ export default function Restaurants({ route, navigation }) {
 
   useEffect(() => {
     let getData = async () => {
-      setMenu([
-        //api end point
-        {
-          id: "A1",
-          name: "",
-          price: "B1",
-          desc: require("../../assets/dp.png"),
-        },
-        {
-          id: "A2",
-          name: "",
-          price: "B2",
-          desc: require("../../assets/dp.png"),
-        },
-        {
-          id: "A3",
-          name: "",
-          price: "B3",
-          desc: require("../../assets/dp.png"),
-        },
-        {
-          id: "A4",
-          name: "",
-          price: "B4",
-          desc: require("../../assets/dp.png"),
-        },
-        {
-          id: "A5",
-          name: "",
-          price: "B5",
-          desc: require("../../assets/dp.png"),
-        },
-        {
-          id: "A6",
-          name: "",
-          price: "B6",
-          desc: require("../../assets/dp.png"),
-        },
-        {
-          id: "A7",
-          name: "",
-          price: "B7",
-          desc: require("../../assets/dp.png"),
-        },
-        {
-          id: "A8",
-          name: "",
-          price: "B8",
-          desc: require("../../assets/dp.png"),
-        },
-        {
-          id: "A9",
-          name: "",
-          price: "B9",
-          desc: require("../../assets/dp.png"),
-        },
-        {
-          id: "A10",
-          name: "",
-          price: "B10",
-          desc: require("../../assets/dp.png"),
-        },
-      ]);
       let res = await get_menu(restaurantID);
       setMenu(res.data.menu);
       console.log(res.data.menu);
@@ -110,14 +49,14 @@ export default function Restaurants({ route, navigation }) {
           qty: 0,
         }))
       );
-      console.log(itemlist);
+      console.log("test", itemlist);
     };
 
     getData();
   }, []);
 
-  var res_name = name; // api end point
-
+  var res_name = name;
+  let [searchKey, setSearchKey] = useState("");
   cart.Res = res_name;
   cart.UID = user.id;
   cart.ResID = restaurantID;
@@ -146,96 +85,185 @@ export default function Restaurants({ route, navigation }) {
 
   const renderItem = ({ item }) => (
     <View style={styles.rows}>
-      <Image source={item.pic} style={styles.row_icon} />
-      <View style={{ padding: 10 }}>
-        <Text>Name: {item.name}</Text>
-        <Text>price: {item.price}</Text>
-      </View>
-      <View style={{ marginLeft: "auto" }}>
-        <View style={styles.buttom_con}>
-          <TouchableOpacity
-            onPress={() => {
-              console.log(item.name);
-              qty(item.id, "+");
-            }}
-          >
-            <Text style={styles.button_inc}>+</Text>
-          </TouchableOpacity>
-          <Text style={styles.qty}>
-            {itemlist.find((i) => i.item === item.id)?.qty}
-          </Text>
-          <TouchableOpacity
-            onPress={() => {
-              console.log(item.name);
-              qty(item.items, "-");
-            }}
-          >
-            <Text style={styles.button_dec}>-</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      {searchKey != "" ? (
+        typeof searchKey === "string" &&
+        item.name.toLowerCase().includes(searchKey.toLowerCase()) ? (
+          <>
+            <Image
+              source={{ uri: ITEM_IMAGE_URL + item.id }}
+              defaultSource={require("../../assets/grey.png")}
+              style={styles.row_icon}
+            />
+            <View style={{ padding: 10 }}>
+              <Text>{item.name}</Text>
+              <Text>{item.price}</Text>
+            </View>
+            <View style={{ marginLeft: "auto" }}>
+              <View style={styles.buttom_con}>
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log(item.name);
+                    qty(item.id, "+");
+                  }}
+                >
+                  <Text style={styles.button_inc}>+</Text>
+                </TouchableOpacity>
+                <Text style={styles.qty}>
+                  {itemlist.find((i) => i.item === item.id)?.qty}
+                </Text>
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log(item.name);
+                    qty(item.items, "-");
+                  }}
+                >
+                  <Text style={styles.button_dec}>-</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
+        ) : null
+      ) : (
+        <>
+          <Image
+            source={{ uri: ITEM_IMAGE_URL + item.id }}
+            defaultSource={require("../../assets/grey.png")}
+            style={styles.row_icon}
+          />
+          <View style={{ padding: 10 }}>
+            <Text>{item.name}</Text>
+            <Text>{item.price}</Text>
+          </View>
+          <View style={{ marginLeft: "auto" }}>
+            <View style={styles.buttom_con}>
+              <TouchableOpacity
+                onPress={() => {
+                  console.log(item.name);
+                  qty(item.id, "+");
+                }}
+              >
+                <Text style={styles.button_inc}>+</Text>
+              </TouchableOpacity>
+              <Text style={styles.qty}>
+                {itemlist.find((i) => i.item === item.id)?.qty}
+              </Text>
+              <TouchableOpacity
+                onPress={() => {
+                  console.log(item.name);
+                  qty(item.items, "-");
+                }}
+              >
+                <Text style={styles.button_dec}>-</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </>
+      )}
     </View>
   );
 
   return (
-    <SafeAreaView>
-      <ScrollView>
-        <KeyboardAvoidingView
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-          style={styles.kba}
-        >
+    <KeyboardAvoidingView style={styles.container}>
+      <View style={styles.top}>
+        <View>
+          <StatusBar backgroundColor="#ad8840" />
           <View>
-            <StatusBar backgroundColor="#ad8840" />
+            {
+              <Image
+                style={[
+                  styles.primary_bg,
+                  {
+                    width: windowWidth,
+                  },
+                ]}
+                source={require("../../assets/backdrop.jpeg")}
+              />
+            }
             <View>
-              {
-                <Image
-                  style={[
-                    styles.primary_bg,
-                    {
-                      width: windowWidth,
-                    },
-                  ]}
-                  source={require("../../assets/backdrop.jpeg")}
-                />
-              }
-              <View>
-                <Image
-                  style={styles.secondary_dp}
-                  source={require("../../assets/dp1.png")} // fetched from api.
-                />
-              </View>
-            </View>
-            <View style={styles.h1view}>
-              <Text style={styles.h1}>{res_name}</Text>
-            </View>
-
-            <View style={{ padding: 5 }}>
-              <FlatList
-                data={menu}
-                renderItem={renderItem}
-                keyExtractor={(item, index) => index.toString()}
-                scrollToEnd={true}
-                style={{ flex: 1 }}
-                contentContainerStyle={{ flexGrow: 1 }}
+              <Image
+                style={styles.secondary_dp}
+                source={{ uri: RESTAURANT_IMAGE_URL + restaurantID }}
+                defaultSource={require("../../assets/grey.png")} // fetched from api.
               />
             </View>
           </View>
-          <TouchableOpacity
-            onPress={() => {
-              addItem(itemlist);
+          <View style={styles.h1view}>
+            <Text style={styles.h1}>{res_name}</Text>
+          </View>
+          <View
+            style={{
+              height: 50,
+              borderRadius: 25,
+              marginHorizontal: 5,
+              padding: 10,
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 2,
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5,
+              backgroundColor: "#ffffff",
+              marginBottom: 5,
             }}
           >
-            <View style={styles.confirmOrderView}>
-              <Text style={styles.confirmOrderText}>Confirm Order</Text>
-            </View>
-          </TouchableOpacity>
-        </KeyboardAvoidingView>
-      </ScrollView>
-    </SafeAreaView>
+            <Image
+              source={require("../../assets/looking.gif")}
+              style={{ height: 35, width: 35, borderRadius: 20, marginLeft: 5 }}
+            />
+            <TextInput
+              onChangeText={setSearchKey}
+              value={searchKey}
+              style={{
+                height: 53,
+                borderRadius: 25,
+                padding: 10,
+                width: "93%",
+                position: "absolute",
+                right: 0,
+              }}
+            />
+          </View>
+        </View>
+      </View>
+      <View style={styles.middle}>
+        <View style={{ padding: 5, flex: 1 }}>
+          <FlatList
+            data={menu}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+            scrollToEnd={true}
+            style={{ flex: 1 }}
+            contentContainerStyle={{ flexGrow: 1 }}
+          />
+        </View>
+      </View>
+      <View style={styles.bottom}>
+        <TouchableOpacity
+          onPress={() => {
+            addItem(itemlist);
+          }}
+        >
+          <View style={styles.confirmOrderView}>
+            <Text style={styles.confirmOrderText}>Confirm Order</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: "column",
+  },
+  top: {},
+  middle: {
+    flex: 1,
+  },
+  bottom: {},
   kba: {
     backgroundColor: "#f3f5f9",
   },
@@ -252,11 +280,11 @@ const styles = StyleSheet.create({
   secondary_dp: {
     width: 150,
     height: 150,
-    resizeMode: "contain",
     top: "100%",
     left: "50%",
     marginTop: -5,
     marginLeft: -70,
+    borderRadius: 100,
   },
   primary_bg: {
     resizeMode: "cover",

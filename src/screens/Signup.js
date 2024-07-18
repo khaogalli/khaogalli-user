@@ -21,6 +21,7 @@ export default function Signup({ route, navigation }) {
   const [username, onChangeText] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const [Conpassword, onChangeConPass] = React.useState("");
+  const [error, setError] = React.useState("");
 
   const { register } = useContext(AuthContext);
 
@@ -29,27 +30,44 @@ export default function Signup({ route, navigation }) {
   };
 
   verify = async () => {
+    if (username == "") {
+      setError("Please Enter Username");
+      return;
+    }
+
+    if (password == "") {
+      setError("Please Enter Password");
+      return;
+    }
+
+    if (Conpassword == "") {
+      setError("Please confirm the Password");
+      return;
+    }
+
     if (!username.trim().match(/^[a-zA-Z0-9]+$/)) {
-      error = "Username Invalid";
-      Alert.alert("Username Invalid");
+      setError("Username Invalid");
       return;
     }
 
     if (password.length < 8) {
-      error = "Password should be at least 8 characters long";
-      Alert.alert("Password should be at least 8 characters long.");
+      setError("Password should be at least 8 characters long");
       return;
     }
 
-    // if (password == Conpassword) {
-    //   error = "Password don't match";
-    //   Alert.alert("Password don't match");
-    //   return;
-    // }
+    if (password !== Conpassword) {
+      setError("Passwords don't match");
+      return;
+    }
+
     try {
       await register(username, password);
     } catch (err) {
-      console.log("Error:", err.response.data);
+      console.log("hi" + err);
+      if (err.response.status == 422) {
+        if (err.response.data.errors.hasOwnProperty("username"))
+          setError("Username already taken");
+      }
     }
   };
   return (
@@ -89,6 +107,10 @@ export default function Signup({ route, navigation }) {
                   value={Conpassword}
                 />
 
+                <Text style={{ color: "#ffbf00", textAlign: "center" }}>
+                  {error}
+                </Text>
+
                 <TouchableOpacity style={styles.button1} onPress={verify}>
                   <Text style={styles.continueText}>Continue</Text>
                 </TouchableOpacity>
@@ -125,7 +147,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     backgroundColor: "#aa2e32",
-    height: 355,
+    height: 380,
     width: 300,
     borderRadius: 20,
     marginTop: 10,
