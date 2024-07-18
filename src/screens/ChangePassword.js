@@ -14,6 +14,12 @@ import {
   Pressable,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
+import * as ImagePicker from "expo-image-picker";
+import { upload_user_image, USER_IMAGE_URL } from "../services/api";
+import * as FileSystem from "expo-file-system";
+
+import { genNonce } from "../services/utils";
+
 
 const ProfilePage = ({ route, navigation }) => {
   const { update_user, user } = useContext(AuthContext);
@@ -60,39 +66,51 @@ const ProfilePage = ({ route, navigation }) => {
     doSomething();
   }, [pressed]);
 
-  // const saveChanges = () => {
-  //   console.log("hi1");
-  //   const doSomething = async () => {
-  //     console.log("hi");
-  //     let user = {};
-  //     let changed = false;
-  //     if (userName != username) {
-  //       changed = true;
-  //       user.username = userName;
-  //     }
-  //     if (password != "" && NewPassword == confirmPassword) {
-  //       // todo validate new password
-  //       user.update_pass = {
-  //         old_password: password,
-  //         new_password: confirmPassword,
-  //       };
-  //       changed = true;
-  //     }
+  const [nonce, setNonce] = useState(genNonce());
 
-  //     if (!changed) {
-  //       return;
-  //     }
-  //     console.log("something");
+  const resetNonce = () => {
+    setNonce(genNonce());
+  };
 
-  //     try {
-  //       let res = await update_user(user);
-  //       console.log(res.data);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   doSomething();
-  // };
+  const [photo, setPhoto] = useState(USER_IMAGE_URL + user.id);
+
+  useEffect(() => {
+    const requestPermissions = async () => {
+      const { status } =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("Sorry, we need camera roll permissions to make this work!");
+      }
+    };
+
+    requestPermissions();
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      console.log(result.assets[0].uri);
+      try {
+        const base64 = await FileSystem.readAsStringAsync(
+          result.assets[0].uri,
+          {
+            encoding: FileSystem.EncodingType.Base64,
+          }
+        );
+
+        const res = await upload_user_image(base64);
+        resetNonce();
+        console.log("Image uploaded successfully");
+      } catch (error) {
+        console.error("Error reading file or uploading image:", error);
+      }
+    }
+  };
 
   return (
     <>
@@ -101,10 +119,11 @@ const ProfilePage = ({ route, navigation }) => {
         <TouchableOpacity // upload profle page yet to be made so this is a placeholder for now
           onPress={() => {
             console.log("Edit Profile");
+            pickImage();
           }}
         >
           <Image
-            source={require("../../assets/download.jpeg")}
+            source={{ uri: photo }} //require("../../assets/download.jpeg")
             style={styles.profileImage}
           />
         </TouchableOpacity>

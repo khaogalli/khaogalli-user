@@ -10,7 +10,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
-import { get_restaurants, restaurant } from "../services/api";
+import {
+  get_orders,
+  get_restaurants,
+  RESTAURANT_IMAGE_URL,
+  USER_IMAGE_URL,
+} from "../services/api";
+import { useFocusEffect } from "@react-navigation/native";
+import { genNonce } from "../services/utils";
 
 export default function Home({ route, navigation }) {
   const { user } = useContext(AuthContext);
@@ -55,6 +62,14 @@ export default function Home({ route, navigation }) {
     navigation.navigate("Restaurants", { itemId, itemName });
   };
 
+  const [nonce, setNonce] = useState(genNonce());
+
+  const resetNonce = () => {
+    setNonce(genNonce());
+  };
+
+  const [photo, setPhoto] = useState(USER_IMAGE_URL + user.id);
+
   const renderItem = ({ item }) => (
     <Pressable
       onPress={() => {
@@ -64,11 +79,11 @@ export default function Home({ route, navigation }) {
     >
       <View style={[styles.renderItem, styles.listShadow]}>
         <Image
-          source={item.pic}
+          source={{ uri: RESTAURANT_IMAGE_URL + item.id }}
           style={{ height: 55, width: 55, borderRadius: 10 }}
         />
         <View style={{ padding: 10 }}>
-          <Text>Name: {item.name}</Text>
+          <Text>{item.name}</Text>
         </View>
       </View>
     </Pressable>
@@ -84,7 +99,16 @@ export default function Home({ route, navigation }) {
         </Text>
         <View style={styles.profilePicture}>
           <TouchableOpacity onPress={goToProfile}>
-            <Image source={require("../../assets/favicon.png")} />
+            <Image
+              source={{ uri: USER_IMAGE_URL + user.id }}
+              style={{
+                borderWidth: 1,
+                borderColor: "black",
+                width: 50,
+                height: 50,
+                borderRadius: 25,
+              }}
+              />
           </TouchableOpacity>
         </View>
       </View>

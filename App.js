@@ -13,11 +13,6 @@ import Restaurants from "./src/screens/Restaurants";
 import Summary from "./src/screens/Summary";
 import Orders from "./src/screens/Orders";
 import Profile from "./src/screens/Profile";
-//pages for restaurant
-import ResHome from "./src/screens/ResHome";
-import ResOrder from "./src/screens/ResOrder";
-import SetMenu from "./src/screens/SetMenu";
-import ResProfile from "./src/screens/ResProfile";
 import { AuthContext, AuthProvider } from "./src/services/AuthContext";
 
 const Stack = createNativeStackNavigator();
@@ -97,34 +92,7 @@ const App = () => {
             headerShown: false,
           }}
         />
-        <Stack.Screen
-          name="ResHome"
-          component={ResHome}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="ResOrder"
-          component={ResOrder}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="SetMenu"
-          component={SetMenu}
-          options={{
-            headerShown: false,
-          }}
-        />
-        <Stack.Screen
-          name="ResProfile"
-          component={ResProfile}
-          options={{
-            headerShown: false,
-          }}
-        />
+        
       </Stack.Navigator>
     </NavigationContainer>
   ) : (

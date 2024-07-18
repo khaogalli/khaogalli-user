@@ -1,4 +1,4 @@
-import { React, useContext, useEffect, useState } from "react";
+import { React, useCallback, useContext, useEffect, useState } from "react";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
 import {
@@ -10,7 +10,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
-import { get_orders } from "../services/api";
+import { get_orders, USER_IMAGE_URL } from "../services/api";
+import { genNonce } from "../services/utils";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ProfilePage = ({ route, navigation }) => {
   const { user } = useContext(AuthContext);
@@ -147,11 +149,19 @@ const ProfilePage = ({ route, navigation }) => {
     navigation.navigate("Orders", { username });
   };
 
+  const [nonce, setNonce] = useState(genNonce());
+
+  const resetNonce = () => {
+    setNonce(genNonce());
+  };
+  useFocusEffect(useCallback(resetNonce, []));
+  const [photo, setPhoto] = useState(USER_IMAGE_URL + user.id);
+
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={goToChnagePassword}>
         <Image
-          source={require("../../assets/download.jpeg")}
+          source={{ uri: photo + "?" + nonce }}
           style={styles.profileImage}
         />
       </TouchableOpacity>

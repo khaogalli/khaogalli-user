@@ -1,6 +1,8 @@
 import axios from "axios";
 
-const API_URL = "http://172.20.10.6:8080";
+const API_URL = "http://192.168.186.18:8080";
+export const RESTAURANT_IMAGE_URL = API_URL + "/api/restaurants/image/";
+export const USER_IMAGE_URL = API_URL + "/api/users/image/";
 
 const api = axios.create({
   baseURL: API_URL,
@@ -53,6 +55,10 @@ export const get_orders = (days) => {
 
 export const api_update_user = (user) => {
   return api.patch("/api/users", { user });
+};
+
+export const upload_user_image = (image) => {
+  return api.post("/api/users/upload_image", { image });
 };
 
 export default api;
