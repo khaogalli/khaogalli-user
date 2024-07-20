@@ -9,13 +9,14 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   StatusBar,
-  Image,
   TouchableOpacity,
   Alert,
 } from "react-native";
 
 import Api from "../ApiManager";
 import { AuthContext } from "../services/AuthContext";
+import FastImage from "react-native-fast-image";
+import { Image } from 'expo-image';
 
 export default function Signup({ route, navigation }) {
   const [username, onChangeText] = React.useState("");
@@ -84,7 +85,6 @@ export default function Signup({ route, navigation }) {
               style={[styles.logo, styles.h1]}
               source={require("../../assets/download.jpeg")}
             />
-
             <Text style={styles.signupText}>Sign up</Text>
             <View style={styles.formContainer}>
               <View style={{ marginLeft: 15, marginTop: 20 }}>

@@ -1,15 +1,17 @@
 import React, { useContext, useEffect, useState } from "react";
 import {
+  Modal,
   View,
   Text,
   StatusBar,
   StyleSheet,
-  Image,
   useWindowDimensions,
   KeyboardAvoidingView,
   FlatList,
   TouchableOpacity,
   TextInput,
+  TouchableWithoutFeedback,
+  Pressable,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import {
@@ -17,6 +19,8 @@ import {
   ITEM_IMAGE_URL,
   RESTAURANT_IMAGE_URL,
 } from "../services/api";
+import { BlurView } from "expo-blur";
+import { Image } from "expo-image";
 
 export default function Restaurants({ route, navigation }) {
   const windowWidth = useWindowDimensions().width;
@@ -25,8 +29,19 @@ export default function Restaurants({ route, navigation }) {
   const restaurantID = route.params.itemId;
   console.log(restaurantID);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [description, setDescription] = useState("No Description Available");
+  const [tilte, setTitle] = useState("");
+
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   var cart = {
-    //send to BE
     UID: "",
     Res: "",
     ResID: "",
@@ -84,14 +99,66 @@ export default function Restaurants({ route, navigation }) {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.rows}>
-      {searchKey != "" ? (
-        typeof searchKey === "string" &&
-        item.name.toLowerCase().includes(searchKey.toLowerCase()) ? (
+    <Pressable
+      onPress={() => {
+        openModal();
+        setTitle(item.name);
+        if (item.description != "") {
+          setDescription(item.description);
+        } else {
+          setDescription("No Description Available");
+        }
+      }}
+    >
+      <View style={styles.rows}>
+        {searchKey != "" ? (
+          typeof searchKey === "string" &&
+          item.name.toLowerCase().includes(searchKey.toLowerCase()) ? (
+            <>
+              <Image
+                source={{
+                  uri: ITEM_IMAGE_URL + item.id,
+                }}
+                placeholder={require("../../assets/grey.png")}
+                style={styles.row_icon}
+              />
+              <View style={{ padding: 10 }}>
+                <Text>{item.name}</Text>
+                <Text>{item.price}</Text>
+              </View>
+              <View style={{ marginLeft: "auto" }}>
+                <View style={styles.buttom_con}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log(item.name);
+                      qty(item.id, "+");
+                    }}
+                  >
+                    <Text style={styles.button_inc}>+</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.qty}>
+                    {itemlist.find((i) => i.item === item.id)?.qty}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      console.log(item.name);
+                      qty(item.items, "-");
+                    }}
+                  >
+                    <Text style={styles.button_dec}>-</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </>
+          ) : null
+        ) : (
           <>
             <Image
-              source={{ uri: ITEM_IMAGE_URL + item.id }}
-              defaultSource={require("../../assets/grey.png")}
+              source={{
+                uri: ITEM_IMAGE_URL + item.id,
+              }}
+              placeholder={"../../assets/grey.png"}
+              priority="high"
               style={styles.row_icon}
             />
             <View style={{ padding: 10 }}>
@@ -122,44 +189,9 @@ export default function Restaurants({ route, navigation }) {
               </View>
             </View>
           </>
-        ) : null
-      ) : (
-        <>
-          <Image
-            source={{ uri: ITEM_IMAGE_URL + item.id }}
-            defaultSource={require("../../assets/grey.png")}
-            style={styles.row_icon}
-          />
-          <View style={{ padding: 10 }}>
-            <Text>{item.name}</Text>
-            <Text>{item.price}</Text>
-          </View>
-          <View style={{ marginLeft: "auto" }}>
-            <View style={styles.buttom_con}>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log(item.name);
-                  qty(item.id, "+");
-                }}
-              >
-                <Text style={styles.button_inc}>+</Text>
-              </TouchableOpacity>
-              <Text style={styles.qty}>
-                {itemlist.find((i) => i.item === item.id)?.qty}
-              </Text>
-              <TouchableOpacity
-                onPress={() => {
-                  console.log(item.name);
-                  qty(item.items, "-");
-                }}
-              >
-                <Text style={styles.button_dec}>-</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </>
-      )}
-    </View>
+        )}
+      </View>
+    </Pressable>
   );
 
   return (
@@ -168,22 +200,22 @@ export default function Restaurants({ route, navigation }) {
         <View>
           <StatusBar backgroundColor="#ad8840" />
           <View>
-            {
-              <Image
-                style={[
-                  styles.primary_bg,
-                  {
-                    width: windowWidth,
-                  },
-                ]}
-                source={require("../../assets/backdrop.jpeg")}
-              />
-            }
+            <Image
+              style={[
+                styles.primary_bg,
+                {
+                  width: windowWidth,
+                },
+              ]}
+              source={require("../../assets/download.jpeg")}
+            />
             <View>
               <Image
                 style={styles.secondary_dp}
-                source={{ uri: RESTAURANT_IMAGE_URL + restaurantID }}
-                defaultSource={require("../../assets/grey.png")} // fetched from api.
+                source={{
+                  uri: RESTAURANT_IMAGE_URL + restaurantID,
+                }}
+                placeholder={require("../../assets/grey.png")}
               />
             </View>
           </View>
@@ -250,6 +282,29 @@ export default function Restaurants({ route, navigation }) {
           </View>
         </TouchableOpacity>
       </View>
+      {modalVisible && (
+        <Modal
+          transparent={true}
+          animationType="fade"
+          visible={modalVisible}
+          onRequestClose={closeModal}
+        >
+          <TouchableWithoutFeedback onPress={closeModal}>
+            <View style={styles.modalBackground}>
+              <BlurView intensity={50} style={styles.blurContainer}>
+                <TouchableWithoutFeedback>
+                  <View style={styles.modalContent}>
+                    <Text style={[styles.modalText, { textAlign: "justify" }]}>
+                      {tilte}
+                    </Text>
+                    <Text style={styles.modalText}>{description}</Text>
+                  </View>
+                </TouchableWithoutFeedback>
+              </BlurView>
+            </View>
+          </TouchableWithoutFeedback>
+        </Modal>
+      )}
     </KeyboardAvoidingView>
   );
 }
@@ -351,5 +406,27 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 20,
     color: "#ffbf00",
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  blurContainer: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 18,
   },
 });

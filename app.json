@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "KhaoGalli Customer",
-    "slug": "KhaoGalli",
+    "name": "KhaoGalli",
+    "slug": "KhaoGalliUser",
     "version": "1.0.0",
     "orientation": "default",
     "icon": "./assets/download.jpeg",
@@ -24,17 +24,26 @@
       },
       "permissions": [
         "android.permission.WRITE_EXTERNAL_STORAGE"
-      ]
+      ],
+      "package": "com.heet10104.KhaoGalliUser"
     },
     "web": {
       "favicon": "./assets/download.jpeg"
     },
     "plugins": [
-      ["expo-build-properties", {
-        "android": {
-          "usesCleartextTraffic": true
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
         }
-      }]
-    ]
+      ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "cbbbbac4-8082-4b84-9522-78dc283f1da9"
+      }
+    }
   }
 }

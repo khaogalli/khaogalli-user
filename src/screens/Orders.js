@@ -4,11 +4,13 @@ import {
   Text,
   StatusBar,
   StyleSheet,
-  Image,
   Pressable,
   FlatList,
 } from "react-native";
 import { get_orders } from "../services/api";
+import FastImage from "react-native-fast-image";
+import { Image } from 'expo-image';
+
 
 export default function Home({ route, navigation }) {
   const [i, setI] = useState(true);

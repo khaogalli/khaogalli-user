@@ -9,17 +9,15 @@ import {
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
-  Image,
-  Animated,
-  Pressable,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import * as ImagePicker from "expo-image-picker";
 import { upload_user_image, USER_IMAGE_URL } from "../services/api";
 import * as FileSystem from "expo-file-system";
+import FastImage from "react-native-fast-image";
+import { Image } from "expo-image";
 
 import { genNonce } from "../services/utils";
-
 
 const ProfilePage = ({ route, navigation }) => {
   const { update_user, user } = useContext(AuthContext);
@@ -123,8 +121,9 @@ const ProfilePage = ({ route, navigation }) => {
           }}
         >
           <Image
-            source={{ uri: photo }} //require("../../assets/download.jpeg")
-            defaultSource={require("../../assets/user.png")}
+            source={{ uri: photo }}
+            placeholder={require("../../assets/user.png")}
+            priority="high"
             style={styles.profileImage}
           />
         </TouchableOpacity>

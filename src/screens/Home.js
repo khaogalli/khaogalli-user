@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Image,
   Pressable,
   FlatList,
   StatusBar,
@@ -17,6 +16,9 @@ import {
   USER_IMAGE_URL,
 } from "../services/api";
 import { genNonce } from "../services/utils";
+import FastImage from "react-native-fast-image";
+import { Image } from 'expo-image';
+
 
 export default function Home({ route, navigation }) {
   const { user } = useContext(AuthContext);
@@ -70,8 +72,10 @@ export default function Home({ route, navigation }) {
           item.name.toLowerCase().includes(searchKey.toLowerCase()) ? (
             <View style={[styles.renderItem, styles.listShadow]}>
               <Image
-                source={{ uri: RESTAURANT_IMAGE_URL + item.id }}
-                defaultSource={require("../../assets/grey.png")}
+                source={{
+                  uri: RESTAURANT_IMAGE_URL + item.id,
+                }}
+                placeholder={require("../../assets/grey.png")}
                 style={{ height: 55, width: 55, borderRadius: 10 }}
               />
               <View style={{ padding: 10 }}>
@@ -93,8 +97,11 @@ export default function Home({ route, navigation }) {
         ) : (
           <View style={[styles.renderItem, styles.listShadow]}>
             <Image
-              source={{ uri: RESTAURANT_IMAGE_URL + item.id }}
-              defaultSource={require("../../assets/grey.png")}
+              source={{
+                uri: RESTAURANT_IMAGE_URL + item.id,
+                priority: FastImage.priority.high,
+              }}
+              placeholder={require("../../assets/grey.png")}
               style={{ height: 55, width: 55, borderRadius: 10 }}
             />
             <View style={{ padding: 10 }}>
@@ -125,8 +132,11 @@ export default function Home({ route, navigation }) {
         <View style={styles.profilePicture}>
           <TouchableOpacity onPress={goToProfile}>
             <Image
-              source={{ uri: USER_IMAGE_URL + user.id }}
-              defaultSource={require("../../assets/user.png")}
+              source={{
+                uri: USER_IMAGE_URL + user.id,
+                priority: FastImage.priority.high,
+              }}
+              placeholder={"../../assets/user.png"}
               style={{
                 borderWidth: 1,
                 borderColor: "black",

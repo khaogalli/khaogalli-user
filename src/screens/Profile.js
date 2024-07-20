@@ -4,15 +4,15 @@ import { shareAsync } from "expo-sharing";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
-  Pressable,
+  Image,
   TouchableOpacity,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import { get_orders, USER_IMAGE_URL } from "../services/api";
 import { genNonce } from "../services/utils";
 import { useFocusEffect } from "@react-navigation/native";
+import { Image as ExpoImage } from "expo-image";
 
 const ProfilePage = ({ route, navigation }) => {
   const { user } = useContext(AuthContext);
@@ -129,9 +129,11 @@ const ProfilePage = ({ route, navigation }) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={goToChnagePassword}>
-        <Image
-          source={{ uri: photo + "?" + nonce }}
-          defaultSource={require("../../assets/user.png")}
+        <ExpoImage
+          source={{
+            uri: photo + "?" + nonce,
+          }}
+          placeholder={"../../assets/user.png"}
           style={styles.profileImage}
         />
       </TouchableOpacity>

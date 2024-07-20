@@ -9,6 +9,9 @@ import {
   SafeAreaView,
 } from "react-native";
 import { place_order } from "../services/api";
+import FastImage from "react-native-fast-image";
+import { Image } from 'expo-image';
+
 
 export default function App({ route, navigation }) {
   const cart = route.params.cart;

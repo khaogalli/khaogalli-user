@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  Image,
   TextInput,
   KeyboardAvoidingView,
   Platform,
@@ -17,6 +16,9 @@ import {
 
 import Api from "../ApiManager";
 import { AuthContext } from "../services/AuthContext";
+import FastImage from "react-native-fast-image";
+import { Image } from 'expo-image';
+
 
 export default function Signin({ route, navigation }) {
   const [username, onChangeText] = React.useState("");
@@ -66,11 +68,9 @@ export default function Signin({ route, navigation }) {
             <StatusBar backgroundColor="#ad8840" />
 
             <View style={[styles.center, styles.h1]}>
-              <Image
-                style={styles.logo}
-                source={require("../../assets/download.jpeg")}
+              <Image style={styles.logo}
+              source={require("../../assets/download.jpeg")}
               />
-
               <Text style={styles.signinText}>Sign in</Text>
               <View style={styles.formContainer}>
                 <View style={{ marginLeft: 15, marginTop: 20 }}>
