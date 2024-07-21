@@ -10,13 +10,10 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
-  Alert,
   TouchableOpacity,
 } from "react-native";
 
-import Api from "../ApiManager";
 import { AuthContext } from "../services/AuthContext";
-import FastImage from "react-native-fast-image";
 import { Image } from "expo-image";
 
 export default function Signin({ route, navigation }) {
