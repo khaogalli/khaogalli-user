@@ -8,56 +8,23 @@ import {
   FlatList,
 } from "react-native";
 import { get_orders } from "../services/api";
-import FastImage from "react-native-fast-image";
-import { Image } from 'expo-image';
-
 
 export default function Home({ route, navigation }) {
   const [i, setI] = useState(true);
   const username = route.params.username;
-
+  const [loading, setLoading] = useState(true);
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
       let res = await get_orders(100);
+      setLoading(false);
       console.log(res.data);
       setOrders(res.data);
     };
     getData();
   }, []);
   const name = username;
-  // const orders = [
-  //   // this is the orders of the customer so far.....1 means completed and 0 means pending
-  //   {
-  //     OderID: "134",
-  //     status: "0",
-  //     UserID: "645893", // no need of this field
-  //     Date: "2021-10-10",
-  //     Time: "12:30:00",
-  //   },
-  //   {
-  //     OderID: "12234",
-  //     status: "1",
-  //     UserID: "645893",
-  //     Date: "2021-10-10",
-  //     Time: "12:30:00",
-  //   },
-  //   {
-  //     OderID: "134",
-  //     status: "0",
-  //     UserID: "645893",
-  //     Date: "2021-10-10",
-  //     Time: "12:30:00",
-  //   },
-  //   {
-  //     OderID: "12234",
-  //     status: "1",
-  //     UserID: "645893",
-  //     Date: "2021-10-10",
-  //     Time: "12:30:00",
-  //   },
-  // ];
 
   const renderItem = ({ item }) => (
     <>
@@ -95,8 +62,7 @@ export default function Home({ route, navigation }) {
               paddingTop: 5,
               paddingBottom: 10,
             }}
-          >
-          </View>
+          ></View>
         </View>
         <Pressable
           onPress={() => {
@@ -111,14 +77,69 @@ export default function Home({ route, navigation }) {
         >
           <View>{i ? <Text>Pending</Text> : <Text>Completed</Text>}</View>
         </Pressable>
-        <View style={styles.bottomView}>
-          <FlatList
-            style={{ width: "100%", marginTop: 5 }}
-            data={orders}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-          />
-        </View>
+        {!loading ? (
+          <View style={styles.bottomView}>
+            <FlatList
+              style={{ width: "100%", marginTop: 5 }}
+              data={orders}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+            />
+          </View>
+        ) : (
+          <>
+            <View
+              style={[
+                styles.renderItem,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.5,
+                },
+              ]}
+            ></View>
+            <View
+              style={[
+                styles.renderItem,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.4,
+                },
+              ]}
+            ></View>
+            <View
+              style={[
+                styles.renderItem,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.3,
+                },
+              ]}
+            ></View>
+            <View
+              style={[
+                styles.renderItem,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.2,
+                },
+              ]}
+            ></View>
+            <View
+              style={[
+                styles.renderItem,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.1,
+                },
+              ]}
+            ></View>
+          </>
+        )}
       </View>
     </>
   );

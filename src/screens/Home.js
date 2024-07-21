@@ -1,5 +1,12 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, {
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 import {
+  Animated,
   View,
   Text,
   StyleSheet,
@@ -8,6 +15,7 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
+  Image,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import {
@@ -16,21 +24,22 @@ import {
   USER_IMAGE_URL,
 } from "../services/api";
 import { genNonce } from "../services/utils";
-import FastImage from "react-native-fast-image";
-import { Image } from 'expo-image';
-
+import { Image as ExpoImage } from "expo-image";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Home({ route, navigation }) {
   const { user } = useContext(AuthContext);
   const username = user.username;
   const [restaurants, setRestaurants] = useState([]);
   let [searchKey, setSearchKey] = useState("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let getData = async () => {
       console.log("get data");
       try {
         let res = await get_restaurants();
+        setLoading(false);
         setRestaurants(res.data.restaurants);
         console.log(res.data);
       } catch (err) {
@@ -56,7 +65,7 @@ export default function Home({ route, navigation }) {
   const resetNonce = () => {
     setNonce(genNonce());
   };
-
+  useFocusEffect(useCallback(resetNonce, []));
   const [photo, setPhoto] = useState(USER_IMAGE_URL + user.id);
 
   const renderItem = ({ item }) => {
@@ -71,18 +80,18 @@ export default function Home({ route, navigation }) {
           typeof searchKey === "string" &&
           item.name.toLowerCase().includes(searchKey.toLowerCase()) ? (
             <View style={[styles.renderItem, styles.listShadow]}>
-              <Image
+              <ExpoImage
                 source={{
                   uri: RESTAURANT_IMAGE_URL + item.id,
                 }}
                 placeholder={require("../../assets/grey.png")}
-                style={{ height: 55, width: 55, borderRadius: 10 }}
+                style={{ height: 65, width: 65, borderRadius: 10 }}
               />
               <View style={{ padding: 10 }}>
                 <Text>{item.name}</Text>
               </View>
               <View>
-                <Image
+                <ExpoImage
                   source={require("../../assets/next.png")}
                   style={{
                     height: 20,
@@ -96,19 +105,19 @@ export default function Home({ route, navigation }) {
           ) : null
         ) : (
           <View style={[styles.renderItem, styles.listShadow]}>
-            <Image
+            <ExpoImage
               source={{
                 uri: RESTAURANT_IMAGE_URL + item.id,
-                priority: FastImage.priority.high,
               }}
+              priority="high"
               placeholder={require("../../assets/grey.png")}
-              style={{ height: 55, width: 55, borderRadius: 10 }}
+              style={{ height: 65, width: 65, borderRadius: 10 }}
             />
             <View style={{ padding: 10 }}>
               <Text>{item.name}</Text>
             </View>
             <View>
-              <Image
+              <ExpoImage
                 source={require("../../assets/next.png")}
                 style={{
                   height: 20,
@@ -131,12 +140,12 @@ export default function Home({ route, navigation }) {
         <Text style={styles.headerTextLeftAlign}>{name}</Text>
         <View style={styles.profilePicture}>
           <TouchableOpacity onPress={goToProfile}>
-            <Image
+            <ExpoImage
               source={{
-                uri: USER_IMAGE_URL + user.id,
-                priority: FastImage.priority.high,
+                uri: USER_IMAGE_URL + user.id + "?" + nonce,
               }}
               placeholder={"../../assets/user.png"}
+              priority="high"
               style={{
                 borderWidth: 1,
                 borderColor: "black",
@@ -183,14 +192,69 @@ export default function Home({ route, navigation }) {
           }}
         />
       </View>
-      <View style={styles.bottomView}>
-        <FlatList
-          style={{ width: "100%" }}
-          data={restaurants}
-          renderItem={renderItem}
-          keyExtractor={(item, index) => index.toString()}
-        />
-      </View>
+      {!loading ? (
+        <View style={styles.bottomView}>
+          <FlatList
+            style={{ width: "100%" }}
+            data={restaurants}
+            renderItem={renderItem}
+            keyExtractor={(item, index) => index.toString()}
+          />
+        </View>
+      ) : (
+        <>
+          <View
+            style={[
+              styles.renderItem,
+              {
+                height: 85,
+                backgroundColor: "#333333",
+                opacity: 0.5,
+              },
+            ]}
+          ></View>
+          <View
+            style={[
+              styles.renderItem,
+              {
+                height: 85,
+                backgroundColor: "#333333",
+                opacity: 0.4,
+              },
+            ]}
+          ></View>
+          <View
+            style={[
+              styles.renderItem,
+              {
+                height: 85,
+                backgroundColor: "#333333",
+                opacity: 0.3,
+              },
+            ]}
+          ></View>
+          <View
+            style={[
+              styles.renderItem,
+              {
+                height: 85,
+                backgroundColor: "#333333",
+                opacity: 0.2,
+              },
+            ]}
+          ></View>
+          <View
+            style={[
+              styles.renderItem,
+              {
+                height: 85,
+                backgroundColor: "#333333",
+                opacity: 0.1,
+              },
+            ]}
+          ></View>
+        </>
+      )}
     </View>
   );
 }
@@ -212,7 +276,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   renderItem: {
-    padding: 15,
+    padding: 10,
     marginBottom: 7,
     margin: 2,
     borderRadius: 20,

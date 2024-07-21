@@ -1,13 +1,7 @@
 import { React, useCallback, useContext, useEffect, useState } from "react";
 import { printToFileAsync } from "expo-print";
 import { shareAsync } from "expo-sharing";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import { get_orders, USER_IMAGE_URL } from "../services/api";
 import { genNonce } from "../services/utils";
@@ -133,7 +127,8 @@ const ProfilePage = ({ route, navigation }) => {
           source={{
             uri: photo + "?" + nonce,
           }}
-          placeholder={"../../assets/user.png"}
+          placeholder={require("../../assets/user.png")}
+          priority="high"
           style={styles.profileImage}
         />
       </TouchableOpacity>

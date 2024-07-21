@@ -1,6 +1,9 @@
-import React, { useContext, useRef, useState, useEffect } from "react";
-import { printToFileAsync } from "expo-print";
-import { shareAsync } from "expo-sharing";
+import React, {
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+} from "react";
 import {
   View,
   Text,
@@ -14,10 +17,10 @@ import { AuthContext } from "../services/AuthContext";
 import * as ImagePicker from "expo-image-picker";
 import { upload_user_image, USER_IMAGE_URL } from "../services/api";
 import * as FileSystem from "expo-file-system";
-import FastImage from "react-native-fast-image";
 import { Image } from "expo-image";
 
 import { genNonce } from "../services/utils";
+import { useFocusEffect } from "@react-navigation/native";
 
 const ProfilePage = ({ route, navigation }) => {
   const { update_user, user } = useContext(AuthContext);
@@ -102,13 +105,14 @@ const ProfilePage = ({ route, navigation }) => {
         );
 
         const res = await upload_user_image(base64);
-        resetNonce();
+
         console.log("Image uploaded successfully");
       } catch (error) {
         console.error("Error reading file or uploading image:", error);
       }
     }
   };
+  useFocusEffect(useCallback(resetNonce, []));
 
   return (
     <>
@@ -121,7 +125,7 @@ const ProfilePage = ({ route, navigation }) => {
           }}
         >
           <Image
-            source={{ uri: photo }}
+            source={{ uri: photo + "?" + nonce }}
             placeholder={require("../../assets/user.png")}
             priority="high"
             style={styles.profileImage}

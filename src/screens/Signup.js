@@ -16,7 +16,7 @@ import {
 import Api from "../ApiManager";
 import { AuthContext } from "../services/AuthContext";
 import FastImage from "react-native-fast-image";
-import { Image } from 'expo-image';
+import { Image } from "expo-image";
 
 export default function Signup({ route, navigation }) {
   const [username, onChangeText] = React.useState("");

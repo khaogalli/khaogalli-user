@@ -12,6 +12,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Pressable,
+  Image
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import {
@@ -20,14 +21,16 @@ import {
   RESTAURANT_IMAGE_URL,
 } from "../services/api";
 import { BlurView } from "expo-blur";
-import { Image } from "expo-image";
+import { Image as ExpoImage } from "expo-image";
+import { Asset } from "expo-asset";
 
 export default function Restaurants({ route, navigation }) {
+  const bg = Asset.fromModule("../../assets/backdrop.jpeg");
   const windowWidth = useWindowDimensions().width;
   const { user } = useContext(AuthContext);
   const name = route.params.itemName;
   const restaurantID = route.params.itemId;
-  console.log(restaurantID);
+  const [loading, setLoading] = useState(true);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [description, setDescription] = useState("No Description Available");
@@ -54,6 +57,7 @@ export default function Restaurants({ route, navigation }) {
   useEffect(() => {
     let getData = async () => {
       let res = await get_menu(restaurantID);
+      setLoading(false);
       setMenu(res.data.menu);
       console.log(res.data.menu);
       setItemList(
@@ -77,6 +81,7 @@ export default function Restaurants({ route, navigation }) {
   cart.ResID = restaurantID;
 
   const qty = (item, op) => {
+    console.log("kjhjkhkjh", JSON.stringify(item), op);
     setItemList((prevItemList) =>
       prevItemList.map((itemData) =>
         itemData.item === item
@@ -115,11 +120,12 @@ export default function Restaurants({ route, navigation }) {
           typeof searchKey === "string" &&
           item.name.toLowerCase().includes(searchKey.toLowerCase()) ? (
             <>
-              <Image
+              <ExpoImage
                 source={{
                   uri: ITEM_IMAGE_URL + item.id,
                 }}
                 placeholder={require("../../assets/grey.png")}
+                priority="high"
                 style={styles.row_icon}
               />
               <View style={{ padding: 10 }}>
@@ -130,7 +136,6 @@ export default function Restaurants({ route, navigation }) {
                 <View style={styles.buttom_con}>
                   <TouchableOpacity
                     onPress={() => {
-                      console.log(item.name);
                       qty(item.id, "+");
                     }}
                   >
@@ -141,8 +146,7 @@ export default function Restaurants({ route, navigation }) {
                   </Text>
                   <TouchableOpacity
                     onPress={() => {
-                      console.log(item.name);
-                      qty(item.items, "-");
+                      qty(item.id, "-");
                     }}
                   >
                     <Text style={styles.button_dec}>-</Text>
@@ -153,7 +157,7 @@ export default function Restaurants({ route, navigation }) {
           ) : null
         ) : (
           <>
-            <Image
+            <ExpoImage
               source={{
                 uri: ITEM_IMAGE_URL + item.id,
               }}
@@ -166,27 +170,31 @@ export default function Restaurants({ route, navigation }) {
               <Text>{item.price}</Text>
             </View>
             <View style={{ marginLeft: "auto" }}>
-              <View style={styles.buttom_con}>
-                <TouchableOpacity
-                  onPress={() => {
-                    console.log(item.name);
-                    qty(item.id, "+");
-                  }}
-                >
-                  <Text style={styles.button_inc}>+</Text>
-                </TouchableOpacity>
-                <Text style={styles.qty}>
-                  {itemlist.find((i) => i.item === item.id)?.qty}
+              {item.available ? (
+                <View style={styles.buttom_con}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      qty(item.id, "+");
+                    }}
+                  >
+                    <Text style={styles.button_inc}>+</Text>
+                  </TouchableOpacity>
+                  <Text style={styles.qty}>
+                    {itemlist.find((i) => i.item === item.id)?.qty}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      qty(item.id, "-");
+                    }}
+                  >
+                    <Text style={styles.button_dec}>-</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : (
+                <Text style={{ color: "#ff3c3c", fontSize: 16 }}>
+                  Not Available
                 </Text>
-                <TouchableOpacity
-                  onPress={() => {
-                    console.log(item.name);
-                    qty(item.items, "-");
-                  }}
-                >
-                  <Text style={styles.button_dec}>-</Text>
-                </TouchableOpacity>
-              </View>
+              )}
             </View>
           </>
         )}
@@ -201,21 +209,26 @@ export default function Restaurants({ route, navigation }) {
           <StatusBar backgroundColor="#ad8840" />
           <View>
             <Image
+              source={require("../../assets/backdrop.jpeg")}
               style={[
                 styles.primary_bg,
                 {
                   width: windowWidth,
                 },
               ]}
-              source={require("../../assets/download.jpeg")}
+              onError={(error) => {
+                console.error("Image failed to load:", error);
+              }}
+              priority="high"
             />
             <View>
-              <Image
+              <ExpoImage
                 style={styles.secondary_dp}
                 source={{
                   uri: RESTAURANT_IMAGE_URL + restaurantID,
                 }}
                 placeholder={require("../../assets/grey.png")}
+                priority="high"
               />
             </View>
           </View>
@@ -260,16 +273,71 @@ export default function Restaurants({ route, navigation }) {
         </View>
       </View>
       <View style={styles.middle}>
-        <View style={{ padding: 5, flex: 1 }}>
-          <FlatList
-            data={menu}
-            renderItem={renderItem}
-            keyExtractor={(item, index) => index.toString()}
-            scrollToEnd={true}
-            style={{ flex: 1 }}
-            contentContainerStyle={{ flexGrow: 1 }}
-          />
-        </View>
+        {!loading ? (
+          <View style={{ padding: 5, flex: 1 }}>
+            <FlatList
+              data={menu}
+              renderItem={renderItem}
+              keyExtractor={(item, index) => index.toString()}
+              scrollToEnd={true}
+              style={{ flex: 1 }}
+              contentContainerStyle={{ flexGrow: 1 }}
+            />
+          </View>
+        ) : (
+          <>
+            <View
+              style={[
+                styles.rows,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.5,
+                },
+              ]}
+            ></View>
+            <View
+              style={[
+                styles.rows,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.4,
+                },
+              ]}
+            ></View>
+            <View
+              style={[
+                styles.rows,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.3,
+                },
+              ]}
+            ></View>
+            <View
+              style={[
+                styles.rows,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.2,
+                },
+              ]}
+            ></View>
+            <View
+              style={[
+                styles.rows,
+                {
+                  height: 85,
+                  backgroundColor: "#333333",
+                  opacity: 0.1,
+                },
+              ]}
+            ></View>
+          </>
+        )}
       </View>
       <View style={styles.bottom}>
         <TouchableOpacity
@@ -347,7 +415,7 @@ const styles = StyleSheet.create({
   },
   rows: [
     {
-      padding: 15,
+      padding: 10,
       marginBottom: 7,
       margin: 2,
       borderRadius: 20,
@@ -367,7 +435,7 @@ const styles = StyleSheet.create({
       elevation: 5,
     },
   ],
-  row_icon: { height: 55, width: 55, borderRadius: 10 },
+  row_icon: { height: 65, width: 65, borderRadius: 10 },
   buttom_con: {
     borderWidth: 1,
     borderColor: "black",
