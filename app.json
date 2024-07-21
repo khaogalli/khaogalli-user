@@ -4,10 +4,10 @@
     "slug": "KhaoGalliUser",
     "version": "1.0.0",
     "orientation": "default",
-    "icon": "./assets/download.jpeg",
+    "icon": "./assets/download.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/download.jpeg",
+      "image": "./assets/download.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,7 +19,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/download.jpeg",
+        "foregroundImage": "./assets/download.png",
         "backgroundColor": "#ffffff"
       },
       "permissions": [
@@ -28,7 +28,7 @@
       "package": "com.heet10104.KhaoGalliUser"
     },
     "web": {
-      "favicon": "./assets/download.jpeg"
+      "favicon": "./assets/download.png"
     },
     "plugins": [
       [

@@ -83,7 +83,7 @@ export default function Signup({ route, navigation }) {
           <View style={styles.center}>
             <Image
               style={[styles.logo, styles.h1]}
-              source={require("../../assets/download.jpeg")}
+              source={require("../../assets/download.png")}
             />
             <Text style={styles.signupText}>Sign up</Text>
             <View style={styles.formContainer}>

@@ -30,7 +30,7 @@ const ProfilePage = ({ route, navigation }) => {
   }, []);
 
   const icon_path = Image.resolveAssetSource(
-    require("../../assets/download.jpeg")
+    require("../../assets/download.png")
   ).uri;
 
   const html = `
