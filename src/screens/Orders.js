@@ -1,39 +1,60 @@
 import React, { useEffect, useState } from "react";
 import {
+  Modal,
   View,
   Text,
   StatusBar,
   StyleSheet,
   Pressable,
   FlatList,
+  RefreshControl,
+  TouchableWithoutFeedback,
 } from "react-native";
 import { get_orders } from "../services/api";
+import { BlurView } from "expo-blur";
 
 export default function Home({ route, navigation }) {
   const [i, setI] = useState(true);
   const username = route.params.username;
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [orders, setOrders] = useState([]);
+  const [modalOrder, setModalOrder] = useState();
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const getData = async () => {
+    setRefreshing(true);
+    let res = await get_orders(100);
+    setLoading(false);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+    console.log(res.data);
+    setOrders(res.data);
+  };
 
   useEffect(() => {
-    const getData = async () => {
-      let res = await get_orders(100);
-      setLoading(false);
-      console.log(res.data);
-      setOrders(res.data);
-    };
     getData();
   }, []);
   const name = username;
 
+  const openModal = (order) => {
+    setModalOrder(order);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   const renderItem = ({ item }) => (
-    <>
+    <Pressable
+      onPress={() => {
+        openModal(item);
+      }}
+    >
       {item.pending == i ? (
-        <Pressable
-          onPress={() => {
-            console.log(item.OderID);
-          }}
-        >
+        <>
           <View style={[styles.renderItem, styles.listShadow]}>
             <View style={{ padding: 10 }}>
               <Text>Order ID</Text>
@@ -44,10 +65,34 @@ export default function Home({ route, navigation }) {
               <Text>{item.created_at.substring(11, 19)}</Text>
             </View>
           </View>
-        </Pressable>
+        </>
       ) : null}
-    </>
+    </Pressable>
   );
+  var grandTotal = 0;
+  const displayItems = () => {
+    if (!modalOrder || !modalOrder.items) {
+      return <Text>No items found.</Text>;
+    }
+
+    modalOrder.items.map((item) => {
+      grandTotal += item.price * item.quantity;
+    });
+
+    return modalOrder.items.map((item, index) => (
+      <View
+        key={index}
+        style={{
+          padding: 10,
+          flexDirection: "row",
+        }}
+      >
+        <Text style={{ width: 120 }}>{item.name}</Text>
+        <Text style={{ width: 100 }}>{item.quantity}</Text>
+        <Text>{item.quantity * item.price}</Text>
+      </View>
+    ));
+  };
 
   return (
     <>
@@ -84,6 +129,9 @@ export default function Home({ route, navigation }) {
               data={orders}
               renderItem={renderItem}
               keyExtractor={(item, index) => index.toString()}
+              refreshControl={
+                <RefreshControl refreshing={refreshing} onRefresh={getData} />
+              }
             />
           </View>
         ) : (
@@ -140,12 +188,49 @@ export default function Home({ route, navigation }) {
             ></View>
           </>
         )}
+        {modalVisible && (
+          <Modal
+            transparent={true}
+            animationType="fade"
+            visible={modalVisible}
+            onRequestClose={closeModal}
+          >
+            <TouchableWithoutFeedback onPress={closeModal}>
+              <View style={styles.modalBackground}>
+                <BlurView intensity={50} style={styles.blurContainer}>
+                  <TouchableWithoutFeedback>
+                    <View style={styles.modalContent}>
+                      <Text style={styles.heading}>Order</Text>
+                      <Text style={styles.heading1}>{modalOrder.id}</Text>
+                      <View style={styles.table}>
+                        <View style={styles.header}>
+                          <Text style={styles.headerText}>Item</Text>
+                          <Text style={styles.headerText}>Qty</Text>
+                          <Text style={styles.headerText}>Amount</Text>
+                        </View>
+                        {displayItems()}
+                      </View>
+                      <View style={styles.total}>
+                        <Text style={styles.totalAmount}>
+                          Grand Total: {grandTotal}
+                        </Text>
+                      </View>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </BlurView>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+        )}
       </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  table: {
+    marginBottom: 20,
+  },
   filterButton: {
     padding: 10,
     alignItems: "center",
@@ -261,5 +346,66 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     height: 60,
+  },
+  modalBackground: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  blurContainer: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContent: {
+    width: 300,
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  modalText: {
+    fontSize: 18,
+  },
+  heading: {
+    fontSize: 24,
+    fontWeight: "bold",
+    marginBottom: 5,
+    textAlign: "center",
+  },
+  heading1: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 20,
+    textAlign: "center",
+  },
+  heading2: {
+    fontSize: 16,
+    fontWeight: "bold",
+    marginBottom: 20,
+  },
+  table: {
+    marginBottom: 20,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    borderBottomWidth: 1,
+    borderBottomColor: "#000",
+    paddingBottom: 10,
+    marginBottom: 10,
+  },
+  headerText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    width: "33%", // Adjusting width to fit three columns
+    textAlign: "center",
+  },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
   },
 });

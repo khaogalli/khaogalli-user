@@ -25,7 +25,6 @@ import { Image as ExpoImage } from "expo-image";
 import { Asset } from "expo-asset";
 
 export default function Restaurants({ route, navigation }) {
-  const bg = Asset.fromModule("../../assets/backdrop.jpeg");
   const windowWidth = useWindowDimensions().width;
   const { user } = useContext(AuthContext);
   const name = route.params.itemName;
@@ -81,7 +80,6 @@ export default function Restaurants({ route, navigation }) {
   cart.ResID = restaurantID;
 
   const qty = (item, op) => {
-    console.log("kjhjkhkjh", JSON.stringify(item), op);
     setItemList((prevItemList) =>
       prevItemList.map((itemData) =>
         itemData.item === item
