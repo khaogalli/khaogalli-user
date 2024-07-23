@@ -13,6 +13,7 @@ import * as ImagePicker from "expo-image-picker";
 import { upload_user_image, USER_IMAGE_URL } from "../services/api";
 import * as FileSystem from "expo-file-system";
 import { Image } from "expo-image";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { genNonce } from "../services/utils";
 import { useFocusEffect } from "@react-navigation/native";
@@ -22,16 +23,13 @@ const ProfilePage = ({ route, navigation }) => {
   let username = user.username;
 
   const [userName, setUserName] = useState(username);
-  const [type, setType] = useState(0); // 0 for student, 1 for restaurant //get from api
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [NewPassword, setNewPassword] = useState("");
   const [pressed, setPressed] = useState(0);
 
   useEffect(() => {
-    console.log("hi1");
     const doSomething = async () => {
-      console.log("hi");
       let user = {};
       let changed = false;
       if (userName != username) {
@@ -111,7 +109,7 @@ const ProfilePage = ({ route, navigation }) => {
 
   return (
     <>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaProvider style={styles.container}>
         <StatusBar backgroundColor="#ad8840" />
         <TouchableOpacity // upload profle page yet to be made so this is a placeholder for now
           onPress={() => {
@@ -171,7 +169,7 @@ const ProfilePage = ({ route, navigation }) => {
         >
           <Text style={styles.changePasswordText}>Save Changes</Text>
         </TouchableOpacity>
-      </SafeAreaView>
+      </SafeAreaProvider>
     </>
   );
 };

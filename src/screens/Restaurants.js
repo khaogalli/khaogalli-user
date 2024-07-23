@@ -13,6 +13,7 @@ import {
   TouchableWithoutFeedback,
   Pressable,
   Image,
+  Platform,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import {
@@ -22,7 +23,7 @@ import {
 } from "../services/api";
 import { BlurView } from "expo-blur";
 import { Image as ExpoImage } from "expo-image";
-import { Asset } from "expo-asset";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 export default function Restaurants({ route, navigation }) {
   const windowWidth = useWindowDimensions().width;
@@ -203,185 +204,197 @@ export default function Restaurants({ route, navigation }) {
   );
 
   return (
-    <KeyboardAvoidingView style={styles.container}>
-      <View style={styles.top}>
-        <View>
-          <StatusBar backgroundColor="#ad8840" />
+    <SafeAreaProvider>
+      <KeyboardAvoidingView
+        style={styles.container}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <View style={styles.top}>
           <View>
-            <Image
-              source={require("../../assets/backdrop.jpeg")}
-              style={[
-                styles.primary_bg,
-                {
-                  width: windowWidth,
-                },
-              ]}
-              onError={(error) => {
-                console.error("Image failed to load:", error);
-              }}
-              priority="high"
-            />
+            <StatusBar backgroundColor="#ad8840" />
             <View>
-              <ExpoImage
-                style={styles.secondary_dp}
-                source={{
-                  uri: RESTAURANT_IMAGE_URL + restaurantID,
+              <Image
+                source={require("../../assets/backdrop.jpeg")}
+                style={[
+                  styles.primary_bg,
+                  {
+                    width: windowWidth,
+                  },
+                ]}
+                onError={(error) => {
+                  console.error("Image failed to load:", error);
                 }}
-                placeholder={require("../../assets/grey.png")}
                 priority="high"
+              />
+              <View>
+                <ExpoImage
+                  style={styles.secondary_dp}
+                  source={{
+                    uri: RESTAURANT_IMAGE_URL + restaurantID,
+                  }}
+                  placeholder={require("../../assets/grey.png")}
+                  priority="high"
+                />
+              </View>
+            </View>
+            <View style={styles.h1view}>
+              <Text style={styles.h1}>{res_name}</Text>
+            </View>
+            <View
+              style={{
+                height: 50,
+                borderRadius: 25,
+                marginHorizontal: 5,
+                padding: 10,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 2,
+                },
+                shadowOpacity: 0.25,
+                shadowRadius: 3.84,
+                elevation: 5,
+                backgroundColor: "#ffffff",
+                marginBottom: 5,
+              }}
+            >
+              <Image
+                source={require("../../assets/looking.gif")}
+                style={{
+                  height: 35,
+                  width: 35,
+                  borderRadius: 20,
+                  marginLeft: 5,
+                }}
+              />
+              <TextInput
+                onChangeText={setSearchKey}
+                value={searchKey}
+                style={{
+                  height: 53,
+                  borderRadius: 25,
+                  padding: 10,
+                  width: "93%",
+                  position: "absolute",
+                  right: 0,
+                }}
               />
             </View>
           </View>
-          <View style={styles.h1view}>
-            <Text style={styles.h1}>{res_name}</Text>
-          </View>
-          <View
-            style={{
-              height: 50,
-              borderRadius: 25,
-              marginHorizontal: 5,
-              padding: 10,
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 2,
-              },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5,
-              backgroundColor: "#ffffff",
-              marginBottom: 5,
+        </View>
+        <View style={styles.middle}>
+          {!loading ? (
+            <View style={{ padding: 5, flex: 1 }}>
+              <FlatList
+                data={menu}
+                renderItem={renderItem}
+                keyExtractor={(item, index) => index.toString()}
+                scrollToEnd={true}
+                style={{ flex: 1 }}
+                contentContainerStyle={{ flexGrow: 1 }}
+              />
+            </View>
+          ) : (
+            <>
+              <View
+                style={[
+                  styles.rows,
+                  {
+                    height: 85,
+                    backgroundColor: "#333333",
+                    opacity: 0.5,
+                  },
+                ]}
+              ></View>
+              <View
+                style={[
+                  styles.rows,
+                  {
+                    height: 85,
+                    backgroundColor: "#333333",
+                    opacity: 0.4,
+                  },
+                ]}
+              ></View>
+              <View
+                style={[
+                  styles.rows,
+                  {
+                    height: 85,
+                    backgroundColor: "#333333",
+                    opacity: 0.3,
+                  },
+                ]}
+              ></View>
+              <View
+                style={[
+                  styles.rows,
+                  {
+                    height: 85,
+                    backgroundColor: "#333333",
+                    opacity: 0.2,
+                  },
+                ]}
+              ></View>
+              <View
+                style={[
+                  styles.rows,
+                  {
+                    height: 85,
+                    backgroundColor: "#333333",
+                    opacity: 0.1,
+                  },
+                ]}
+              ></View>
+            </>
+          )}
+        </View>
+        <View style={styles.bottom}>
+          <TouchableOpacity
+            onPress={() => {
+              addItem(itemlist);
             }}
           >
-            <Image
-              source={require("../../assets/looking.gif")}
-              style={{ height: 35, width: 35, borderRadius: 20, marginLeft: 5 }}
-            />
-            <TextInput
-              onChangeText={setSearchKey}
-              value={searchKey}
-              style={{
-                height: 53,
-                borderRadius: 25,
-                padding: 10,
-                width: "93%",
-                position: "absolute",
-                right: 0,
-              }}
-            />
-          </View>
-        </View>
-      </View>
-      <View style={styles.middle}>
-        {!loading ? (
-          <View style={{ padding: 5, flex: 1 }}>
-            <FlatList
-              data={menu}
-              renderItem={renderItem}
-              keyExtractor={(item, index) => index.toString()}
-              scrollToEnd={true}
-              style={{ flex: 1 }}
-              contentContainerStyle={{ flexGrow: 1 }}
-            />
-          </View>
-        ) : (
-          <>
-            <View
-              style={[
-                styles.rows,
-                {
-                  height: 85,
-                  backgroundColor: "#333333",
-                  opacity: 0.5,
-                },
-              ]}
-            ></View>
-            <View
-              style={[
-                styles.rows,
-                {
-                  height: 85,
-                  backgroundColor: "#333333",
-                  opacity: 0.4,
-                },
-              ]}
-            ></View>
-            <View
-              style={[
-                styles.rows,
-                {
-                  height: 85,
-                  backgroundColor: "#333333",
-                  opacity: 0.3,
-                },
-              ]}
-            ></View>
-            <View
-              style={[
-                styles.rows,
-                {
-                  height: 85,
-                  backgroundColor: "#333333",
-                  opacity: 0.2,
-                },
-              ]}
-            ></View>
-            <View
-              style={[
-                styles.rows,
-                {
-                  height: 85,
-                  backgroundColor: "#333333",
-                  opacity: 0.1,
-                },
-              ]}
-            ></View>
-          </>
-        )}
-      </View>
-      <View style={styles.bottom}>
-        <TouchableOpacity
-          onPress={() => {
-            addItem(itemlist);
-          }}
-        >
-          <View style={styles.confirmOrderView}>
-            <Text style={styles.confirmOrderText}>Confirm Order</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-      {modalVisible && (
-        <Modal
-          transparent={true}
-          animationType="fade"
-          visible={modalVisible}
-          onRequestClose={closeModal}
-        >
-          <TouchableWithoutFeedback onPress={closeModal}>
-            <View style={styles.modalBackground}>
-              <BlurView intensity={50} style={styles.blurContainer}>
-                <TouchableWithoutFeedback>
-                  <View style={styles.modalContent}>
-                    <Text style={[styles.modalText, { textAlign: "justify" }]}>
-                      {tilte}
-                    </Text>
-                    <ExpoImage
-                      source={{
-                        uri: ITEM_IMAGE_URL + item_ID,
-                      }}
-                      placeholder={"../../assets/grey.png"}
-                      priority="high"
-                      style={styles.row_icon}
-                    />
-                    <Text style={styles.modalText}>{description}</Text>
-                  </View>
-                </TouchableWithoutFeedback>
-              </BlurView>
+            <View style={styles.confirmOrderView}>
+              <Text style={styles.confirmOrderText}>Confirm Order</Text>
             </View>
-          </TouchableWithoutFeedback>
-        </Modal>
-      )}
-    </KeyboardAvoidingView>
+          </TouchableOpacity>
+        </View>
+        {modalVisible && (
+          <Modal
+            transparent={true}
+            animationType="fade"
+            visible={modalVisible}
+            onRequestClose={closeModal}
+          >
+            <TouchableWithoutFeedback onPress={closeModal}>
+              <View style={styles.modalBackground}>
+                <BlurView intensity={50} style={styles.blurContainer}>
+                  <TouchableWithoutFeedback>
+                    <View style={styles.modalContent}>
+                      <Text
+                        style={[styles.modalText, { textAlign: "justify" }]}
+                      >
+                        {tilte}
+                      </Text>
+                      <ExpoImage
+                        source={{
+                          uri: ITEM_IMAGE_URL + item_ID,
+                        }}
+                        placeholder={"../../assets/grey.png"}
+                        priority="high"
+                        style={styles.row_icon}
+                      />
+                      <Text style={styles.modalText}>{description}</Text>
+                    </View>
+                  </TouchableWithoutFeedback>
+                </BlurView>
+              </View>
+            </TouchableWithoutFeedback>
+          </Modal>
+        )}
+      </KeyboardAvoidingView>
+    </SafeAreaProvider>
   );
 }
 

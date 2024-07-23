@@ -3,10 +3,8 @@ import React, {
   useContext,
   useEffect,
   useCallback,
-  useRef,
 } from "react";
 import {
-  Animated,
   View,
   Text,
   StyleSheet,
