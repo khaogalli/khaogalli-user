@@ -12,7 +12,7 @@ import {
   TextInput,
   TouchableWithoutFeedback,
   Pressable,
-  Image
+  Image,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import {
@@ -34,6 +34,7 @@ export default function Restaurants({ route, navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const [description, setDescription] = useState("No Description Available");
   const [tilte, setTitle] = useState("");
+  const [item_ID, setItemID] = useState("");
 
   const openModal = () => {
     setModalVisible(true);
@@ -106,6 +107,7 @@ export default function Restaurants({ route, navigation }) {
       onPress={() => {
         openModal();
         setTitle(item.name);
+        setItemID(item.id);
         if (item.description != "") {
           setDescription(item.description);
         } else {
@@ -128,7 +130,7 @@ export default function Restaurants({ route, navigation }) {
               />
               <View style={{ padding: 10 }}>
                 <Text>{item.name}</Text>
-                <Text>{item.price}</Text>
+                <Text>Rs. {item.price}</Text>
               </View>
               <View style={{ marginLeft: "auto" }}>
                 <View style={styles.buttom_con}>
@@ -165,7 +167,7 @@ export default function Restaurants({ route, navigation }) {
             />
             <View style={{ padding: 10 }}>
               <Text>{item.name}</Text>
-              <Text>{item.price}</Text>
+              <Text>Rs. {item.price}</Text>
             </View>
             <View style={{ marginLeft: "auto" }}>
               {item.available ? (
@@ -363,6 +365,14 @@ export default function Restaurants({ route, navigation }) {
                     <Text style={[styles.modalText, { textAlign: "justify" }]}>
                       {tilte}
                     </Text>
+                    <ExpoImage
+                      source={{
+                        uri: ITEM_IMAGE_URL + item_ID,
+                      }}
+                      placeholder={"../../assets/grey.png"}
+                      priority="high"
+                      style={styles.row_icon}
+                    />
                     <Text style={styles.modalText}>{description}</Text>
                   </View>
                 </TouchableWithoutFeedback>

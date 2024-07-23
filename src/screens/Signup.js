@@ -95,12 +95,14 @@ export default function Signup({ route, navigation }) {
                 />
                 <Text style={styles.lable}>Password</Text>
                 <TextInput
+                  secureTextEntry={true}
                   style={[styles.input, { height: 40, width: 270 }]}
                   onChangeText={onChangePass}
                   value={password}
                 />
                 <Text style={styles.lable}>Confirm Password</Text>
                 <TextInput
+                  secureTextEntry={true}
                   style={[styles.input, { height: 40, width: 270 }]}
                   onChangeText={onChangeConPass}
                   value={Conpassword}

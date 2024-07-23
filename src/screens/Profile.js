@@ -54,6 +54,7 @@ const ProfilePage = ({ route, navigation }) => {
           </thead>
           <tbody>
             ${history
+              .filter((order) => !order.pending)
               .map(
                 (order) => `
                   <tr style="text-align:center">

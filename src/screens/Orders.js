@@ -79,7 +79,7 @@ export default function Home({ route, navigation }) {
       grandTotal += item.price * item.quantity;
     });
 
-    return modalOrder.items.map((item, index) => (
+    return modalOrder.items.map((item, index) => ( 
       <View
         key={index}
         style={{
@@ -89,7 +89,7 @@ export default function Home({ route, navigation }) {
       >
         <Text style={{ width: 120 }}>{item.name}</Text>
         <Text style={{ width: 100 }}>{item.quantity}</Text>
-        <Text>{item.quantity * item.price}</Text>
+        <Text>Rs. {item.quantity * item.price}</Text>
       </View>
     ));
   };
@@ -212,7 +212,7 @@ export default function Home({ route, navigation }) {
                       </View>
                       <View style={styles.total}>
                         <Text style={styles.totalAmount}>
-                          Grand Total: {grandTotal}
+                          Grand Total: Rs. {grandTotal}
                         </Text>
                       </View>
                     </View>

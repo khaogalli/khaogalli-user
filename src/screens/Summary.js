@@ -12,19 +12,13 @@ import { place_order } from "../services/api";
 
 export default function App({ route, navigation }) {
   const cart = route.params.cart;
-  const user = route.params.user; // get user name from the data base using the order id
+  const user = route.params.user; 
   const order = cart.Order;
   const resName = cart.Res;
   const resID = cart.ResID;
   console.log(order);
   console.log(resName);
   console.log(resID);
-  // Order Id is generated when Confirm button is clicked.
-  //api call to send order to backend ItemID, Name, Price list from backend(not good less work).//or get item price via params (better but more work)
-
-  for (let i = 0; i < order.length; i++) {
-    //logic to form the OrderItems array from the info given above.....
-  }
 
   let orderItems = [
     { item: "1", name: "Item 1", quantity: 2, price: 10 },
@@ -38,7 +32,7 @@ export default function App({ route, navigation }) {
     <View style={styles.row}>
       <Text style={styles.itemName}>{item.name}</Text>
       <Text style={styles.itemQuantity}>{item.qty}</Text>
-      <Text style={styles.itemAmount}>{item.price * item.qty}</Text>
+      <Text style={styles.itemAmount}>Rs. {item.price * item.qty}</Text>
     </View>
   );
 
