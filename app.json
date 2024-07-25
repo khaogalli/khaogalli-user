@@ -36,12 +36,7 @@
         "expo-build-properties",
         {
           "android": {
-            "usesCleartextTraffic": true,
-            "repositories":[
-              {
-                "url" : "https://phonepe.mycloudrepo.io/public/repositories/phonepe-intentsdk-android"
-              }
-            ]
+            "usesCleartextTraffic": true
           }
         }
       ],
