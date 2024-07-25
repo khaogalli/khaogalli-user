@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   TextInput,
-  SafeAreaView,
   StatusBar,
   TouchableOpacity,
 } from "react-native";

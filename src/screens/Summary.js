@@ -7,37 +7,34 @@ import {
   FlatList,
   TouchableOpacity,
   SafeAreaView,
+  Linking,
 } from "react-native";
-import { place_order } from "../services/api";
+import { get_payment_session, place_order } from "../services/api";
+import PhonePePaymentSDK from "react-native-phonepe-pg";
 
 export default function App({ route, navigation }) {
-  const cart = route.params.cart;
-  const user = route.params.user; 
-  const order = cart.Order;
-  const resName = cart.Res;
-  const resID = cart.ResID;
+  const order = route.params.order;
+  const resName = order.restaurant_name;
+  const resID = order.restaurant_id;
   console.log(order);
   console.log(resName);
   console.log(resID);
 
-  let orderItems = [
-    { item: "1", name: "Item 1", quantity: 2, price: 10 },
-    { item: "2", name: "Item 2", quantity: 1, price: 15 },
-    { item: "3", name: "Item 3", quantity: 3, price: 20 },
-  ];
-
-  orderItems = order;
+  const orderItems = order.items;
 
   const renderItem = ({ item }) => (
     <View style={styles.row}>
       <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemQuantity}>{item.qty}</Text>
-      <Text style={styles.itemAmount}>Rs. {item.price * item.qty}</Text>
+      <Text style={styles.itemQuantity}>{item.quantity}</Text>
+      <Text style={styles.itemAmount}>Rs. {item.price * item.quantity}</Text>
     </View>
   );
 
   const getTotalAmount = () => {
-    return orderItems.reduce((total, item) => total + item.price * item.qty, 0);
+    return orderItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   };
 
   return (
@@ -65,31 +62,23 @@ export default function App({ route, navigation }) {
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() => alert("Proceed to Payment")}
-          >
-            <Text style={styles.buttonText}>Proceed to Payment</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
             onPress={async () => {
-              let order = {
-                restaurant_id: resID,
-                items: orderItems.map((item) => ({
-                  id: item.item,
-                  quantity: item.qty,
-                })),
-              };
-              console.log(order);
               try {
-                let res = await place_order(order);
-                console.log(res.data);
-                navigation.navigate("Home", { user });
-              } catch (err) {
-                console.log(err.response.data);
+                let pay_res = await get_payment_session(order.id);
+                console.log(pay_res.data);
+                switch (pay_res.data.status) {
+                  case "Pending":
+                    Linking.openURL(pay_res.data.url);
+                    break;
+                  default:
+                    console.log("iojwdpops");
+                }
+              } catch (error) {
+                console.log(error);
               }
             }}
           >
-            <Text style={styles.buttonText}>Place Order</Text>
+            <Text style={styles.buttonText}>Proceed to pay</Text>
           </TouchableOpacity>
         </View>
       </View>

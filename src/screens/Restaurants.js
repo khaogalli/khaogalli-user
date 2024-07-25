@@ -19,6 +19,7 @@ import { AuthContext } from "../services/AuthContext";
 import {
   get_menu,
   ITEM_IMAGE_URL,
+  place_order,
   RESTAURANT_IMAGE_URL,
 } from "../services/api";
 import { BlurView } from "expo-blur";
@@ -100,7 +101,6 @@ export default function Restaurants({ route, navigation }) {
     cart.Order = selectedItems;
     console.log("final cart:");
     console.log(cart);
-    navigation.navigate("Summary", { cart });
   };
 
   const renderItem = ({ item }) => (
@@ -351,12 +351,27 @@ export default function Restaurants({ route, navigation }) {
         </View>
         <View style={styles.bottom}>
           <TouchableOpacity
-            onPress={() => {
+            onPress={async () => {
               addItem(itemlist);
+              let order = {
+                restaurant_id: restaurantID,
+                items: cart.Order.map((item) => ({
+                  id: item.item,
+                  quantity: item.qty,
+                })),
+              };
+              console.log(JSON.stringify(order));
+              try {
+                let res = await place_order(order);
+                console.log(res.data);
+                navigation.navigate("Summary", { order: res.data.order });
+              } catch (error) {
+                console.log(error);
+              }
             }}
           >
             <View style={styles.confirmOrderView}>
-              <Text style={styles.confirmOrderText}>Confirm Order</Text>
+              <Text style={styles.confirmOrderText}>Place Order</Text>
             </View>
           </TouchableOpacity>
         </View>

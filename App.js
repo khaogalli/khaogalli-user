@@ -1,5 +1,4 @@
 import React, { useContext, useState } from "react";
-import Api from "./src/ApiManager";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
@@ -14,8 +13,20 @@ import Summary from "./src/screens/Summary";
 import Orders from "./src/screens/Orders";
 import Profile from "./src/screens/Profile";
 import { AuthContext, AuthProvider } from "./src/services/AuthContext";
+import * as Linking from "expo-linking";
 
 const Stack = createNativeStackNavigator();
+
+const prefix = Linking.createURL("/");
+console.log(prefix);
+const linking = {
+  prefixes: [prefix],
+  config: {
+    screens: {
+      Summary: "summary",
+    },
+  },
+};
 
 const App = () => {
   const initialScreen = "Signup";
@@ -23,7 +34,7 @@ const App = () => {
   const { user } = useContext(AuthContext);
   console.log(user);
   return user ? (
-    <NavigationContainer>
+    <NavigationContainer linking={linking}>
       <Stack.Navigator
         initialRouteName={initialScreen}
         screenOptions={{
@@ -92,7 +103,6 @@ const App = () => {
             headerShown: false,
           }}
         />
-
       </Stack.Navigator>
     </NavigationContainer>
   ) : (

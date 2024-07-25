@@ -11,6 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
+    "scheme": "khaogalli",
     "assetBundlePatterns": [
       "**/*"
     ],
@@ -35,7 +36,12 @@
         "expo-build-properties",
         {
           "android": {
-            "usesCleartextTraffic": true
+            "usesCleartextTraffic": true,
+            "repositories":[
+              {
+                "url" : "https://phonepe.mycloudrepo.io/public/repositories/phonepe-intentsdk-android"
+              }
+            ]
           }
         }
       ],
