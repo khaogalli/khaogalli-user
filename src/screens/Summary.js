@@ -10,7 +10,6 @@ import {
   Linking,
 } from "react-native";
 import { get_payment_session, place_order } from "../services/api";
-import PhonePePaymentSDK from "react-native-phonepe-pg";
 
 export default function App({ route, navigation }) {
   const order = route.params.order;
