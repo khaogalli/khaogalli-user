@@ -14,7 +14,7 @@ import { get_orders } from "../services/api";
 import { BlurView } from "expo-blur";
 
 export default function Home({ route, navigation }) {
-  const [i, setI] = useState(true);
+  const [i, setI] = useState("paid");
   const username = route.params.username;
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -53,7 +53,7 @@ export default function Home({ route, navigation }) {
         openModal(item);
       }}
     >
-      {item.pending == i ? (
+      {item.status == i ? (
         <>
           <View style={[styles.renderItem, styles.listShadow]}>
             <View style={{ padding: 10 }}>
@@ -79,7 +79,7 @@ export default function Home({ route, navigation }) {
       grandTotal += item.price * item.quantity;
     });
 
-    return modalOrder.items.map((item, index) => ( 
+    return modalOrder.items.map((item, index) => (
       <View
         key={index}
         style={{
@@ -111,16 +111,19 @@ export default function Home({ route, navigation }) {
         </View>
         <Pressable
           onPress={() => {
-            setI(!i);
+            if (i == "paid") setI("completed");
+            else setI("paid");
           }}
           style={[
             {
-              backgroundColor: i ? "red" : "green",
+              backgroundColor: i == "paid" ? "red" : "green",
             },
             styles.filterButton,
           ]}
         >
-          <View>{i ? <Text>Pending</Text> : <Text>Completed</Text>}</View>
+          <View>
+            {i == "paid" ? <Text>Pending</Text> : <Text>Completed</Text>}
+          </View>
         </Pressable>
         {!loading ? (
           <View style={styles.bottomView}>

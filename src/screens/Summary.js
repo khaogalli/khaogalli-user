@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import {
   StatusBar,
   View,
@@ -8,10 +8,13 @@ import {
   TouchableOpacity,
   SafeAreaView,
   Linking,
+  Alert,
 } from "react-native";
 import { get_payment_session, place_order } from "../services/api";
+import { AuthContext } from "../services/AuthContext";
 
 export default function App({ route, navigation }) {
+  const { user } = useContext(AuthContext);
   const order = route.params.order;
   const resName = order.restaurant_name;
   const resID = order.restaurant_id;
@@ -69,8 +72,23 @@ export default function App({ route, navigation }) {
                   case "Pending":
                     Linking.openURL(pay_res.data.url);
                     break;
+                  case "Paid":
+                    navigation.navigate("Orders", { username: user.username });
+                    break;
+                  case "Failed":
+                    Alert.alert("Error", "Payment Failed", [
+                      {
+                        text: "Ok",
+                        onPress: () =>
+                          navigation.navigate("Restaurant", {
+                            itemId: resID,
+                            itemName: resName,
+                          }),
+                      },
+                    ]);
+                    break;
                   default:
-                    console.log("iojwdpops");
+                    console.log("Unknown status");
                 }
               } catch (error) {
                 console.log(error);

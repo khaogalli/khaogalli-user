@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
-const API_URL = "http://172.20.10.6:8080";
+const API_URL = "https://khaogalli.me";
 export const RESTAURANT_IMAGE_URL = API_URL + "/api/restaurants/image/";
 export const USER_IMAGE_URL = API_URL + "/api/users/image/";
 export const ITEM_IMAGE_URL = API_URL + "/api/restaurants/menu/item/image/";
