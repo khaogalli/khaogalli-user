@@ -66,7 +66,7 @@ export default function Signin({ route, navigation }) {
             <View style={[styles.center, styles.h1]}>
               <Image
                 style={styles.logo}
-                source={require("../../assets/download.png")}
+                source={require("../../assets/download1.png")}
               />
               <Text style={styles.signinText}>Sign in</Text>
               <View style={styles.formContainer}>

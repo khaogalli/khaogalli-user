@@ -121,7 +121,7 @@ export default function Home({ route, navigation }) {
                   height: 20,
                   width: 20,
                   borderRadius: 10,
-                  marginLeft: 230,
+                  marginLeft: "75%",
                 }}
               />
             </View>
