@@ -1,9 +1,4 @@
-import React, {
-  useState,
-  useContext,
-  useEffect,
-  useCallback,
-} from "react";
+import React, { useState, useContext, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -14,6 +9,7 @@ import {
   TouchableOpacity,
   TextInput,
   Image,
+  RefreshControl,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import {
@@ -31,19 +27,24 @@ export default function Home({ route, navigation }) {
   const [restaurants, setRestaurants] = useState([]);
   let [searchKey, setSearchKey] = useState("");
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
+  let getData = async () => {
+    console.log("get data");
+    try {
+      setRefreshing(true);
+      let res = await get_restaurants();
+      setLoading(false);
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+      setRestaurants(res.data.restaurants);
+      console.log(res.data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
   useEffect(() => {
-    let getData = async () => {
-      console.log("get data");
-      try {
-        let res = await get_restaurants();
-        setLoading(false);
-        setRestaurants(res.data.restaurants);
-        console.log(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
     getData();
   }, []);
 
@@ -77,16 +78,44 @@ export default function Home({ route, navigation }) {
         {searchKey != "" ? (
           typeof searchKey === "string" &&
           item.name.toLowerCase().includes(searchKey.toLowerCase()) ? (
-            <View style={[styles.renderItem, styles.listShadow]}>
+            <View
+              style={[
+                styles.renderItem,
+                styles.listShadow,
+                {
+                  borderColor:
+                    item.pending_orders > 10
+                      ? "#d9534f"
+                      : item.pending_orders > 5
+                      ? "#f0ad4e"
+                      : "#5cb85c",
+                  borderWidth: 2,
+                },
+              ]}
+            >
               <ExpoImage
                 source={{
                   uri: RESTAURANT_IMAGE_URL + item.id,
                 }}
+                priority="high"
                 placeholder={require("../../assets/grey.png")}
                 style={{ height: 65, width: 65, borderRadius: 10 }}
               />
               <View style={{ padding: 10 }}>
-                <Text>{item.name}</Text>
+                <Text style={{ fontSize: 16 }}>{item.name}</Text>
+                <Text
+                  style={{
+                    fontSize: 12,
+                    color:
+                      item.pending_orders > 10
+                        ? "#d9534f"
+                        : item.pending_orders > 5
+                        ? "#f0ad4e"
+                        : "#5cb85c",
+                  }}
+                >
+                  {item.pending_orders}
+                </Text>
               </View>
               <View>
                 <ExpoImage
@@ -95,14 +124,28 @@ export default function Home({ route, navigation }) {
                     height: 20,
                     width: 20,
                     borderRadius: 10,
-                    marginLeft: 230,
+                    marginLeft: "73%",
                   }}
                 />
               </View>
             </View>
           ) : null
         ) : (
-          <View style={[styles.renderItem, styles.listShadow]}>
+          <View
+            style={[
+              styles.renderItem,
+              styles.listShadow,
+              {
+                borderColor:
+                  item.pending_orders > 10
+                    ? "#d9534f"
+                    : item.pending_orders > 5
+                    ? "#f0ad4e"
+                    : "#5cb85c",
+                borderWidth: 2,
+              },
+            ]}
+          >
             <ExpoImage
               source={{
                 uri: RESTAURANT_IMAGE_URL + item.id,
@@ -112,7 +155,20 @@ export default function Home({ route, navigation }) {
               style={{ height: 65, width: 65, borderRadius: 10 }}
             />
             <View style={{ padding: 10 }}>
-              <Text>{item.name}</Text>
+              <Text style={{ fontSize: 16 }}>{item.name}</Text>
+              <Text
+                style={{
+                  fontSize: 12,
+                  color:
+                    item.pending_orders > 10
+                      ? "#d9534f"
+                      : item.pending_orders > 5
+                      ? "#f0ad4e"
+                      : "#5cb85c",
+                }}
+              >
+                {item.pending_orders}
+              </Text>
             </View>
             <View>
               <ExpoImage
@@ -121,7 +177,7 @@ export default function Home({ route, navigation }) {
                   height: 20,
                   width: 20,
                   borderRadius: 10,
-                  marginLeft: "75%",
+                  marginLeft: "73%",
                 }}
               />
             </View>
@@ -197,6 +253,9 @@ export default function Home({ route, navigation }) {
             data={restaurants}
             renderItem={renderItem}
             keyExtractor={(item, index) => index.toString()}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={getData} />
+            }
           />
         </View>
       ) : (

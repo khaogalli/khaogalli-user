@@ -13,6 +13,7 @@ import {
 import { get_orders } from "../services/api";
 import { BlurView } from "expo-blur";
 
+
 export default function Home({ route, navigation }) {
   const [i, setI] = useState("paid");
   const username = route.params.username;
