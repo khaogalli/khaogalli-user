@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   StatusBar,
   View,
@@ -18,6 +18,7 @@ export default function App({ route, navigation }) {
   const order = route.params.order;
   const resName = order.restaurant_name;
   const resID = order.restaurant_id;
+  const [paid, setPaid] = useState(false);
   console.log(order);
   console.log(resName);
   console.log(resID);
@@ -73,6 +74,7 @@ export default function App({ route, navigation }) {
                     Linking.openURL(pay_res.data.url);
                     break;
                   case "Paid":
+                    setPaid(true);
                     navigation.navigate("Orders", { username: user.username });
                     break;
                   case "Failed":
@@ -95,7 +97,11 @@ export default function App({ route, navigation }) {
               }
             }}
           >
-            <Text style={styles.buttonText}>Proceed to pay</Text>
+            {paid ? (
+              <Text style={styles.buttonText}>Verify</Text>
+            ) : (
+              <Text style={styles.buttonText}>Proceed to pay</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>

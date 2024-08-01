@@ -69,8 +69,8 @@ export default function Home({ route, navigation }) {
   const [photo, setPhoto] = useState(USER_IMAGE_URL + user.id);
 
   const renderItem = ({ item }) => {
-    const ot = new Date(item.opening_time);
-    const ct = new Date(item.closing_time);
+    const ot = new Date(item.open_time);
+    const ct = new Date(item.close_time);
 
     let opening = new Date();
     opening.setHours(ot.getHours(), ot.getMinutes(), 0, 0);
