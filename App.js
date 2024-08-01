@@ -12,6 +12,7 @@ import Restaurants from "./src/screens/Restaurants";
 import Summary from "./src/screens/Summary";
 import Orders from "./src/screens/Orders";
 import Profile from "./src/screens/Profile";
+import Analysis from "./src/screens/Analysis";
 import { AuthContext, AuthProvider } from "./src/services/AuthContext";
 import * as Linking from "expo-linking";
 
@@ -85,6 +86,13 @@ const App = () => {
         <Stack.Screen
           name="Restaurants"
           component={Restaurants}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <Stack.Screen
+          name="Analysis"
+          component={Analysis}
           options={{
             headerShown: false,
           }}

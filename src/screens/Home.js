@@ -10,6 +10,7 @@ import {
   TextInput,
   Image,
   RefreshControl,
+  Alert,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import {
@@ -68,10 +69,30 @@ export default function Home({ route, navigation }) {
   const [photo, setPhoto] = useState(USER_IMAGE_URL + user.id);
 
   const renderItem = ({ item }) => {
+    const ot = new Date(item.opening_time);
+    const ct = new Date(item.closing_time);
+
+    let opening = new Date();
+    opening.setHours(ot.getHours(), ot.getMinutes(), 0, 0);
+    let closing = new Date();
+    closing.setHours(ct.getHours(), ct.getMinutes(), 0, 0);
+    let current = new Date();
+    let open = false;
+    if (current >= opening && current <= closing) {
+      open = true;
+    }
     return (
       <Pressable
         onPress={() => {
           console.log(item.id);
+          if (!open) {
+            Alert.alert("Sorry", "Restarant is closed.", [
+              {
+                text: "OK",
+              },
+            ]);
+            return;
+          }
           goToRestaurants(item.id, item.name);
         }}
       >
@@ -90,6 +111,10 @@ export default function Home({ route, navigation }) {
                       ? "#f0ad4e"
                       : "#5cb85c",
                   borderWidth: 2,
+                  backgroundColor: "#f0f0f0",
+                },
+                {
+                  backgroundColor: !open ? "#f0f0f0" : "white",
                 },
               ]}
             >
@@ -143,6 +168,9 @@ export default function Home({ route, navigation }) {
                     ? "#f0ad4e"
                     : "#5cb85c",
                 borderWidth: 2,
+              },
+              {
+                backgroundColor: !open ? "#f0f0f0" : "white",
               },
             ]}
           >

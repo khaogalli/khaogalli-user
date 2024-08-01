@@ -103,6 +103,11 @@ const ProfilePage = ({ route, navigation }) => {
     }
   };
 
+  const analysis = () => {
+    console.log("analysis");
+    navigation.navigate("Analysis", { username });
+  };
+
   const handleGeneratePDF = () => {
     generatePdf();
     console.log("PDF generated");
@@ -140,6 +145,14 @@ const ProfilePage = ({ route, navigation }) => {
         <TouchableOpacity onPress={orders}>
           <View style={styles.buttonText}>
             <Text style={styles.name}>Orders</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={analysis}>
+          <View style={styles.buttonText}>
+            <Text style={styles.name}>Analysis</Text>
           </View>
         </TouchableOpacity>
       </View>

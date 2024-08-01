@@ -67,4 +67,8 @@ export const get_payment_session = (orderID) => {
   return api.get("/api/orders/payment/" + orderID);
 };
 
+export const stats = () => {
+  return api.get("/api/stats/user");
+};
+
 export default api;
