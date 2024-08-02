@@ -85,6 +85,7 @@ export default function Home({ route, navigation }) {
       <Pressable
         onPress={() => {
           console.log(item.id);
+          //console.log(opening + " " + closing);
           if (!open) {
             Alert.alert("Sorry", "Restarant is closed.", [
               {

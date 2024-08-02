@@ -66,6 +66,7 @@ export default function App({ route, navigation }) {
           <TouchableOpacity
             style={styles.button}
             onPress={async () => {
+              setPaid(true);
               try {
                 let pay_res = await get_payment_session(order.id);
                 console.log(pay_res.data);
@@ -74,7 +75,6 @@ export default function App({ route, navigation }) {
                     Linking.openURL(pay_res.data.url);
                     break;
                   case "Paid":
-                    setPaid(true);
                     navigation.navigate("Orders", { username: user.username });
                     break;
                   case "Failed":

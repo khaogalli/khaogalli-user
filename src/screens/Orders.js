@@ -9,10 +9,12 @@ import {
   FlatList,
   RefreshControl,
   TouchableWithoutFeedback,
+  BackHandler,
+  TouchableOpacity,
 } from "react-native";
-import { get_orders } from "../services/api";
+import { cancel_order, get_orders } from "../services/api";
 import { BlurView } from "expo-blur";
-
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function Home({ route, navigation }) {
   const [i, setI] = useState("paid");
@@ -22,6 +24,21 @@ export default function Home({ route, navigation }) {
   const [orders, setOrders] = useState([]);
   const [modalOrder, setModalOrder] = useState();
   const [modalVisible, setModalVisible] = useState(false);
+  const [canCancel, setCanCancel] = useState(false);
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate("Home");
+        return true;
+      };
+
+      BackHandler.addEventListener("hardwareBackPress", onBackPress);
+
+      return () => {
+        BackHandler.removeEventListener("hardwareBackPress", onBackPress);
+      };
+    }, [navigation])
+  );
 
   const getData = async () => {
     setRefreshing(true);
@@ -41,6 +58,16 @@ export default function Home({ route, navigation }) {
 
   const openModal = (order) => {
     setModalOrder(order);
+    let ct = new Date();
+    let orderTime = new Date(order.created_at);
+    console.log(ct - orderTime);
+    if (ct - orderTime < 60000) {
+      console.log("can");
+      setCanCancel(true);
+    } else {
+      console.log("cannot");
+      setCanCancel(false);
+    }
     setModalVisible(true);
   };
 
@@ -95,6 +122,14 @@ export default function Home({ route, navigation }) {
     ));
   };
 
+  const cancelOrder = async (orderID) => {
+    try {
+      let res = await cancel_order(orderID);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
     <>
       <StatusBar backgroundColor="#ad8840" />
@@ -110,22 +145,53 @@ export default function Home({ route, navigation }) {
             }}
           ></View>
         </View>
-        <Pressable
-          onPress={() => {
-            if (i == "paid") setI("completed");
-            else setI("paid");
-          }}
-          style={[
-            {
-              backgroundColor: i == "paid" ? "red" : "green",
-            },
-            styles.filterButton,
-          ]}
-        >
-          <View>
-            {i == "paid" ? <Text>Pending</Text> : <Text>Completed</Text>}
-          </View>
-        </Pressable>
+        <View style={{ justifyContent: "space-around", flexDirection: "row" }}>
+          <Pressable
+            onPress={() => {
+              setI("paid");
+            }}
+            style={[
+              {
+                borderBottomWidth: i == "paid" ? 2 : 0,
+              },
+              styles.filterButton,
+            ]}
+          >
+            <View>
+              <Text>Pending</Text>
+            </View>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              setI("completed");
+            }}
+            style={[
+              {
+                borderBottomWidth: i == "completed" ? 2 : 0,
+              },
+              styles.filterButton,
+            ]}
+          >
+            <View>
+              <Text>Completed</Text>
+            </View>
+          </Pressable>
+          <Pressable
+            onPress={() => {
+              setI("cancelled");
+            }}
+            style={[
+              {
+                borderBottomWidth: i == "cancelled" ? 2 : 0,
+              },
+              styles.filterButton,
+            ]}
+          >
+            <View>
+              <Text>Cancelled</Text>
+            </View>
+          </Pressable>
+        </View>
         {!loading ? (
           <View style={styles.bottomView}>
             <FlatList
@@ -219,6 +285,25 @@ export default function Home({ route, navigation }) {
                           Grand Total: Rs. {grandTotal}
                         </Text>
                       </View>
+                      {canCancel ? (
+                        <View>
+                          <TouchableOpacity
+                            onPress={() => {
+                              cancelOrder(modalOrder.id);
+                            }}
+                            style={{
+                              margin: 10,
+                              backgroundColor: "red",
+                              padding: 10,
+                              borderRadius: 5,
+                            }}
+                          >
+                            <View>
+                              <Text>Cancel</Text>
+                            </View>
+                          </TouchableOpacity>
+                        </View>
+                      ) : null}
                     </View>
                   </TouchableWithoutFeedback>
                 </BlurView>

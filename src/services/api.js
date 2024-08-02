@@ -71,4 +71,8 @@ export const stats = () => {
   return api.get("/api/stats/user");
 };
 
+export const cancel_order = (orderID) => {
+  return api.post("/api/orders/cancel/" + orderID);
+};
+
 export default api;
