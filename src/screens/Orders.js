@@ -15,7 +15,6 @@ import {
 import { cancel_order, get_orders } from "../services/api";
 import { BlurView } from "expo-blur";
 import { useFocusEffect } from "@react-navigation/native";
-
 export default function Home({ route, navigation }) {
   const [i, setI] = useState("paid");
   const username = route.params.username;
@@ -290,6 +289,8 @@ export default function Home({ route, navigation }) {
                           <TouchableOpacity
                             onPress={() => {
                               cancelOrder(modalOrder.id);
+                              setI("cancelled");
+                              closeModal();
                             }}
                             style={{
                               margin: 10,
