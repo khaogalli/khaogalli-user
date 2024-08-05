@@ -12,8 +12,6 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-
-import Api from "../ApiManager";
 import { AuthContext } from "../services/AuthContext";
 import { Image } from "expo-image";
 
