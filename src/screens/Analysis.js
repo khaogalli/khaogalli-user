@@ -7,7 +7,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { LineChart } from "react-native-chart-kit";
+import { ContributionGraph, LineChart } from "react-native-chart-kit";
 import { stats } from "../services/api";
 import { useFocusEffect } from "@react-navigation/native";
 
@@ -27,7 +27,22 @@ export default function Home({ route, navigation }) {
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ],
+    orders_per_day: {},
   });
+
+  let commitsData = [
+    { date: "2017-01-02", count: 1 },
+    { date: "2017-01-03", count: 2 },
+    { date: "2017-01-04", count: 3 },
+    { date: "2017-01-05", count: 4 },
+    { date: "2017-01-06", count: 5 },
+    { date: "2017-01-30", count: 2 },
+    { date: "2017-01-31", count: 3 },
+    { date: "2017-03-01", count: 2 },
+    { date: "2017-04-02", count: 4 },
+    { date: "2017-03-05", count: 2 },
+    { date: "2017-02-30", count: 4 },
+  ];
 
   const getData = async () => {
     setRefreshing(true);
@@ -42,6 +57,10 @@ export default function Home({ route, navigation }) {
       setRefreshing(false);
     }, 2000);
   };
+
+  commitsData = Object.keys(statis.orders_per_day).map((date) => {
+    return { date: date, count: statis.orders_per_day[date] };
+  });
 
   useFocusEffect(
     useCallback(() => {
@@ -123,7 +142,7 @@ export default function Home({ route, navigation }) {
           ))}
         </View>
 
-        <View style={{ paddingTop: 20 }}>
+        <View style={{ paddingTop: 20, marginBottom: 10 }}>
           <LineChart
             data={{
               labels: [
@@ -168,6 +187,30 @@ export default function Home({ route, navigation }) {
             bezier
             style={{
               borderRadius: 16,
+            }}
+          />
+        </View>
+        <View>
+          <ContributionGraph
+            values={commitsData}
+            endDate={new Date()}
+            numDays={120}
+            width={Dimensions.get("window").width}
+            height={220}
+            chartConfig={{
+              backgroundColor: "#e26a00",
+              backgroundGradientFrom: "#fb8c00",
+              backgroundGradientTo: "#ffa726",
+              color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+              style: {
+                borderRadius: 16,
+              },
+              propsForDots: {
+                r: "3",
+                strokeWidth: "2",
+                stroke: "#ffa726",
+              },
             }}
           />
         </View>
