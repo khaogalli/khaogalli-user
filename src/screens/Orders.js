@@ -60,7 +60,7 @@ export default function Home({ route, navigation }) {
     let ct = new Date();
     let orderTime = new Date(order.created_at);
     console.log(ct - orderTime);
-    if (ct - orderTime < 60000) {
+    if (ct - orderTime < 180000) {
       console.log("can");
       setCanCancel(true);
     } else {
