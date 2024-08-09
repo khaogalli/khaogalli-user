@@ -11,6 +11,7 @@ import Home from "./src/screens/Home";
 import Restaurants from "./src/screens/Restaurants";
 import Summary from "./src/screens/Summary";
 import Orders from "./src/screens/Orders";
+import Notification from "./src/screens/Notification";
 import Profile from "./src/screens/Profile";
 import Analysis from "./src/screens/Analysis";
 import { AuthContext, AuthProvider } from "./src/services/AuthContext";
@@ -111,6 +112,13 @@ const App = () => {
             headerShown: false,
           }}
         />
+        <Stack.Screen
+          name="Notification"
+          component={Notification}
+          options={{
+            headerShown: false,
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   ) : (
@@ -167,108 +175,3 @@ export default () => {
     </AuthProvider>
   );
 };
-// import React, { useState } from "react";
-// import {
-//   Modal,
-//   View,
-//   Text,
-//   StyleSheet,
-//   TouchableOpacity,
-//   TouchableWithoutFeedback,
-// } from "react-native";
-// import { BlurView } from "expo-blur";
-
-// const App = () => {
-//   const [modalVisible, setModalVisible] = useState(false);
-
-//   const openModal = () => {
-//     setModalVisible(true);
-//   };
-
-//   const closeModal = () => {
-//     setModalVisible(false);
-//   };
-
-//   return (
-//     <View style={styles.container}>
-//       <TouchableOpacity onPress={openModal} style={styles.button}>
-//         <Text style={styles.buttonText}>Open Pop-up</Text>
-//       </TouchableOpacity>
-
-//       {modalVisible && (
-//         <Modal
-//           transparent={true}
-//           animationType="fade"
-//           visible={modalVisible}
-//           onRequestClose={closeModal}
-//         >
-//           <TouchableWithoutFeedback onPress={closeModal}>
-//             <View style={styles.modalBackground}>
-//               <BlurView intensity={50} style={styles.blurContainer}>
-//                 <TouchableWithoutFeedback>
-//                   <View style={styles.modalContent}>
-//                     <Text style={styles.modalText}>This is a pop-up!</Text>
-//                     <TouchableOpacity
-//                       onPress={closeModal}
-//                       style={styles.closeButton}
-//                     >
-//                       <Text style={styles.buttonText}>Close</Text>
-//                     </TouchableOpacity>
-//                   </View>
-//                 </TouchableWithoutFeedback>
-//               </BlurView>
-//             </View>
-//           </TouchableWithoutFeedback>
-//         </Modal>
-//       )}
-//     </View>
-//   );
-// };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   button: {
-//     padding: 10,
-//     backgroundColor: "blue",
-//     borderRadius: 5,
-//   },
-//   buttonText: {
-//     color: "white",
-//     fontSize: 16,
-//   },
-//   modalBackground: {
-//     flex: 1,
-//     justifyContent: "center",
-//     alignItems: "center",
-//     backgroundColor: "rgba(0, 0, 0, 0.5)",
-//   },
-//   blurContainer: {
-//     width: "100%",
-//     height: "100%",
-//     justifyContent: "center",
-//     alignItems: "center",
-//   },
-//   modalContent: {
-//     width: 300,
-//     padding: 20,
-//     backgroundColor: "white",
-//     borderRadius: 10,
-//     alignItems: "center",
-//   },
-//   modalText: {
-//     fontSize: 18,
-//     marginBottom: 10,
-//   },
-//   closeButton: {
-//     marginTop: 10,
-//     padding: 10,
-//     backgroundColor: "red",
-//     borderRadius: 5,
-//   },
-// });
-
-// export default App;

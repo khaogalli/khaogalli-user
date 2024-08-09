@@ -118,6 +118,11 @@ const ProfilePage = ({ route, navigation }) => {
     navigation.navigate("Orders", { username });
   };
 
+  const notifications = () => {
+    console.log("Notification");
+    navigation.navigate("Notification", { username });
+  };
+
   const [nonce, setNonce] = useState(genNonce());
 
   const resetNonce = () => {
@@ -145,6 +150,14 @@ const ProfilePage = ({ route, navigation }) => {
         <TouchableOpacity onPress={orders}>
           <View style={styles.buttonText}>
             <Text style={styles.name}>Orders</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity onPress={notifications}>
+          <View style={styles.buttonText}>
+            <Text style={styles.name}>Notifications</Text>
           </View>
         </TouchableOpacity>
       </View>
