@@ -85,7 +85,10 @@ export default function Home({ route, navigation }) {
           <View style={[styles.renderItem, styles.listShadow]}>
             <View style={{ padding: 10 }}>
               <Text>Order ID</Text>
-              <Text>{item.id}</Text>
+              <Text>{item.id.substring(24, 36)}</Text>
+            </View>
+            <View style={{ padding: 10 }}>
+              <Text>15min</Text>
             </View>
             <View style={styles.dateTime}>
               <Text>{item.created_at.substring(0, 10)}</Text>
@@ -339,8 +342,6 @@ const styles = StyleSheet.create({
   },
   dateTime: {
     padding: 10,
-    position: "absolute",
-    right: 0,
     marginBottom: 5,
   },
   container: {
@@ -371,6 +372,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
+    justifyContent: "space-between",
   },
   listShadow: {
     shadowColor: "#000",

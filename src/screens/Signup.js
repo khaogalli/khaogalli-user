@@ -11,6 +11,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Alert,
+  ScrollView,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import { Image } from "expo-image";
@@ -73,60 +74,62 @@ export default function Signup({ route, navigation }) {
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={styles.container}
     >
-      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <View style={styles.inner}>
-          <StatusBar backgroundColor="#ad8840" />
+      <ScrollView style={{ marginTop: "22%" }}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+          <View style={styles.inner}>
+            <StatusBar backgroundColor="#ad8840" />
 
-          <View style={styles.center}>
-            <Image
-              style={[styles.logo, styles.h1]}
-              source={require("../../assets/download1.png")}
-            />
-            <Text style={styles.signupText}>Sign up</Text>
-            <View style={styles.formContainer}>
-              <View style={{ marginLeft: 15, marginTop: 20 }}>
-                <Text style={styles.lable}>Username</Text>
-                <TextInput
-                  style={[styles.input, { height: 40, width: 270 }]}
-                  onChangeText={onChangeText}
-                  value={username}
-                />
-                <Text style={styles.lable}>Password</Text>
-                <TextInput
-                  secureTextEntry={true}
-                  style={[styles.input, { height: 40, width: 270 }]}
-                  onChangeText={onChangePass}
-                  value={password}
-                />
-                <Text style={styles.lable}>Confirm Password</Text>
-                <TextInput
-                  secureTextEntry={true}
-                  style={[styles.input, { height: 40, width: 270 }]}
-                  onChangeText={onChangeConPass}
-                  value={Conpassword}
-                />
+            <View style={styles.center}>
+              <Image
+                style={[styles.logo, styles.h1]}
+                source={require("../../assets/download1.png")}
+              />
+              <Text style={styles.signupText}>Sign up</Text>
+              <View style={styles.formContainer}>
+                <View style={{ marginLeft: 15, marginTop: 20 }}>
+                  <Text style={styles.lable}>Username</Text>
+                  <TextInput
+                    style={[styles.input, { height: 40, width: 270 }]}
+                    onChangeText={onChangeText}
+                    value={username}
+                  />
+                  <Text style={styles.lable}>Password</Text>
+                  <TextInput
+                    secureTextEntry={true}
+                    style={[styles.input, { height: 40, width: 270 }]}
+                    onChangeText={onChangePass}
+                    value={password}
+                  />
+                  <Text style={styles.lable}>Confirm Password</Text>
+                  <TextInput
+                    secureTextEntry={true}
+                    style={[styles.input, { height: 40, width: 270 }]}
+                    onChangeText={onChangeConPass}
+                    value={Conpassword}
+                  />
 
-                <Text style={{ color: "#ffbf00", textAlign: "center" }}>
-                  {error}
-                </Text>
-
-                <TouchableOpacity style={styles.button1} onPress={verify}>
-                  <Text style={styles.continueText}>Continue</Text>
-                </TouchableOpacity>
-
-                <TouchableOpacity
-                  style={{ marginTop: 15 }}
-                  onPress={goToSignin}
-                >
-                  <Text style={styles.footerText}>
-                    Already Signed up? Sign in
+                  <Text style={{ color: "#ffbf00", textAlign: "center" }}>
+                    {error}
                   </Text>
-                </TouchableOpacity>
+
+                  <TouchableOpacity style={styles.button1} onPress={verify}>
+                    <Text style={styles.continueText}>Continue</Text>
+                  </TouchableOpacity>
+
+                  <TouchableOpacity
+                    style={{ marginTop: 15 }}
+                    onPress={goToSignin}
+                  >
+                    <Text style={styles.footerText}>
+                      Already Signed up? Sign in
+                    </Text>
+                  </TouchableOpacity>
+                </View>
               </View>
             </View>
           </View>
-        </View>
-      </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback>
+      </ScrollView>
     </KeyboardAvoidingView>
   );
 }
