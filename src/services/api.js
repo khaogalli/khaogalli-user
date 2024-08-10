@@ -39,6 +39,10 @@ export const registerUser = (user) => {
   return api.post("/api/users", { user });
 };
 
+export const update_push_token = (expo_push_token) => {
+  return api.put("/api/users/expo_push_token", { expo_push_token });
+};
+
 export const get_restaurants = () => {
   return api.get("/api/restaurants/list");
 };

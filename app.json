@@ -19,6 +19,7 @@
       "supportsTablet": true
     },
     "android": {
+      "googleServicesFile": "./google-services.json",  
       "adaptiveIcon": {
         "foregroundImage": "./assets/download1.png",
         "backgroundColor": "#ffffff"
@@ -26,7 +27,7 @@
       "permissions": [
         "android.permission.WRITE_EXTERNAL_STORAGE"
       ],
-      "package": "com.heet10104.KhaoGalliUser"
+      "package": "me.khaogalli.user"
     },
     "web": {
       "favicon": "./assets/download1.png"

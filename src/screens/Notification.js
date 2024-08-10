@@ -94,7 +94,7 @@ export default function Home({ route, navigation }) {
         }}
       >
         <Text style={{ width: "100%", textAlign: "center" }}>
-          {modalNoti.description}
+          {modalNoti.body}
         </Text>
       </View>
     );
