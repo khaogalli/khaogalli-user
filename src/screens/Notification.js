@@ -10,7 +10,7 @@ import {
   RefreshControl,
   TouchableWithoutFeedback,
 } from "react-native";
-import { cancel_order, get_orders } from "../services/api";
+import { get_noti } from "../services/api";
 import { BlurView } from "expo-blur";
 
 export default function Home({ route, navigation }) {
@@ -23,12 +23,13 @@ export default function Home({ route, navigation }) {
 
   const getData = async () => {
     setRefreshing(true);
-    let res = await get_orders(100);
+    let res = await get_noti();
     setLoading(false);
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
     console.log(res.data);
+    setNotifications(res.data);
   };
 
   useEffect(() => {
@@ -68,6 +69,7 @@ export default function Home({ route, navigation }) {
       <>
         <View style={[styles.renderItem, styles.listShadow]}>
           <View style={{ padding: 10 }}>
+            <Text style={{ fontSize: 20 }}>{item.restaurant_name}</Text>
             <Text>{item.title}</Text>
           </View>
           <View style={styles.dateTime}>
