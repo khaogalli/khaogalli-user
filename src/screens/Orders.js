@@ -58,9 +58,9 @@ export default function Home({ route, navigation }) {
   const openModal = (order) => {
     setModalOrder(order);
     let ct = new Date();
-    let orderTime = new Date(order.created_at);
+    let orderTime = new Date(order.order_placed_time);
     console.log(ct - orderTime);
-    if (ct - orderTime < 180000) {
+    if (ct - orderTime < 60000) {
       console.log("can");
       setCanCancel(true);
     } else {
@@ -72,6 +72,20 @@ export default function Home({ route, navigation }) {
 
   const closeModal = () => {
     setModalVisible(false);
+  };
+
+  const calculate_estimated_time = (order) => {
+    const currentTime = new Date();
+    const orderPlacedTimeDate = new Date(order.order_placed_time);
+
+    const elapsedTimeInMinutes =
+      (currentTime - orderPlacedTimeDate) / 1000 / 60;
+
+    const avgWaitTimeInMinutes = order.avg_wait_time / 60;
+
+    const remainingWaitTime = avgWaitTimeInMinutes - elapsedTimeInMinutes;
+
+    return Math.max(remainingWaitTime.toFixed(2), 0);
   };
 
   const renderItem = ({ item }) => (
@@ -88,11 +102,18 @@ export default function Home({ route, navigation }) {
               <Text>{item.id.substring(24, 36)}</Text>
             </View>
             <View style={{ padding: 10 }}>
-              <Text>15min</Text>
+              <Text>{calculate_estimated_time(item)} min.</Text>
             </View>
             <View style={styles.dateTime}>
               <Text>{item.created_at.substring(0, 10)}</Text>
-              <Text>{item.created_at.substring(11, 19)}</Text>
+              <Text>
+                {new Date(item.order_placed_time).toLocaleTimeString("en-GB", {
+                  hour12: true,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                })}
+              </Text>
             </View>
           </View>
         </>

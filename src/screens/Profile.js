@@ -60,10 +60,14 @@ const ProfilePage = ({ route, navigation }) => {
                   <tr style="text-align:center">
                     <td>${order.id}</td>
                     <td>${order.restaurant_name}</td>
-                    <td>${order.created_at.substring(
-                      0,
-                      10
-                    )}<br>${order.created_at.substring(11, 19)}</td>
+                    <td>${order.created_at.substring(0, 10)}<br>${new Date(
+                  order.order_placed_time
+                ).toLocaleTimeString("en-GB", {
+                  hour12: true,
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  second: "2-digit",
+                })}</td>
                     <td>
                       <ul style="list-style-type: none">
                         ${order.items
