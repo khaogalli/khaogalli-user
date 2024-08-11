@@ -29,26 +29,15 @@ export default function Home({ route, navigation }) {
     ],
     orders_per_day: {},
   });
-
-  let commitsData = [
-    { date: "2017-01-02", count: 1 },
-    { date: "2017-01-03", count: 2 },
-    { date: "2017-01-04", count: 3 },
-    { date: "2017-01-05", count: 4 },
-    { date: "2017-01-06", count: 5 },
-    { date: "2017-01-30", count: 2 },
-    { date: "2017-01-31", count: 3 },
-    { date: "2017-03-01", count: 2 },
-    { date: "2017-04-02", count: 4 },
-    { date: "2017-03-05", count: 2 },
-    { date: "2017-02-30", count: 4 },
-  ];
+  const name = username;
+  const [selectedDay, setSelectedDay] = useState(0);
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const AOV = statis.total_spent / statis.total_orders;
 
   const getData = async () => {
     setRefreshing(true);
     try {
       let res = await stats();
-      console.log(res.data);
       setStatis(res.data);
     } catch (e) {
       console.log(e);
@@ -67,10 +56,6 @@ export default function Home({ route, navigation }) {
       getData();
     }, [])
   );
-  const name = username;
-  const [selectedDay, setSelectedDay] = useState(0);
-  const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
-  const AOV = statis.total_spent / statis.total_orders;
   return (
     <>
       <StatusBar backgroundColor="#ad8840" />
@@ -86,13 +71,7 @@ export default function Home({ route, navigation }) {
             <Text>Total Orders</Text>
             <Text>Total Expense</Text>
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              marginBottom: 20,
-            }}
-          >
+          <View style={styles.rowContainer}>
             <Text style={{ fontSize: 24, color: "#e26a00" }}>
               {statis.total_orders}
             </Text>
@@ -105,13 +84,7 @@ export default function Home({ route, navigation }) {
           >
             <Text>Average Order Value</Text>
           </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-around",
-              marginBottom: 20,
-            }}
-          >
+          <View style={styles.rowContainer}>
             <Text style={{ fontSize: 24, color: "#e26a00" }}>
               {AOV.toFixed(2)}
             </Text>
@@ -214,19 +187,17 @@ export default function Home({ route, navigation }) {
             }}
           />
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-around",
-            marginVertical: 20,
-          }}
-        ></View>
       </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  rowContainer: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    marginBottom: 20,
+  },
   container_day: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -250,30 +221,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     paddingTop: 20,
-  },
-  renderItem: {
-    padding: 15,
-    marginBottom: 7,
-    margin: 2,
-    borderRadius: 20,
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "white",
-  },
-  listShadow: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 10,
   },
   selectedDayContainer: {
     borderBottomWidth: 2,

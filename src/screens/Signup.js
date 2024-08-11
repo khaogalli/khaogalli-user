@@ -21,7 +21,6 @@ export default function Signup({ route, navigation }) {
   const [password, onChangePass] = React.useState("");
   const [Conpassword, onChangeConPass] = React.useState("");
   const [error, setError] = React.useState("");
-
   const { register } = useContext(AuthContext);
 
   goToSignin = () => {
@@ -62,7 +61,6 @@ export default function Signup({ route, navigation }) {
     try {
       await register(username, password);
     } catch (err) {
-      console.log("hi" + err);
       if (err.response.status == 422) {
         if (err.response.data.errors.hasOwnProperty("username"))
           setError("Username already taken");
@@ -169,21 +167,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-around",
   },
-  header: {
-    fontSize: 36,
-    marginBottom: 48,
-  },
-  textInput: {
-    height: 40,
-    borderColor: "#000000",
-    borderBottomWidth: 1,
-    marginBottom: 36,
-  },
-  btnContainer: {
-    backgroundColor: "white",
-    marginTop: 12,
-  },
-
   logo: {
     width: 150,
     height: 150,
@@ -191,18 +174,15 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 2,
   },
-
   center: {
     marginTop: "0%",
     alignItems: "center",
     backgroundColor: "#f74449",
   },
-
   h1: {
     paddingTop: 10,
     alignItems: "center",
   },
-
   input: {
     marginBottom: 12,
     borderWidth: 1,

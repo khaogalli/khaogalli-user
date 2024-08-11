@@ -11,22 +11,20 @@ import { Image as ExpoImage } from "expo-image";
 const ProfilePage = ({ route, navigation }) => {
   const { user } = useContext(AuthContext);
   const { logout } = useContext(AuthContext);
+  const [history, setHistory] = useState([]);
   const username = user.username;
   const userID = user.id;
-
-  goToChnagePassword = () => {
-    navigation.navigate("ChangePassword", { username });
-  };
-
-  const [history, setHistory] = useState([]);
 
   useEffect(() => {
     const getData = async () => {
       let res = await get_orders(100);
-      console.log(res.data[0].items);
       setHistory(res.data);
     };
-    getData();
+    try {
+      getData();
+    } catch (err) {
+      console.log(err);
+    }
   }, []);
 
   const icon_path = Image.resolveAssetSource(
@@ -89,6 +87,10 @@ const ProfilePage = ({ route, navigation }) => {
     </html>
   `;
 
+  goToChnagePassword = () => {
+    navigation.navigate("ChangePassword", { username });
+  };
+
   let generatePdf = async () => {
     const file = await printToFileAsync({
       html: html,
@@ -99,7 +101,6 @@ const ProfilePage = ({ route, navigation }) => {
   };
 
   const handleLogout = async () => {
-    console.log("Logout");
     try {
       await logout();
     } catch (error) {
@@ -108,22 +109,18 @@ const ProfilePage = ({ route, navigation }) => {
   };
 
   const analysis = () => {
-    console.log("analysis");
     navigation.navigate("Analysis", { username });
   };
 
   const handleGeneratePDF = () => {
     generatePdf();
-    console.log("PDF generated");
   };
 
   const orders = () => {
-    console.log("Orders");
     navigation.navigate("Orders", { username });
   };
 
   const notifications = () => {
-    console.log("Notification");
     navigation.navigate("Notification", { username });
   };
 

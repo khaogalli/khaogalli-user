@@ -23,13 +23,16 @@ export default function Home({ route, navigation }) {
 
   const getData = async () => {
     setRefreshing(true);
-    let res = await get_noti();
-    setLoading(false);
-    setTimeout(() => {
-      setRefreshing(false);
-    }, 2000);
-    console.log(res.data);
-    setNotifications(res.data);
+    try {
+      let res = await get_noti();
+      setLoading(false);
+      setTimeout(() => {
+        setRefreshing(false);
+      }, 2000);
+      setNotifications(res.data);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   useEffect(() => {
@@ -48,16 +51,13 @@ export default function Home({ route, navigation }) {
 
   function isexpired(item) {
     const timestamp = new Date(item.created_at);
-
     const currentTime = new Date();
-
     const ttlTime = new Date(timestamp.getTime() + item.ttl_minutes * 60000);
-
     return currentTime > ttlTime;
   }
 
   const renderItem = ({ item }) =>
-    isexpired(item) ? (
+    !isexpired(item) ? (
       <Pressable
         onPress={() => {
           openModal(item);
@@ -91,15 +91,8 @@ export default function Home({ route, navigation }) {
     }
 
     return (
-      <View
-        style={{
-          padding: 10,
-          flexDirection: "column",
-        }}
-      >
-        <Text style={{ width: "100%", textAlign: "center" }}>
-          {modalNoti.body}
-        </Text>
+      <View style={styles.DisItem}>
+        <Text style={styles.DisItemBody}>{modalNoti.body}</Text>
       </View>
     );
   };
@@ -110,14 +103,6 @@ export default function Home({ route, navigation }) {
       <View style={styles.container}>
         <View style={styles.topView}>
           <Text style={styles.userName}>{name}</Text>
-          <View
-            style={{
-              alignSelf: "flex-end",
-              paddingRight: 10,
-              paddingTop: 5,
-              paddingBottom: 10,
-            }}
-          ></View>
         </View>
 
         {!loading ? (
@@ -137,9 +122,8 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
                   opacity: 0.5,
                 },
               ]}
@@ -147,9 +131,8 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
                   opacity: 0.4,
                 },
               ]}
@@ -157,9 +140,8 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
                   opacity: 0.3,
                 },
               ]}
@@ -167,9 +149,8 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
                   opacity: 0.2,
                 },
               ]}
@@ -177,10 +158,9 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
-                  opacity: 0.1,
+                  opacity: 0.2,
                 },
               ]}
             ></View>
@@ -205,12 +185,15 @@ export default function Home({ route, navigation }) {
                       </View>
                       <Text>{modalNoti.created_at.substring(0, 10)}</Text>
                       <Text>
-                        {new Date(item.created_at).toLocaleTimeString("en-GB", {
-                          hour12: true,
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          second: "2-digit",
-                        })}
+                        {new Date(modalNoti.created_at).toLocaleTimeString(
+                          "en-GB",
+                          {
+                            hour12: true,
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            second: "2-digit",
+                          }
+                        )}
                       </Text>
                     </View>
                   </TouchableWithoutFeedback>
@@ -225,15 +208,22 @@ export default function Home({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  DisItemBody: { width: "100%", textAlign: "center" },
+  LoadingItem: {
+    height: 85,
+    backgroundColor: "#333333",
+    opacity: 0.5,
+  },
+  loading: {
+    height: 85,
+    backgroundColor: "#333333",
+  },
+  DisItem: {
+    padding: 10,
+    flexDirection: "column",
+  },
   table: {
     marginBottom: 20,
-  },
-  filterButton: {
-    padding: 10,
-    alignItems: "center",
-    width: "25%",
-    borderRadius: 10,
-    marginLeft: 10,
   },
   userName: {
     fontSize: 28,
@@ -265,11 +255,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  inner: {
-    padding: 24,
-    flex: 1,
-    justifyContent: "space-around",
-  },
   renderItem: {
     padding: 15,
     marginBottom: 7,
@@ -288,61 +273,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  },
-  logo: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    borderColor: "black",
-    borderWidth: 2,
-  },
-
-  center: {
-    paddingTop: "40%",
-    alignItems: "center",
-    backgroundColor: "#f74449",
-  },
-
-  h1: {
-    paddingTop: 10,
-    alignItems: "center",
-  },
-
-  input: {
-    marginBottom: 12,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#431213",
-    color: "white",
-  },
-  lable: {
-    fontSize: 18,
-    color: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    paddingRight: 10,
-    fontWeight: "bold",
-    marginBottom: 2,
-  },
-  button1: {
-    width: 270,
-    height: 40,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#ffbf00",
-    marginTop: 12,
-    justifyContent: "center",
-  },
-  header: {
-    borderBottomColor: "black",
-    borderBottomWidth: 2,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: 60,
   },
   modalBackground: {
     flex: 1,
@@ -363,28 +293,11 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
   },
-  modalText: {
-    fontSize: 18,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 5,
-    textAlign: "center",
-  },
   heading1: {
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 20,
     textAlign: "center",
-  },
-  heading2: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  table: {
-    marginBottom: 20,
   },
   header: {
     flexDirection: "row",
@@ -393,16 +306,5 @@ const styles = StyleSheet.create({
     borderBottomColor: "#000",
     paddingBottom: 10,
     marginBottom: 10,
-  },
-  headerText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    width: "33%",
-    textAlign: "center",
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 10,
   },
 });

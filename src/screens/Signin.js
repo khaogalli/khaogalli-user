@@ -21,7 +21,6 @@ export default function Signin({ route, navigation }) {
   const [username, onChangeText] = React.useState("");
   const [password, onChangePass] = React.useState("");
   const [error, setError] = React.useState("");
-
   const { login } = useContext(AuthContext);
 
   goToSignup = () => {
@@ -42,7 +41,6 @@ export default function Signin({ route, navigation }) {
     try {
       await login(username, password);
     } catch (err) {
-      console.log("hi" + err);
       if (err.response.status == 422) {
         if (err.response.data.errors.hasOwnProperty("username"))
           setError("Username does not exist");
@@ -195,10 +193,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#ffbf00",
     marginTop: 12,
     justifyContent: "center",
-  },
-  continueButton: {
-    textAlign: "center",
-    fontWeight: "bold",
-    fontSize: 15,
   },
 });

@@ -20,7 +20,6 @@ import * as Linking from "expo-linking";
 const Stack = createNativeStackNavigator();
 
 const prefix = Linking.createURL("/");
-console.log(prefix);
 const linking = {
   prefixes: [prefix],
   config: {
@@ -34,7 +33,6 @@ const App = () => {
   const initialScreen = "Signup";
 
   const { user } = useContext(AuthContext);
-  console.log(user);
   return user ? (
     <NavigationContainer linking={linking}>
       <Stack.Navigator

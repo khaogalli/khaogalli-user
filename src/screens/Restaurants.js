@@ -61,7 +61,6 @@ export default function Restaurants({ route, navigation }) {
       let res = await get_menu(restaurantID);
       setLoading(false);
       setMenu(res.data.menu);
-      console.log(res.data.menu);
       setItemList(
         res.data.menu.map((menuItem) => ({
           item: menuItem.id,
@@ -70,9 +69,7 @@ export default function Restaurants({ route, navigation }) {
           qty: 0,
         }))
       );
-      console.log("test", itemlist);
     };
-
     getData();
   }, []);
 
@@ -93,14 +90,11 @@ export default function Restaurants({ route, navigation }) {
           : itemData
       )
     );
-    console.log(itemlist);
   };
 
   const addItem = (itemlist) => {
     const selectedItems = itemlist.filter((itemData) => itemData.qty > 0);
     cart.Order = selectedItems;
-    console.log("final cart:");
-    console.log(cart);
   };
 
   const renderItem = ({ item }) => (
@@ -240,44 +234,15 @@ export default function Restaurants({ route, navigation }) {
             <View style={styles.h1view}>
               <Text style={styles.h1}>{res_name}</Text>
             </View>
-            <View
-              style={{
-                height: 50,
-                borderRadius: 25,
-                marginHorizontal: 5,
-                padding: 10,
-                shadowColor: "#000",
-                shadowOffset: {
-                  width: 0,
-                  height: 2,
-                },
-                shadowOpacity: 0.25,
-                shadowRadius: 3.84,
-                elevation: 5,
-                backgroundColor: "#ffffff",
-                marginBottom: 5,
-              }}
-            >
+            <View style={styles.search}>
               <Image
                 source={require("../../assets/looking.gif")}
-                style={{
-                  height: 35,
-                  width: 35,
-                  borderRadius: 20,
-                  marginLeft: 5,
-                }}
+                style={styles.searchGif}
               />
               <TextInput
                 onChangeText={setSearchKey}
                 value={searchKey}
-                style={{
-                  height: 53,
-                  borderRadius: 25,
-                  padding: 10,
-                  width: "93%",
-                  position: "absolute",
-                  right: 0,
-                }}
+                style={styles.searchInput}
               />
             </View>
           </View>
@@ -299,9 +264,8 @@ export default function Restaurants({ route, navigation }) {
               <View
                 style={[
                   styles.rows,
+                  styles.loading,
                   {
-                    height: 85,
-                    backgroundColor: "#333333",
                     opacity: 0.5,
                   },
                 ]}
@@ -309,9 +273,8 @@ export default function Restaurants({ route, navigation }) {
               <View
                 style={[
                   styles.rows,
+                  styles.loading,
                   {
-                    height: 85,
-                    backgroundColor: "#333333",
                     opacity: 0.4,
                   },
                 ]}
@@ -319,9 +282,8 @@ export default function Restaurants({ route, navigation }) {
               <View
                 style={[
                   styles.rows,
+                  styles.loading,
                   {
-                    height: 85,
-                    backgroundColor: "#333333",
                     opacity: 0.3,
                   },
                 ]}
@@ -329,9 +291,8 @@ export default function Restaurants({ route, navigation }) {
               <View
                 style={[
                   styles.rows,
+                  styles.loading,
                   {
-                    height: 85,
-                    backgroundColor: "#333333",
                     opacity: 0.2,
                   },
                 ]}
@@ -339,9 +300,8 @@ export default function Restaurants({ route, navigation }) {
               <View
                 style={[
                   styles.rows,
+                  styles.loading,
                   {
-                    height: 85,
-                    backgroundColor: "#333333",
                     opacity: 0.1,
                   },
                 ]}
@@ -360,10 +320,8 @@ export default function Restaurants({ route, navigation }) {
                   quantity: item.qty,
                 })),
               };
-              console.log(JSON.stringify(order));
               try {
                 let res = await place_order(order);
-                console.log(res.data);
                 navigation.navigate("Summary", { order: res.data.order });
               } catch (error) {
                 console.log(error);
@@ -414,6 +372,40 @@ export default function Restaurants({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  loading: {
+    height: 85,
+    backgroundColor: "#333333",
+  },
+  searchInput: {
+    height: 53,
+    borderRadius: 25,
+    padding: 10,
+    width: "93%",
+    position: "absolute",
+    right: 0,
+  },
+  searchGif: {
+    height: 35,
+    width: 35,
+    borderRadius: 20,
+    marginLeft: 5,
+  },
+  search: {
+    height: 50,
+    borderRadius: 25,
+    marginHorizontal: 5,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    backgroundColor: "#ffffff",
+    marginBottom: 5,
+  },
   container: {
     flex: 1,
     flexDirection: "column",

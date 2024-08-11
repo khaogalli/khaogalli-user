@@ -15,6 +15,7 @@ import {
 import { cancel_order, get_orders } from "../services/api";
 import { BlurView } from "expo-blur";
 import { useFocusEffect } from "@react-navigation/native";
+
 export default function Home({ route, navigation }) {
   const [i, setI] = useState("paid");
   const username = route.params.username;
@@ -46,7 +47,6 @@ export default function Home({ route, navigation }) {
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
-    console.log(res.data);
     setOrders(res.data);
   };
 
@@ -59,12 +59,9 @@ export default function Home({ route, navigation }) {
     setModalOrder(order);
     let ct = new Date();
     let orderTime = new Date(order.order_placed_time);
-    console.log(ct - orderTime);
     if (ct - orderTime < 60000) {
-      console.log("can");
       setCanCancel(true);
     } else {
-      console.log("cannot");
       setCanCancel(false);
     }
     setModalVisible(true);
@@ -232,9 +229,8 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
                   opacity: 0.5,
                 },
               ]}
@@ -242,9 +238,8 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
                   opacity: 0.4,
                 },
               ]}
@@ -252,9 +247,8 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
                   opacity: 0.3,
                 },
               ]}
@@ -262,9 +256,8 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
                   opacity: 0.2,
                 },
               ]}
@@ -272,9 +265,8 @@ export default function Home({ route, navigation }) {
             <View
               style={[
                 styles.renderItem,
+                styles.loading,
                 {
-                  height: 85,
-                  backgroundColor: "#333333",
                   opacity: 0.1,
                 },
               ]}
@@ -345,6 +337,10 @@ const styles = StyleSheet.create({
   table: {
     marginBottom: 20,
   },
+  loading: {
+    height: 85,
+    backgroundColor: "#333333",
+  },
   filterButton: {
     padding: 10,
     alignItems: "center",
@@ -380,11 +376,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  inner: {
-    padding: 24,
-    flex: 1,
-    justifyContent: "space-around",
-  },
   renderItem: {
     padding: 15,
     marginBottom: 7,
@@ -405,61 +396,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  logo: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    borderColor: "black",
-    borderWidth: 2,
-  },
-
-  center: {
-    paddingTop: "40%",
-    alignItems: "center",
-    backgroundColor: "#f74449",
-  },
-
-  h1: {
-    paddingTop: 10,
-    alignItems: "center",
-  },
-
-  input: {
-    marginBottom: 12,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#431213",
-    color: "white",
-  },
-  lable: {
-    fontSize: 18,
-    color: "white",
-    alignItems: "center",
-    justifyContent: "center",
-    textAlign: "center",
-    paddingRight: 10,
-    fontWeight: "bold",
-    marginBottom: 2,
-  },
-  button1: {
-    width: 270,
-    height: 40,
-    borderWidth: 1,
-    padding: 10,
-    borderRadius: 10,
-    backgroundColor: "#ffbf00",
-    marginTop: 12,
-    justifyContent: "center",
-  },
-  header: {
-    borderBottomColor: "black",
-    borderBottomWidth: 2,
-    position: "absolute",
-    top: 0,
-    left: 0,
-    height: 60,
-  },
   modalBackground: {
     flex: 1,
     justifyContent: "center",
@@ -479,9 +415,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     alignItems: "center",
   },
-  modalText: {
-    fontSize: 18,
-  },
   heading: {
     fontSize: 24,
     fontWeight: "bold",
@@ -494,14 +427,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  heading2: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
-  table: {
-    marginBottom: 20,
-  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -513,12 +438,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 18,
     fontWeight: "bold",
-    width: "33%", // Adjusting width to fit three columns
+    width: "33%",
     textAlign: "center",
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingVertical: 10,
   },
 });

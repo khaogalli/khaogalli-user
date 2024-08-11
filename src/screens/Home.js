@@ -31,7 +31,6 @@ export default function Home({ route, navigation }) {
   const [refreshing, setRefreshing] = useState(false);
 
   let getData = async () => {
-    console.log("get data");
     try {
       setRefreshing(true);
       let res = await get_restaurants();
@@ -40,7 +39,6 @@ export default function Home({ route, navigation }) {
         setRefreshing(false);
       }, 2000);
       setRestaurants(res.data.restaurants);
-      console.log(res.data);
     } catch (err) {
       console.log(err);
     }
@@ -71,7 +69,6 @@ export default function Home({ route, navigation }) {
   const renderItem = ({ item }) => {
     const ot = new Date(item.open_time);
     const ct = new Date(item.close_time);
-
     let opening = new Date();
     opening.setHours(ot.getHours(), ot.getMinutes(), 0, 0);
     let closing = new Date();
@@ -84,8 +81,6 @@ export default function Home({ route, navigation }) {
     return (
       <Pressable
         onPress={() => {
-          console.log(item.id);
-          //console.log(opening + " " + closing);
           if (!open) {
             Alert.alert("Sorry", "Restarant is closed.", [
               {
@@ -117,6 +112,9 @@ export default function Home({ route, navigation }) {
                 {
                   backgroundColor: !open ? "#f0f0f0" : "white",
                 },
+                {
+
+                }
               ]}
             >
               <ExpoImage
@@ -127,7 +125,7 @@ export default function Home({ route, navigation }) {
                 placeholder={require("../../assets/grey.png")}
                 style={{ height: 65, width: 65, borderRadius: 10 }}
               />
-              <View style={{ padding: 10 }}>
+              <View style={{ padding: 10, flex: 1 }}>
                 <Text style={{ fontSize: 16 }}>{item.name}</Text>
                 <Text
                   style={{
@@ -143,15 +141,10 @@ export default function Home({ route, navigation }) {
                   {item.pending_orders}
                 </Text>
               </View>
-              <View>
+              <View >
                 <ExpoImage
                   source={require("../../assets/next.png")}
-                  style={{
-                    height: 20,
-                    width: 20,
-                    borderRadius: 10,
-                    marginLeft: "73%",
-                  }}
+                  style={styles.nxtArr}
                 />
               </View>
             </View>
@@ -183,7 +176,7 @@ export default function Home({ route, navigation }) {
               placeholder={require("../../assets/grey.png")}
               style={{ height: 65, width: 65, borderRadius: 10 }}
             />
-            <View style={{ padding: 10 }}>
+            <View style={{ padding: 10 , flex: 1}}>
               <Text style={{ fontSize: 16 }}>{item.name}</Text>
               <Text
                 style={{
@@ -206,7 +199,6 @@ export default function Home({ route, navigation }) {
                   height: 20,
                   width: 20,
                   borderRadius: 10,
-                  marginLeft: "73%",
                 }}
               />
             </View>
@@ -229,35 +221,12 @@ export default function Home({ route, navigation }) {
               }}
               placeholder={"../../assets/user.png"}
               priority="high"
-              style={{
-                borderWidth: 1,
-                borderColor: "black",
-                width: 50,
-                height: 50,
-                borderRadius: 25,
-              }}
+              style={styles.profilePhoto}
             />
           </TouchableOpacity>
         </View>
       </View>
-      <View
-        style={{
-          height: 50,
-          borderRadius: 25,
-          marginHorizontal: 5,
-          padding: 10,
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: 2,
-          },
-          shadowOpacity: 0.25,
-          shadowRadius: 3.84,
-          elevation: 5,
-          backgroundColor: "#ffffff",
-          marginBottom: 5,
-        }}
-      >
+      <View style={styles.search}>
         <Image
           source={require("../../assets/looking.gif")}
           style={{ height: 35, width: 35, borderRadius: 20, marginLeft: 5 }}
@@ -265,14 +234,7 @@ export default function Home({ route, navigation }) {
         <TextInput
           onChangeText={setSearchKey}
           value={searchKey}
-          style={{
-            height: 53,
-            borderRadius: 25,
-            padding: 10,
-            width: "93%",
-            position: "absolute",
-            right: 0,
-          }}
+          style={styles.searchInput}
         />
       </View>
       {!loading ? (
@@ -292,9 +254,8 @@ export default function Home({ route, navigation }) {
           <View
             style={[
               styles.renderItem,
+              styles.loading,
               {
-                height: 85,
-                backgroundColor: "#333333",
                 opacity: 0.5,
               },
             ]}
@@ -302,9 +263,8 @@ export default function Home({ route, navigation }) {
           <View
             style={[
               styles.renderItem,
+              styles.loading,
               {
-                height: 85,
-                backgroundColor: "#333333",
                 opacity: 0.4,
               },
             ]}
@@ -312,9 +272,8 @@ export default function Home({ route, navigation }) {
           <View
             style={[
               styles.renderItem,
+              styles.loading,
               {
-                height: 85,
-                backgroundColor: "#333333",
                 opacity: 0.3,
               },
             ]}
@@ -322,9 +281,8 @@ export default function Home({ route, navigation }) {
           <View
             style={[
               styles.renderItem,
+              styles.loading,
               {
-                height: 85,
-                backgroundColor: "#333333",
                 opacity: 0.2,
               },
             ]}
@@ -332,9 +290,8 @@ export default function Home({ route, navigation }) {
           <View
             style={[
               styles.renderItem,
+              styles.loading,
               {
-                height: 85,
-                backgroundColor: "#333333",
                 opacity: 0.1,
               },
             ]}
@@ -346,6 +303,46 @@ export default function Home({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  loading: {
+    height: 85,
+    backgroundColor: "#333333",
+  },
+  searchInput: {
+    height: 53,
+    borderRadius: 25,
+    padding: 10,
+    width: "93%",
+    position: "absolute",
+    right: 0,
+  },
+  search: {
+    height: 50,
+    borderRadius: 25,
+    marginHorizontal: 5,
+    padding: 10,
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    backgroundColor: "#ffffff",
+    marginBottom: 5,
+  },
+  profilePhoto: {
+    borderWidth: 1,
+    borderColor: "black",
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+  },
+  nxtArr: {
+    height: 20,
+    width: 20,
+    borderRadius: 10,
+  },
   container: {
     flex: 1,
   },
@@ -369,6 +366,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "white",
+    flex: 1,
   },
   listShadow: {
     shadowColor: "#000",

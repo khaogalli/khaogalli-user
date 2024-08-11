@@ -10,7 +10,7 @@ import {
   Linking,
   Alert,
 } from "react-native";
-import { get_payment_session, place_order } from "../services/api";
+import { get_payment_session } from "../services/api";
 import { AuthContext } from "../services/AuthContext";
 
 export default function App({ route, navigation }) {
@@ -19,10 +19,6 @@ export default function App({ route, navigation }) {
   const resName = order.restaurant_name;
   const resID = order.restaurant_id;
   const [paid, setPaid] = useState(false);
-  console.log(order);
-  console.log(resName);
-  console.log(resID);
-
   const orderItems = order.items;
 
   const renderItem = ({ item }) => (
@@ -127,11 +123,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  heading2: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginBottom: 20,
-  },
   table: {
     marginBottom: 20,
   },
@@ -146,7 +137,7 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 18,
     fontWeight: "bold",
-    width: "33%", // Adjusting width to fit three columns
+    width: "33%",
     textAlign: "center",
   },
   row: {
@@ -156,17 +147,17 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 16,
-    width: "33%", // Adjusting width to fit three columns
+    width: "33%",
     textAlign: "center",
   },
   itemQuantity: {
     fontSize: 16,
-    width: "33%", // Adjusting width to fit three columns
+    width: "33%",
     textAlign: "center",
   },
   itemAmount: {
     fontSize: 16,
-    width: "33%", // Adjusting width to fit three columns
+    width: "33%",
     textAlign: "center",
   },
   total: {

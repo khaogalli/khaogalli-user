@@ -13,14 +13,12 @@ import { upload_user_image, USER_IMAGE_URL } from "../services/api";
 import * as FileSystem from "expo-file-system";
 import { Image } from "expo-image";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
 import { genNonce } from "../services/utils";
 import { useFocusEffect } from "@react-navigation/native";
 
 const ProfilePage = ({ route, navigation }) => {
   const { update_user, user } = useContext(AuthContext);
   let username = user.username;
-
   const [userName, setUserName] = useState(username);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -36,7 +34,6 @@ const ProfilePage = ({ route, navigation }) => {
         user.username = userName;
       }
       if (password != "" && NewPassword == confirmPassword) {
-        // todo validate new password
         user.update_pass = {
           old_password: password,
           new_password: confirmPassword,
@@ -47,7 +44,6 @@ const ProfilePage = ({ route, navigation }) => {
       if (!changed) {
         return;
       }
-      console.log("something");
 
       try {
         await update_user(user);
@@ -87,7 +83,6 @@ const ProfilePage = ({ route, navigation }) => {
     });
 
     if (!result.canceled) {
-      console.log(result.assets[0].uri);
       try {
         const base64 = await FileSystem.readAsStringAsync(
           result.assets[0].uri,
@@ -97,8 +92,6 @@ const ProfilePage = ({ route, navigation }) => {
         );
 
         const res = await upload_user_image(base64);
-
-        console.log("Image uploaded successfully");
       } catch (error) {
         console.error("Error reading file or uploading image:", error);
       }
@@ -110,9 +103,8 @@ const ProfilePage = ({ route, navigation }) => {
     <>
       <SafeAreaProvider style={styles.container}>
         <StatusBar backgroundColor="#ad8840" />
-        <TouchableOpacity // upload profle page yet to be made so this is a placeholder for now
+        <TouchableOpacity
           onPress={() => {
-            console.log("Edit Profile");
             pickImage();
           }}
         >
@@ -134,7 +126,7 @@ const ProfilePage = ({ route, navigation }) => {
         <TextInput
           style={[styles.input]}
           onChangeText={(text) => {
-            setPassword(text); // Call validate with the new text value
+            setPassword(text);
           }}
           value={password}
         />
@@ -179,26 +171,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 15,
   },
-  signouttButtonText: {
-    alignSelf: "center",
-    borderColor: "black",
-    borderWidth: 0.5,
-    padding: 5,
-    borderRadius: 5,
-    width: 230,
-    alignItems: "center",
-    backgroundColor: "#ff3c3c",
-  },
-  buttonText: {
-    alignSelf: "center",
-    borderColor: "black",
-    borderWidth: 0.5,
-    padding: 5,
-    borderRadius: 5,
-    width: 230,
-    alignItems: "center",
-  },
-  userName: { fontWeight: "900", fontSize: 26 },
   container: {
     flex: 1,
     justifyContent: "center",
@@ -212,19 +184,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderColor: "black",
     borderWidth: 2,
-  },
-  name: {
-    fontSize: 18,
-    marginBottom: 5,
-  },
-  regNumber: {
-    fontSize: 18,
-    color: "#666",
-    marginBottom: 20,
-  },
-  buttonContainer: {
-    width: "80%",
-    marginBottom: 10,
   },
   input: {
     borderBottomWidth: 1,
