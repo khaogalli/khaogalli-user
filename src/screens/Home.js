@@ -112,9 +112,7 @@ export default function Home({ route, navigation }) {
                 {
                   backgroundColor: !open ? "#f0f0f0" : "white",
                 },
-                {
-
-                }
+                {},
               ]}
             >
               <ExpoImage
@@ -141,7 +139,7 @@ export default function Home({ route, navigation }) {
                   {item.pending_orders}
                 </Text>
               </View>
-              <View >
+              <View>
                 <ExpoImage
                   source={require("../../assets/next.png")}
                   style={styles.nxtArr}
@@ -176,7 +174,7 @@ export default function Home({ route, navigation }) {
               placeholder={require("../../assets/grey.png")}
               style={{ height: 65, width: 65, borderRadius: 10 }}
             />
-            <View style={{ padding: 10 , flex: 1}}>
+            <View style={{ padding: 10, flex: 1 }}>
               <Text style={{ fontSize: 16 }}>{item.name}</Text>
               <Text
                 style={{
@@ -265,6 +263,8 @@ export default function Home({ route, navigation }) {
               styles.renderItem,
               styles.loading,
               {
+                height: 85,
+    backgroundColor: "#333333",
                 opacity: 0.4,
               },
             ]}
@@ -303,10 +303,6 @@ export default function Home({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  loading: {
-    height: 85,
-    backgroundColor: "#333333",
-  },
   searchInput: {
     height: 53,
     borderRadius: 25,
@@ -391,5 +387,9 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     paddingRight: 10,
     paddingBottom: 10,
+  },
+  loading: {
+    height: 85,
+    backgroundColor: "#333333",
   },
 });

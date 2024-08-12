@@ -65,8 +65,6 @@ export const AuthProvider = ({ children }) => {
     try {
       const response = await loginUser({ username, password });
       const loggedInUser = response.data.user;
-
-      console.log(loggedInUser);
       refreshUser(loggedInUser);
     } catch (error) {
       throw error;

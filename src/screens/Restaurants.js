@@ -14,6 +14,8 @@ import {
   Pressable,
   Image,
   Platform,
+  RefreshControl,
+  Alert,
 } from "react-native";
 import { AuthContext } from "../services/AuthContext";
 import {
@@ -32,7 +34,7 @@ export default function Restaurants({ route, navigation }) {
   const name = route.params.itemName;
   const restaurantID = route.params.itemId;
   const [loading, setLoading] = useState(true);
-
+  const [refreshing, setRefreshing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [description, setDescription] = useState("No Description Available");
   const [tilte, setTitle] = useState("");
@@ -56,20 +58,25 @@ export default function Restaurants({ route, navigation }) {
   const [menu, setMenu] = useState([]);
   const [itemlist, setItemList] = useState([]);
 
+  let getData = async () => {
+    setRefreshing(true);
+    let res = await get_menu(restaurantID);
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+    setLoading(false);
+    setMenu(res.data.menu);
+    setItemList(
+      res.data.menu.map((menuItem) => ({
+        item: menuItem.id,
+        name: menuItem.name,
+        price: menuItem.price,
+        qty: 0,
+      }))
+    );
+  };
+
   useEffect(() => {
-    let getData = async () => {
-      let res = await get_menu(restaurantID);
-      setLoading(false);
-      setMenu(res.data.menu);
-      setItemList(
-        res.data.menu.map((menuItem) => ({
-          item: menuItem.id,
-          name: menuItem.name,
-          price: menuItem.price,
-          qty: 0,
-        }))
-      );
-    };
     getData();
   }, []);
 
@@ -257,6 +264,9 @@ export default function Restaurants({ route, navigation }) {
                 scrollToEnd={true}
                 style={{ flex: 1 }}
                 contentContainerStyle={{ flexGrow: 1 }}
+                refreshControl={
+                  <RefreshControl refreshing={refreshing} onRefresh={getData} />
+                }
               />
             </View>
           ) : (
@@ -321,6 +331,14 @@ export default function Restaurants({ route, navigation }) {
                 })),
               };
               try {
+                if (order.items.length === 0) {
+                  Alert.alert(
+                    "Empty Cart",
+                    "Please select atleast one item to place order",
+                    [{ text: "OK" }]
+                  );
+                  return;
+                }
                 let res = await place_order(order);
                 navigation.navigate("Summary", { order: res.data.order });
               } catch (error) {

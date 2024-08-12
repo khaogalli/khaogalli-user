@@ -160,7 +160,7 @@ export default function Home({ route, navigation }) {
                 styles.renderItem,
                 styles.loading,
                 {
-                  opacity: 0.2,
+                  opacity: 0.1,
                 },
               ]}
             ></View>
@@ -209,11 +209,6 @@ export default function Home({ route, navigation }) {
 
 const styles = StyleSheet.create({
   DisItemBody: { width: "100%", textAlign: "center" },
-  LoadingItem: {
-    height: 85,
-    backgroundColor: "#333333",
-    opacity: 0.5,
-  },
   loading: {
     height: 85,
     backgroundColor: "#333333",
